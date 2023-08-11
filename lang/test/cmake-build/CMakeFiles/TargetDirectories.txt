@@ -1,3 +1,0 @@
-/home/ae/school/lang/test/cmake-build/CMakeFiles/test.dir
-/home/ae/school/lang/test/cmake-build/CMakeFiles/edit_cache.dir
-/home/ae/school/lang/test/cmake-build/CMakeFiles/rebuild_cache.dir

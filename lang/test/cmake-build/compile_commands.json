@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/home/ae/school/lang/test/cmake-build",
-  "command": "/usr/bin/c++   -std=gnu++20 -o CMakeFiles/test.dir/main.cpp.o -c /home/ae/school/lang/test/main.cpp",
-  "file": "/home/ae/school/lang/test/main.cpp",
-  "output": "CMakeFiles/test.dir/main.cpp.o"
-}
-]
