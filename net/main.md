@@ -179,6 +179,20 @@ Los externos son mas frecuentes pero suelen ser de menor impacto. Hay distintos 
 
 == 1.2 Componentes de la red
 
-=== Rol de Host
+Un *host* es un dispositivo con un número especifico (IP) asignado para facilitar la comunicación, puede ser a la vez un cliente, también se les llama dispositivos finales.
 
-Un host es un dispositivo con un número especifico (IP) asignado para facilitar la comunicación, puede ser a la vez un cliente. 
+Un *cliente* tiene el software necesario para solicitar y mostrar información solicitada a un servidor.
+
+A las redes que cuentan con computadoras que funcionan como cliente y como servidor a la vez se les conoce como *redes entre pares*.
+
+Se le conoce como *terminal* a los dispositivos a los extremos de la comunicación, es decir el emisor y receptor.
+
+Los dispositivos intermedios conectan los dispositivos finales,  proporcionan conectividad y garantizan el flujo de datos en toda la red.
+
+== 1.3 Topologias
+
+Un diagrama proporciona una manera fácil de comprender cómo se conectan los dispositivos en una red grande. 
+
+*Los diagramas de topología física* ilustran la ubicación física de los dispositivos intermedios y la instalación del cable, como se muestra en la figura. Puede ver que las habitaciones en las que se encuentran estos dispositivos están etiquetadas en esta topología física.
+
+*Los diagramas de topología lógica* ilustran los dispositivos, los puertos y el esquema de direccionamiento de la red, como se muestra en la figura. Puede ver qué dispositivos finales están conectados a qué dispositivos intermediarios y qué medios se están utilizando.

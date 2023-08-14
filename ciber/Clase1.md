@@ -102,7 +102,7 @@ La confidencialidad, integridad y disponibilidad. Por sus siglas en ingles _Conf
 Lo contrario a la CIA es la DAD, la alteración, destrucción o divulgación.
 
 #rect(width: 100%)[#align(center)[  
-  _La ISC2 es un ente de no se que._
+  _La ISC2 es un ente de no se que. Menciona que es bueno rotar actividades_
 ]]
 
 == Control de seguridad
@@ -115,6 +115,7 @@ Entre las distintas medidas que podemos tomar para proteger la información pode
   - Need to know: Que la persona solo sabe lo que _necesita_ saber.
 - Disponibilidad:
   - Tolerancia a fallas/redundancia
+    - Ej. Dos fuentes de poder.
   - Clusters de alta habilidad (_HA Clusters_)
 - Confidencialidad:
   - Segregación de privilegios
@@ -122,7 +123,33 @@ Entre las distintas medidas que podemos tomar para proteger la información pode
   - Canales encubiertos
   - Análisis de tráfico
   - Cifrado
+  - Controles de accesso
+
+== Tendencias de Gartner
+
+Es una consultora que realiza estudios a nivel mundial que se toma como referencia para la seguridad.
+
+- Se puede reducir en un 90% los impactos financieros si se adopta arquitectura segura.
+- El 60% de empresas considerará la seguridad de terceros para realizar tratos.
+- Preventivo no reactivo. Resiliencia, poder recuperarse de un efecto grave. No es un gasto, es solo medidas preventivas para prevenir más gastos/pérdidas.
+- Hay provedoores y fabricantes especificos de seguridad que desarrollan hardware para bases de datos, etc.
+- Se prevee que la coberseguridad tome mucha fuerza, se creen comites de seguridad.
+- Desde 2020 se habla de la ciber-resilencia.
+- Los que vulneran pueden tomar los artefactos vulnerado como arma.
+
+== Certificaciones
+
+Hay distintas certificaciones que van desde seguridad, inteligencia artificil, computo en la nube, seguridad. A nivel de persecpión económica un project manager ya no es tan valioso.
+
+Entre las certificaciones más solicitadas esta:
+- CISP: Para cargos altos
+- CISA: Auditoria de sistemas
+- OSCP, OSCE: Ofensivo
+- CEH: Certified hacker
+
+Ella de donde saca las cosas? 
 
 = Términos
 
 - 0Day: Vulnerabilidad de reciente creación, por lo que no hay un parche
+
