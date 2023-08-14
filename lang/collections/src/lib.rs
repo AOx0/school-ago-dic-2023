@@ -36,6 +36,35 @@ pub fn union<T: Clone + PartialEq>(a: &[T], b: &[T]) -> Vec<T> {
     res
 }
 
+pub fn times<'a, U, V>(a: &'a [U], b: &'a [V]) -> impl Iterator<Item = (U, V)> + 'a
+where
+    U: Clone,
+    V: Clone,
+{
+    a.iter()
+        .map(|a| b.iter().map(|b| (a.clone(), b.clone())))
+        .flatten()
+}
+
+pub fn fam_times<T: Clone>(a: &[&[T]]) -> Vec<Vec<T>> {
+    let mut res = Vec::new();
+
+    for i in 1..a.len() {
+        res = match i {
+            1 => times(a[0], a[1]).map(|e| vec![e.0, e.1]).collect(),
+            2.. => times(&res, a[i])
+                .map(|(mut vec, val)| {
+                    vec.push(val);
+                    vec
+                })
+                .collect(),
+            _ => unreachable!("Range is 0..n"),
+        };
+    }
+
+    res
+}
+
 #[must_use]
 pub fn test() -> &'static str {
     "Hello World"

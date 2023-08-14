@@ -7,6 +7,8 @@
 
 #let reading(body) = strike(stroke: 1.1em + rgb("ff303030"),body)
 
+#show raw: set text(font: "JetBrainsMono NFM")
+
 En el curso vamos a aprender a procesar de manera automatica información, es decir hacer un compilador.
 
 ```
@@ -203,6 +205,8 @@ Ahora introducimos dos conjuntos especiales; el primero incluye todos los conjun
 
 Dado cualquier conjunto $A$, sabemos que el conjunto nulo $emptyset$ y el conjunto $A$ son ambos subconjuntos de $A$, es decir $A subset.eq A$ y $emptyset subset.eq A$. También sabemos que para cualquier elemento $p in A$, el conjunto ${p}$ es un subconjunto de $A$, ${p} subset A$. De forma similar, podemos considerar otros subconjuntos de $A$. Algo mejor que estar manejando subconjuntos individuales de $A$, podemos buscar describir hechos para todos subconjuntos de $A$. 
 
+Es una verdad _verdad vacuba_ que $emptyset subset.eq A$ para cualquier conjunto $A$ debido a que cada elemento de $emptyset$ (${}$) es también un elemento de $A$. O acaso podemos nombrar un solo miembro de $emptyset$ que no sea mimebro de $A$,  en ese caso la condición se rompería. 
+
 === Conjunto potencia
 
 #reading[Para cada conjunto $A$, a la collección o familia de todos los subconjuntos de $A$ se le conoce como _conjunto potencia_ de $A$]. El conjunto potencia o _power set_ de $A$ se denota como $p(A)$ o $2^A$, es decir $p(A) = 2^A = { x | x subset.eq A }$, nótese como $subset.eq$ implica que $A$ mismo está en $2^A$.
@@ -309,5 +313,95 @@ Asi como el resto de operaciones en conjuntos, podemos extender el del producto 
 $
 times.big_(i in I_n) A_i = A_1 times A_2 times ... times A_n 
 $
+
+Podemos definir el producto cartesiando de forma resursiva como:
+
+$
+times.big_(i in I_1) A_i &= A_1, \ 
+times.big_(i in I_m) A_i &= (times.big_(i in I-(m - 1)) A_i) times A_m "para m = 2, 3, ..., n"
+$
+
+Basados en lo descrito, si el siguiente bloque de codigo devuelve un iterador sobre las 2-tuplas generadas entre dos conjuntos:
+
+```rust
+pub fn times<'a, U, V>(a: &'a [U], b: &'a [V]) -> impl Iterator<Item = (U, V)> + 'a
+where
+    U: Clone,
+    V: Clone,
+{
+    a.iter()
+        .map(|a| b.iter().map(|b| (a.clone(), b.clone())))
+        .flatten()
+}
+```
+
+Entonces, el bloque de código equivalente a la definición de producto cartesiano "recursivo" queda:
+
+```rust
+pub fn fam_times<T: Clone>(a: &[&[T]]) -> Vec<Vec<T>> {
+    let mut res = Vec::new();
+
+    for i in 1..a.len() {
+        res = match i {
+            1 => times(a[0], a[1]).map(|e| vec![e.0, e.1]).collect(),
+            2.. => times(&res, a[i])
+                .map(|(mut vec, val)| {
+                    vec.push(val);
+                    vec
+                })
+                .collect(),
+            _ => unreachable!("Range is 0..n"),
+        };
+    }
+
+    res
+}
+```
+
+Esta definición de producto cartesiano de $n$ conjuntos se relaciona con la definición de $n$-tuplas en el sentido de que: $A_1 times A_2 times ... times A_n = {(x_1, x_2, ..., x_n) | (x_1 in A_1) and (x_2 in A_2) and ... and (x_n in A_n)}$ 
+
+== Ejercicios
+
+1. Da otra descripción a los siguientes conjuntos e indica aquellos que son infinitos. 
+
+$
+&a) {x | x "es entero y" 5 <= x <= 12} = { 5, 6, 7, 8, 9, 10, 11, 12 }\
+&b) {2, 4, 8, ...} = {x | x mod 2 = 0 } = { 2x | x in NN }", es infinito"\
+&c) "Todos los paises del mundo" = { "México", "Estados Unidos", "Canada", ... }
+$
+
+2. Dado que $S = {2, a, {3}, 4}$ y &R = {{a}, 3, 4, 1}&, indica si los siguientes puntos son verdaderos o falsos.
+
+$
+&a) "Falso"  &{a} in S\
+&b) "Verdad" &{a} in R\
+&c) "Verdad" &{a, 4, {3}} subset.eq S\
+&d) "Falso" &{{a}, 1, 3, 4} subset R\
+&e) "Falso" &R = S\
+&f) "Verdad" &{a} subset.eq S\
+&g) "Falso" &{a} subset.eq R\
+&h) "Verdadero" &emptyset subset R\
+&i) "Verdadero" &emptyset subset.eq {{a}} subset.eq R subset.eq E\
+&j) "Falso" &{emptyset} subset.eq S\
+&k) "Falso" &emptyset in R\
+&l) "Verdad" &emptyset subset.eq {{3}, 4}
+$
+
+3. Muestra que $(R subset.eq S) and (S subset Q) -> R subset Q$ siempre es verdadero. Es correcto reemplazar $R subset Q$ por $R subset.eq Q$? 
+
+    Si $R subset.eq S$ entonces tenemos dos escenarios posibles, en donde $R subset.neq S$ y donde $R = S$. El _peor_ de los casos es cuando $R = S$, pues es donde más elementos puede tener $S$, facilitando la violación de la condición.
+
+    Si $R = S$, entonces sabemos que si $S subset Q$, por lo tanto $R subset Q$ pues se tratan del mismo conjunto en esencia.
+
+    Es correcto remplazar $R subset Q$ por $R subset.eq Q$ pues ambos implican que $R$ es subconjunto de $Q$, aunque uno deja la posibilidad de que ambos sean iguales. Sin embargo, si se sabe que $R - Q != emptyset => R != Q$, entonces es conveniente escribirlo de la forma $R subset Q$.
+
+4. Obten $p(S)$ donde $S$ es:
+$
+&a)" " p({a, {b}}) = {emptyset, {a}, {{b}}, {a, {b}}}\
+&b)" " p({1, emptyset}) = {emptyset, {1}, {emptyset}, {1, emptyset}}\
+&c)" " p({X, Y, Z}) = {emptyset, {X}, {Y}, {Z}, {X, Y}, {X, Z}, {Y, Z}, {X, Y, Z}}
+$
+    
+5. Dado que $A = { x | "es entero y" 1 <= x <= 5 }, $
 
 == Relaciones <rela>
