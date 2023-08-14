@@ -106,6 +106,56 @@ Las bases de datos tienen datos, no información. Podemos explotar las bases de 
 
 == Objetos
 
-- Tabla/Entidad: Con objeto nos referimos a elementos que la base de datos sabe almacenar.
-- Vista: Es un sql que se almacena en la base de datos y se muestran como tabla. No se puede escribir en una vista, pero si se puede usar como una tabla.
-- Stored procedures.
+- *Tabla/Entidad*: Con objeto nos referimos a elementos que la base de datos sabe almacenar.
+- *Vista*: Es un sql que se almacena en la base de datos y se muestran como tabla. No se puede escribir en una vista, pero si se puede usar como una tabla.
+  
+  Las vistas son solo de escritura, se puede inventar campos, no está _materializado_ en ningun archivo o tabla, por lo que no hay dónde escribir.
+- *Stored procedures*: Código SQL almacenado en el servidor que no se muestra como tabla, sino que se ejecuta, es como una función, así que admite in y out.
+- *Jobs*: Como un _chron_ en Unix. Tiene un disparador (_trigger_) y un código que ejecuta. El código puede ser un _stored procedure_. Para respaldos, calculos, etc.
+- *Triggers*: Otro tipo de disparadores, asociado a eventos de lectura/escritura. Se asocia a las operaciones que pueden afectar la integridad. Por lo tanto, se suele usar cuando tenemos operaciones que puden alterar la integridad referencial de la base de datos. Tiene disparador (evento io) y código. 
+- *Constraints*: Reglas que podemos tener de relación entre tablas, que dejan condiciones para las operaciones con los datos que mantengan la integridad de la base de datos.
+- *Formulario*: Solo lo tiene Access, puedes guardar y mostrar/preguntar al usuario que rellene bases de datos.
+- *Usuarios*: Los _'usuarios'_ son contraseña/usuario configurado para dar permisos especificos a quienes ingresen a la base de datos. Lo que se refiere con que no son los mismos usuarios es que no hay un usuario 1:1.
+
+== ORM
+
+#rect[
+*Historia*: Parte de las prácticas que realizan las bases de datos para conservar sus clientes. Por eso existen bases de datos con planes tipo: Hago el estándard de SQL 92 y _esto más_. A estas modificaciones se les llama dialectos, haciendo a la vez más dificil migrar entre bases de datos.
+]
+
+#rect[
+*Patrones de diseño*: Debido a los patrones de diseño se pueden llegar a formas comunes de crear software, estos son los patrones de diseño.
+]
+
+No conviene realizar bases de datos que empleen la tecnología específica de la base de datos, como triggers y procedures.  Un _Object Relational Mapping_ provee una forma en que podemos usar con la misma interfaz distintas bases de datos.
+
+Si mi aplicación emplea un ORM podemos desarrollar aplicaciones sin necesidad de casarse con una base de datos especifica.
+
+== DBMS (SMBD en es.)
+
+Es un conjunto de varios procedimientos/programas para que podamos recuperar (}  } SELECT), describir (CREATE/ALTER) y manipular (INSERT/UPDATE/DELETE) datos que se almacenan en la base de datos.
+
+Esto de forma que se mantenga la:
+- integridad: que se mantenga valida la información y sus relaciones
+- confidencialidad: que solo pueda acceder quien tiene permiso a lo que tiene permiso
+- seguridad: asegurar los datos.
+
+
+== Funciones
+
+Lo mismo, describir, manipular y utilización (accessible) de los datos. Si los datos no llegan no hay chiste.
+
+- Interacción con el fs: Antes se especificaba SO pero ahora se confia en el nativo
+- Implantación se seguridad: Lo mismo de las operaciones peligrosas
+- Seguridad: Verifica que los accesos a la base de datos estn realizados por los usuarios. Verificar brechas de seguridad, monitorear.
+
+#rect(width: 100%)[El 60% de los ataques en las empresas son de empleados]
+
+= Términos
+
+- *Integridad referencial*: Hacer referencia a otro dato, lo que implica que el otro existe. Que las llaves foranes/primarias si esten relacionadas.
+- *Operacionesi fundamentales*: Leer, insertar, modificar, borrar
+
+= Proyecto
+
+Mostrar controles, todo facil de digerir, chance simular. Lo importante es extrar los datos.
