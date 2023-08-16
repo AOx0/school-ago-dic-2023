@@ -405,3 +405,103 @@ $
 5. Dado que $A = { x | "es entero y" 1 <= x <= 5 }, $
 
 == Relaciones <rela>
+
+= Gramáticas
+
+== Apuntes
+
+Una gramatica esta definida por una 4-tupla $(V_n, V_t, S, phi)$. Tiene un conjunto $V_n$ y $V_t$ donde ambos son distintos a $emptyset$. $V_n$ se conoce como conjunto de no terminales, en cambio $V_t$ se conoce como conjunto de los terminales.
+
+Definimos a $V = V_t union V_n$, también conocido como el simbolo distinguido o inicial de la gramática, donde $S in V_n$
+
+$phi$ es un conjunto de reglas de la gramatica, que tiene de la formula:
+
+$(V_t union V_n)^* V_n (V_t union V_n)^* -> (V_t union V_n)$
+
+Recorcemos que $*$ es el conjunto de todas las posibilidades.
+
+Puso en ejemplo, un identificador es una secuencia de caracteres que puede tener tales caracteres, no tiene espacios y puede empezar con a-Z o `_`, se usa para todo tipo de entes como variables, estructuras, etc.
+
+Chomsky define, por poner un ejemplo, al identificador como
+
+$
+V_n = {I, L D} ("No terminales")\
+V_t = {a, b, c, ..., z, 0, 1, 2, ..., 9} ("Terminales")\
+S = I ("Simbolo distinguido")\
+phi = {I -> L, I -> I L, I-> a|b|c|...|z, D -> 0, D -> 1, ..., D -> 9}
+$
+
+Donde $I -> L$ quiere decir que $I$ deriva en $L$. Entonces $I$ es el indificador de la gramatica, podemos cambiar esa $I$ por elementos hasta que en la parte derecha solo aparezcan identificadores $I -> L -> a$, o $I -> I L -> L L$, notemos como en el último paso remplazamos $I$ por $L$, pues en las reglas definidas en $phi$ especificamos que podemos sustituirlo, siempre y cuando no se trate de un digito, ejemplo $I -> I D -> I D D -> L D D$.
+
+Es pues la gramatica anterior lo que define formal identificador. Si queremos darle soporte, por ejemplo a otro caracter como `_` entonces simplemente lo agregamos a $V_t$.
+
+== Derivación directa
+
+Aqui no termina, describe lo que se llama _derivación directa_, si tenemos una gramática $G = (V_N, V_T, S, Phi)$, cuando se dice que $sigma, phi in V$, donde $sigma$ es una cadena de caracteres que tiene los caracteres permitidos. Decimos que $sigma$ deriva de "phi" si ?, por lo tanto $phi_1, phi_2 in V*$
+
+$y = phi.alt_1 alpha phi.alt_2$
+
+$r = phi.alt_1 beta phi.alt_2$
+
+$alpha -> beta e Phi$
+
+Si $I -> I L$, entonces $phi_1 I phi_2 -> phi_1 I  phi_2 L$
+
+Una derivación directa es hacer un cambio con una regla de la gramática.
+
+#rect(width: 80%)[Ver los ejemplos del libro]
+
+== Producción
+
+A aplicar multiples veces una derivación directas se le conoce como porducción.
+
+La cadena `si` produce `r`. $Sigma (=>) + r. $sigma =>() $+ r $, se pone `+` porque implica que se hizo por lo menos una derivación, es decir pasamos por una infinidad de sigmas (y) hasta poder llegar a simga (r) que es lo mismo a $y_1 => y_2 => ... r$
+
+Si no derivamos nada entonces queda que si = r. 
+
+Un conjunto de producción que parten siempre del simbolo distinguidor que va haciendo producciones hasta que no queden $sigma in V_n$. Entonces un lenguaje $L(G) = { sigma | S * => sigma and sigma in V^*_t   }$, entonces es el conjunto de cadenas? tales que todas parten del signo identificador y terminan en elementos que no pertenecen a los terminales.
+
+Ahora nos mostró una foto de Von Neumann y Openheimer que desarrollaron la primera computadora, con fines militares. Ahora nos muestra a la abuelita Cobol, Grace Hopper, que 
+
+== Lenguajes
+
+Todas las gramaticas son subconjuntos de otra.
+
+=== Sin restricciones
+
+Hay gramaticas que son sin reglas, no hay manera de escribir un sistema de reglas para ellas. Casi todos los lenguajes que hablamos son del tipo 1, *gramaticas sin restricciones*. Si no podemos describir con reglas en lenguaje no podemos escribir un compilador para el mismo.
+
+=== Dependientes del contexto
+
+Antes estan las gramaticas tipo 2, *dependientes del contexto*, por ejemplo el español, recordemos el ejemplo de "lo contó en el banco". Estas gramaticas tienen reglas de producción $alpha -> beta$ cumplen que la cantidad de elementos en alpha tiene que ser menor/igual que en beta ($|alpha| <= |beta|$) y además $alpha_1 beta in V^+$, es decir que puede tener en la parte derecha tiene que tener terminales. Tenemos que encontrar primero el terminal para ver que regla aplicar.
+
+Porque es una gramatica dependiente del contexto, no se refiere a la fórmula, a la definición, aino quw quiere que interpretemos la definición para ver qué pasa.
+
+La gramatica que estamos viendo del documento genera cadenas del tipo $a^n b^n c^n | n >= 1$, es decir, genera cadenas de $n$ caracteres _a_, $n$ cantidad de _b_s y $n$ canidad de _c_s. 
+
+Pone enfasis en que $V^+$ viene acompañado de $union$, lo que implica que se puede cumplirse o no. Por ejemplo una regla $a b c -> B B B $.
+
+Las gramaticas dependientes del contexto causan que cambiar de lugar los _statements_ se logran efectos distintos.
+
+=== Independientes del contexto
+
+El unico cambio es que $alpha in V_N$, y $beta in V^*$. Es decir, que en la cadena $alpha$ no deben existir no terminales. Por ejemplo la gramatica ${a^n b a^n| n >= 1}$. 
+
+=== Gramaticas regulares
+
+Lo ideal es, para Chomsky, que las gramaticas sean de tipo 4, gramaticas _regulaes_
+
+Donde $alpha$ menor que $beta$ y eso pero con una condición, $alpha === V_N$, es decir, que existe UN SOLO terminal. $beta$ a la vez debe ser de la forma 
+
+En una gramatica regular, segun entiendo, no deben coincidir el numero de terminales, pero si debe concidir con lo que nos dice.
+
+
+=== Ejemplo
+
+En el ejemplo los no terminales se escriben con parentesis cuadrado, los or separan entre reglas. La regla de factor tiene un terminal, parentesis un no terminal y al final un parentesis, lo que lo hace no ser una gramatica regular, no cumple las reglas.
+
+Ahora toca ver si es independiente del contexto, es decir ver que alhpa no tenga terminales, el modulo y que beta tenga cualquiera. Se cumple, por lo tanto es independiente del contexto.
+
+Buscando _ejemplos de gramaticas_.
+
+felix martinez dfmartin
