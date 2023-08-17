@@ -42,3 +42,15 @@ $]
 #[$< = {(x, y)|x, y in RR and x < y}$]\
 #[#text(size: 0.6em)[_Ejemplo de relación_]]
 #pagebreak()
+
+#[$D(S) = {x | (exists y)((x, y) in S)}$]\
+#[#text(size: 0.6em)[_Dominio de relación S_]]
+#pagebreak()
+
+#[$R(S) = {y | (exists x)((x, y) in S)}$]\
+#[#text(size: 0.6em)[_Rango de relación S_]]
+#pagebreak()
+
+#[$A^c = E - A$]\
+#[#text(size: 0.6em)[_*Complemento*: Lo que falta a $A$ para ser $E$_]]
+#pagebreak()

@@ -430,7 +430,7 @@ $
     $
 
 
-== Relaciones <rela>
+= Relaciones <rela>
 
 El concepto de una relaciòn es un concepto básico en matemáticas, asi como en el dia a dia. Asociado 
 El concepto de una relaciòn es un concepto básico en matemáticas, asi como en el dia a dia. Asociamos a _relación_  está el acto de comparar objetos que estan relacionados de una forma u otra. La habilidad de una computadora para realizar distintas tareas basada en el resultado de una comparación es otro punto importante empleado durante la ejecución de un programa típico. En esta sub-sección formalizaremos el concepto de relación y discutiremos los métodos empleados para representar una relación usando una matriz o su grafo. La matriz de relación es muy útil para determinar las propiedades de una relación y también para representar una relación en una computadora. Algunas propiedades básicas de una relEntre a de laación stTambién se mueasi como ciertas clases imporantes introducidas.
@@ -446,9 +446,25 @@ La palabra _relación_ sugiere algunos ejemplos familiares de relaciones tal com
 
 En matematicas las relaciones son denotadas de forma típica por símbolos especiales en lugar de letras mayúsculas (ejemplo $A$). Un ejemplo familiar es la relación "menir que" para los números relaes. Una relación esta denotado por $<$. De hecho, $<$ debería ser considerado como el nombre de un conjunto donde sus elementos son 2-tuplas. Más precisamente, la realción $<$ es $< = {(x, y)|x, y in RR and x < y}$
 
-=== Dominio
+== Dominio y Rango
 
-Digamos que $S$ es una relación binaria. El conjunto $D(S)$ contiene todos los objetos $x$ tales que para alguna $y$, entonces $(x, y) in S$ se le llama _domino_
+Digamos que $S$ es una relación binaria. El conjunto $D(S)$ contiene todos los objetos $x$ tales que para alguna $y$, entonces $(x, y) in S$ se le llama _domino_, es decir:
+
+$
+D(S) = {x | (exists y)((x, y) in S)}
+$
+
+En donde el símbolo $exists$ denota qualidad de existencia. De forma similar $R(S)$ es el conjunto de todos los objetos $y$ tales que para algun elemento $x$, se cumple $(x, y) n S$, a este conjunto se le llama el _rango_ de $S$, es decir:
+
+$
+R(S) = { y | (exists x)((x, y) in S)}
+$
+
+== Operaciones
+
+Debido a que se ha definido a una relación como un conjunto de 2-tuplas, es por lo tanto aplicar las operaciones usales de los conjuntos a los conjuntos de relaciones por igual. El conjunto resultante también estará compuesto por 2-tuplas que define algunas relaciones. Si $R$ y $S$ son dos relaciones, entonces $R sect S$ define una relación tal que $x(R sect S)y <=> x R y and x S y$
+
+
 
 = Gramáticas
 
