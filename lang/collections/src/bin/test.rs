@@ -4,10 +4,10 @@ fn main() {
     #[cfg(feature = "dhat")]
     let _profiler = dhat::Profiler::new_heap();
 
-    let a: &[u8] = &[2, 3, 1];
-    let b: &[u8] = &[4, 5, 1];
-    let c: &[u8] = &[2, 2];
-    let d: &[u8] = &[2, 3];
+    let a: &[char] = &['a', 'b', 'c', 'd', 'f', 'n', 'i'];
+    let b: &[char] = &['a', 'b', 'g'];
+    let c: &[char] = &['h', 'h', 'n'];
+    let d: &[char] = &['h', 'g'];
 
     println!("{:?}", a);
     println!("{:?}", b);
@@ -25,7 +25,7 @@ fn main() {
     println!();
 
     println!("x {:?}", times(&d, &d).collect::<Vec<_>>());
-    println!("f {:?}", fam_times(&[d, d, d]));
+    println!("f {:?}", fam_times(&[a, a, a]));
 
     println!();
     println!("f {:?}", fam_times(&[d]));

@@ -404,7 +404,51 @@ $
     
 5. Dado que $A = { x | "es entero y" 1 <= x <= 5 }, $
 
+6. Muestra las identidades:
+
+    + $
+    A sect A &= A\
+    &\
+    &"Si " A = {x | P(x)}", donde "P(x)"es un predicado que evalúa a 1 si es verdadero"\
+    A sect A &= {x | P(x) and P(x)}\
+    &= {x | P(x)[1 and 1]}\ 
+    &= {x | 1P(x)}\
+    &= {x | P(x)} = A\
+    $
+
+    + $
+    A sect emptyset &= emptyset\
+    &A = {x | P(x)}, emptyset = {x | x in.not E}\
+    A sect emptyset &= {x | P(x) and x in.not E }\
+    "Si" E &= A\
+    A sect emptyset &= {x | P(x) and x in.not {x | P(x)}}\
+    &= {x | P(x) and not P(x)}\
+    &= {x | P(x)(1 and not 1)}\
+    &= {x | 0P(x)}\
+    &= {x | 0}\
+    &"Y como el predicado es siempre 0, el conjunto estará vacío"
+    $
+
+
 == Relaciones <rela>
+
+El concepto de una relaciòn es un concepto básico en matemáticas, asi como en el dia a dia. Asociado 
+El concepto de una relaciòn es un concepto básico en matemáticas, asi como en el dia a dia. Asociamos a _relación_  está el acto de comparar objetos que estan relacionados de una forma u otra. La habilidad de una computadora para realizar distintas tareas basada en el resultado de una comparación es otro punto importante empleado durante la ejecución de un programa típico. En esta sub-sección formalizaremos el concepto de relación y discutiremos los métodos empleados para representar una relación usando una matriz o su grafo. La matriz de relación es muy útil para determinar las propiedades de una relación y también para representar una relación en una computadora. Algunas propiedades básicas de una relEntre a de laación stTambién se mueasi como ciertas clases imporantes introducidas.
+
+La palabra _relación_ sugiere algunos ejemplos familiares de relaciones tal como la relación padre a hijo, hermana a hermano, tio a sobrino. Los ejemplos familares en la aritmética son las relaciones tales como _menor que_, _mayor que_, y demás relaciones de igualdad entre dos números. También conocemos entre la relación entre en area de un trángulo equilatero y el tamaño de uno de sus lados o el area de un cuadrado y el tamaño de uno de sus lados. Estos son solo unos de los ejemplos de relaciones entre dos objetos.
+
+á el acto de compa
+rar objetos que estan relacionados de una forma u otra. La habilidad de una computadora para realizar distintas tareas basada en el resultado de una comparación es otro punto importante empleado durante la ejecución de un programa típico. En esta sub-sección formalizaremos el concepto de relación y discutiremos los métodos empleados para representar una relación usando una matriz o su grafo. La matriz de relación es muy útil para determinar las propiedades de una relación y también para representar una relación en una computadora. También se muestran algunas de las propiedades básicas de una relación asi como ciertas clases imporantes introducidas.
+
+La palabra _relación_ sugiere algunos ejemplos familiares de relaciones tal como la relación padre a hijo, hermana a hermano, tio a sobrino. Los ejemplos familares en la aritmética son las relaciones tales como _menor que_, _mayor que_, y demás relaciones de igualdad entre dos números. También conocemos entre la relación entre en area de un trángulo equilatero y el tamaño de uno de sus lados o el area de un cuadrado y el tamaño de uno de sus lados. Estos son solo unos de los ejemplos de relaciones entre dos objetos.
+
+#reading[A lo largo de la discusión consideraremos las relaciones, llamadas _relaciones binarias_, entre pares de objetos. Cualquier conjunto de pares ordenados define una relación binaria.] Llamamos a una relación simplemente relación. A veces es conveniente expresar un objeto particular ordenado, digamos $(x, y) in R$, donde $R$ es una relación, de la forma $x R y$.
+
+En matematicas las relaciones son denotadas de forma típica por símbolos especiales en lugar de letras mayúsculas (ejemplo $A$). Un ejemplo familiar es la relación "menir que" para los números relaes. Una relación esta denotado por $<$. De hecho, $<$ debería ser considerado como el nombre de un conjunto donde sus elementos son 2-tuplas. Más precisamente, la realción $<$ es $< = {(x, y)|x, y in RR and x < y}$
+
+=== Dominio
+
+Digamos que $S$ es una relación binaria. El conjunto $D(S)$ contiene todos los objetos $x$ tales que para alguna $y$, entonces $(x, y) in S$ se le llama _domino_
 
 = Gramáticas
 
@@ -455,11 +499,11 @@ Una derivación directa es hacer un cambio con una regla de la gramática.
 
 A aplicar multiples veces una derivación directas se le conoce como porducción.
 
-La cadena `si` produce `r`. $Sigma (=>) + r. $sigma =>() $+ r $, se pone `+` porque implica que se hizo por lo menos una derivación, es decir pasamos por una infinidad de sigmas (y) hasta poder llegar a simga (r) que es lo mismo a $y_1 => y_2 => ... r$
+La cadena `si` produce `r`. $Sigma (=>) + r. sigma =>() + r $, se pone `+` porque implica que se hizo por lo menos una derivación, es decir pasamos por una infinidad de sigmas (y) hasta poder llegar a simga (r) que es lo mismo a $y_1 => y_2 => ... r$
 
 Si no derivamos nada entonces queda que si = r. 
 
-Un conjunto de producción que parten siempre del simbolo distinguidor que va haciendo producciones hasta que no queden $sigma in V_n$. Entonces un lenguaje $L(G) = { sigma | S * => sigma and sigma in V^*_t   }$, entonces es el conjunto de cadenas? tales que todas parten del signo identificador y terminan en elementos que no pertenecen a los terminales.
+Un conjunto de producción que parten siempre del simbolo distinguidor que va haciendo producciones hasta que no queden $sigma in V_n$. Entonces un lenguaje $L(G) = { sigma | S^ast => sigma and sigma in V_t^ast   }$, entonces es el conjunto de cadenas? tales que todas parten del signo identificador y terminan en elementos que no pertenecen a los terminales.
 
 Ahora nos mostró una foto de Von Neumann y Openheimer que desarrollaron la primera computadora, con fines militares. Ahora nos muestra a la abuelita Cobol, Grace Hopper, que 
 
@@ -485,7 +529,7 @@ Las gramaticas dependientes del contexto causan que cambiar de lugar los _statem
 
 === Independientes del contexto
 
-El unico cambio es que $alpha in V_N$, y $beta in V^*$. Es decir, que en la cadena $alpha$ no deben existir no terminales. Por ejemplo la gramatica ${a^n b a^n| n >= 1}$. 
+El unico cambio es que $alpha in V_N$, y $beta in V^ast$. Es decir, que en la cadena $alpha$ no deben existir no terminales. Por ejemplo la gramatica ${a^n b a^n| n >= 1}$. 
 
 === Gramaticas regulares
 
