@@ -137,19 +137,58 @@ Es una consultora que realiza estudios a nivel mundial que se toma como referenc
 - Desde 2020 se habla de la ciber-resilencia.
 - Los que vulneran pueden tomar los artefactos vulnerado como arma.
 
+#rect[
+  *Nota*: Un solo provedor trae desventajas como que todos tengan las mismas vulnerabilidades, asi como que si el principal es atacado no tienes a donde moverte.
+]
+
+
 == Certificaciones
 
 Hay distintas certificaciones que van desde seguridad, inteligencia artificil, computo en la nube, seguridad. A nivel de persecpión económica un project manager ya no es tan valioso.
 
 Entre las certificaciones más solicitadas esta:
-- CISP: Para cargos altos
+- CISP: Para cargos altos, es para nivel diseño, es muy completo, incluye de todo. Es como una maestria
+  - Necesita 5 años de experiencia
+  - Estudios solo cuentan como un año en algunos casos
 - CISA: Auditoria de sistemas
 - OSCP, OSCE: Ofensivo
 - CEH: Certified hacker
+- EJPG: Pentester junior
 
-Ella de donde saca las cosas? 
+== Entidades certificadoras
+
+- ISC2: Muy valorado, hay ahora mismo uno abierto
+  - Certificado en Cibserseguridad: Básico, gratis (https://isc2.org/certifications/cc)
+- EC-Council
+  - Ethical Hacking Essentials
+  - Y más (https://www.eccouncil.org/cybersecurity-exchange/cyber-novice/free-cybersecurity-courses-beginners/)
+- ISACA
+- Offensive Security
+- Sans Institute
+
+
+#align(center)[
+#rect(width: 100%)[
+Los posgrados tienen más peso a largo plazo y en las oportunidades que se pueden tener pues aprendes a nivel profundo sobre los temas que se tratan.
+
+En las certificaciones solo se evalua herramientas y puntos escpecificos, esta bien tenerlas pero mejor primero maestria.
+]]
+
+#align(center)[
+#rect(width: 100%)[
+  No hay que quedarse en una sola herramienta.
+]]
+
+#align(center)[
+#rect(width: 100%)[
+  *Laboratorio*: Hack-mex 
+]]
 
 = Términos
 
 - 0Day: Vulnerabilidad de reciente creación, por lo que no hay un parche
+
+== Desventajas de un solo proveedor
+
+
 
