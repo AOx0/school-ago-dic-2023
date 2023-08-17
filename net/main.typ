@@ -196,3 +196,36 @@ Un diagrama proporciona una manera fácil de comprender cómo se conectan los di
 *Los diagramas de topología física* ilustran la ubicación física de los dispositivos intermedios y la instalación del cable, como se muestra en la figura. Puede ver que las habitaciones en las que se encuentran estos dispositivos están etiquetadas en esta topología física.
 
 *Los diagramas de topología lógica* ilustran los dispositivos, los puertos y el esquema de direccionamiento de la red, como se muestra en la figura. Puede ver qué dispositivos finales están conectados a qué dispositivos intermediarios y qué medios se están utilizando.
+
+== Configurar Switch y dispositivo final
+
+Se puede hacer que se muestren mensajes especificos a los usuarios que llegan a el prompt lo reciban
+
+```
+configure terminal
+banner motd #el mensaje del dia#
+```
+
+- `startup-config`
+
+  Es un archivo con todas las modificaciones que hemos hecho en la memoria `NVRAM`, que es no volatil.
+
+- `running-config`
+
+  Es un archivo en la RAM, que tiene las configuraciones hechas en la sesió, si queremos hacer los cambios permantentes debemos copiar la configuración a la `NVRAM`. 
+
+  ```
+  copy running-config startup config
+  ```
+  #rect[Podemos mostrar los valores de configuración de cualquiera de los archivos con `show running-config`]
+
+
+== DIrecciones IP
+
+La máscaras se usa para saber el tamaño de la red, mientras más 0s más grande es la red. 
+
+El gateway es la IP del dispositivo de capa-3, como un router, que le da la conectividad. El _gateway_ es la dirección IP de un dispositivo que le da conevtividad a los demás dispositivos, todos los dispositivos deben tener configurado el gateway, en el caso del switch, actua como una computadora más.
+
+Todos los dispositivos pueden ser condigurados para tener una dirección IPv4 e IPv6.
+
+hacer las 3 practicas y mandar las 8 capturas 

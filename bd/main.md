@@ -159,3 +159,46 @@ Lo mismo, describir, manipular y utilización (accessible) de los datos. Si los 
 = Proyecto
 
 Mostrar controles, todo facil de digerir, chance simular. Lo importante es extrar los datos.
+
+= Respaldo
+
+Tenemos un disco, hacemos una copia de respaldo, almacenamos las copias en lugares seguros, distribuidos, fáciles y rápidos de acceder. 
+
+En la nube puede ser un lugar pero hay que considerar los tiempos de subida/bajada.
+
+Se debe ejercitar el poder respaldar, simulacros donde se pruebe la facilidad de respaldo, todo el ciclo del mismo.
+
+El respaldo se debe hacer considerando la cantidad de información que entra, las operaciones importantes que suceden con la imporación, etc. Cada que se haga algo relevante.
+
+== Replicación
+
+En el caso de sistemas con cantidades de eventos relevantes altas en muy poco tiempo se debe tener _replicación_, otra(s) base(s) de datos que sean espejo en tiempo real.
+
+= Concurrencia
+
+El SMBD se encarga de manejar la concurrencia de forma que no haya colisiones, donde se corrompen los datos desde el nivel de memoria.
+
+= Transacciones
+
+Una transacción en el contexto de la base de datos es un conjunto de tareas para la base de datos. O se hacen exiosamente todas las tareas o se cancela el grupo como conjunto.
+
+= Componentes
+
+- Tenemos el *_gestor de seguridad_*, que valida que los usuarios (_de acceso_) pueden entrar cuando deben de entrar
+- El *_gestor de consultas_* que se encarga de recibir las consultas y los almacena en una cola
+- El *_optimizador de consultas_* verifica si puede modificar los queries (sin cambiar su efecto) para hacer el query más rápido, asi podemos atender más consultas en menos tiempo.
+- El *_planificador_*, o _scheduler_, el orquestador de tareas se encarga de dar prioridad a las consultas, es decir, influir en el orden en que las consultas se ejecutan para evitar colisiones, optimizar los recursos y reducir el tiempo de ejecución.
+- *_Procesador de consultas/transacciones_* ejecuta el query.
+- *_Gestor de archivos_*, que se encarga de administrar los archivos, en estos tiempos no se nota tanto pero en la antiguedad optimizaba la escritura en momento adecuado.
+- *_Buffers_*: Transfiere datos entre memoria y secundarios, los buffers son el paso intermedio, si se apaga el servidor es necesario que se almacene, pude ser parte de la RAM.
+- El *_Gestor de recuperación_* garantiza la consistencia de la base de datos.
+
+Los SMBD hoy en dia no se almacenan en SSDs, porque son caros y no alcanzan el tamaño que si pueden almacenar discos de estado sólido. Además se puede utilizar el esquema _raid_ que petmite almacenar copias entre multiples discos para siempre asegurar la información.
+
+
+
+
+
+
+
+
