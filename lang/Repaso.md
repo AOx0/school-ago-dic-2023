@@ -54,3 +54,40 @@ $]
 #[$A^c = E - A$]\
 #[#text(size: 0.6em)[_*Complemento*: Lo que falta a $A$ para ser $E$_]]
 #pagebreak()
+
+#[$V = {a, b, c, ...}$]\
+#[#text(size: 0.6em)[_Vocabulario_]]
+#pagebreak()
+
+#[$R^2$]\
+#[#text(size: 0.6em)[_Vocabula_]]
+#pagebreak()
+
+#[$R^+ = R union R^2 union R^3 union ...$]\
+#[#text(size: 0.6em)[_Conjunto cerradura (transitiva) si $R$ es una relación en $X$. No inlcuye $emptyset$_]]
+#pagebreak()
+
+#[$M_R$]\
+#[#text(size: 0.6em)[_Matriz que describe relación R_]]
+#pagebreak()
+
+#[$V^+ = V union V^2 union V^3 union ...$]\
+#[#text(size: 0.6em)[_Conjunto cerradura del vocabulario, no incluye ${epsilon}$_]]
+#pagebreak()
+
+#[$V^* = {epsilon} union V union V^2 union V^3 union ...$]\
+#[#text(size: 0.6em)[_Conjunto cerradura del alfabeto_]]
+#pagebreak()
+
+#[$L subset.eq V^*$]\
+#[#text(size: 0.6em)[_Definición de lenguaje_]]
+#pagebreak()
+
+#[$S -> N P" "V P$]\
+#[#text(size: 0.6em)[_Ejemplo de producción (regla gramática)_]]
+#pagebreak()
+
+#[$S => N P" "V P$]\
+#[#text(size: 0.6em)[_Aplicar una regla a derecha ($S$) para llegar a $N P" "V P$_]]
+#pagebreak()
+

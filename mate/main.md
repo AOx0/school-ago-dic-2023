@@ -1,3 +1,78 @@
+#outline(indent: 2em)
+
+#set heading(numbering: "1.")
+
+#set text(lang: "es", size: 10pt)
+
+#let reading(body) = strike(stroke: 1.1em + rgb("ff303030"),body)
+
+#show raw: set text(font: "JetBrainsMono NFM")
+
+= Evaluación
+
+```
+1er, 2do Parcial  ... 40 %
+Tareas            ... 10 %
+
+Proyecto          ... 25 % 
+Examen Final      ... 25 %
+```
+
+Correos acepta de 2 am a 2:30 am
+
+= Conjuntos de números
+
+== $CC$omplejos
+
+Los números complejos son una suma de una parte real $RR$ y una parte imaginaria $II m$, por ejemplo $2 + 3i$.
+
+
+=== $RR$eales
+
+Son un subconjunto de los números complejos $CC$ donde no existe la parte imaginaria, por lo que se puede representar en una recta numérica.
+
+==== Racionales ($Q$) (a/b)
+
+Se representan con un cociente de dos enteros, por ejemplo $1/3 = 0.33macron(3)$, también tenemos por ejemplo el $2 = 2/1$
+
+===== Enteros ($ZZ$)
+
+Que no tienen parte decimal
+
+====== Enteros negativos ($Z'$)
+
+====== Monoide (0)
+
+====== Naturales ($N$)
+
+Dependiendo de si se denota $NN_0$ o $NN_1$ se considera si el conjunto incluye al 0 o no, esto depende de si conviene o no para los trabajos de investigación. Entonces $NN_0 = {0, 1, 2, ...}$ y $NN_1 = {1, 2, ...}$
+
+======= Primo: Divide entre si y 1
+======= Compuesto: Los demás, 3+ divisores 
+
+
+===== Fraccionarios ($F$)
+
+Todos los demás que no son enteros
+
+==== $II$rracionales ($II = RR - Q$)
+
+Entre estos tenemos razones que no son repetitivas en su parte decimal, es decir que no hay patrones en la secuecia de números decimales como con $pi, sqrt(2), tau, e$
+
+También tenemos aqui todas las raíces de números primos.
+
+=== $II m$aginarios
+
+En los números imaginarios se entiende $i = sqrt(-1)$. Para descartar rápidamente numeros que no están expresados de la forma imaginaria solo tenemos que fijarnos en el _exponente_ de la raíz.
+
+$
+root(n, a)
+$
+
+En caso de que $a$ sea un número negativo y $n$ sea par, entonces podemos decir con seguridad que se trata de un número imaginario.
+
+En todos los demás casos el resultado obtenido será $c + 0i$, donde no existe una parte imaginaria. 
+
 = Introducción a conjuntos
 
 == Definición de conjunto
@@ -46,7 +121,32 @@ Ejemplo:
 
 *Diferencia simétrica*: $A triangle.t B$ o $A plus.circle B$ que es $(A - B) union (B - A)$, es decir, todo lo que no se repite en $A$ y $B$, es decir, todos los elementos que no son parte de $A sect B$ pero que esten en $A or B$.
 
-== Exposisición 
+== Ejercicio
+
+Sea 
+- $U = {x in NN | 1 <= x < 100} = {1, 2, 3, .., 99}$
+- $A = {x in NN | 3 < x <= 7 and x^2 - 5x + 6 = 0} = emptyset$
+- $B = {5, 6, 10, 11}$
+- $C = {x in NN | 2 < x and x < 11} = {x in NN | 2 < x < 11} = {3, 4, 5, 6, 7, 8, 9, 10}$
+
+a) $
+(A plus.circle B) union (B sect C)\
+&= {5, 6, 10, 11} union (5, 6, 10)\
+&= {5, 6, 10, 11}
+$
+
+b) $
+[(B - C) union (C - B)]^c sect (A-B)^c\
+&= (B plus.circle C)^c sect (A - B)^c\
+&= {3, 4, 7, 8, 9, 11}^c sect emptyset^c\
+&= {3, 4, 7, 8, 9, 11}^c sect E\
+&= {3, 4, 7, 8, 9, 11}^c\
+&= {1, 2, 5, 6, 10, 12, 13, .., 99}
+$
+
+donde $E$ es el universo y por lo tanto $A sect E = A$
+
+= Exposisición 
 
 10 min, teoria, comporbar con codigo, etc
 
