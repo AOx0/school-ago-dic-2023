@@ -184,11 +184,16 @@ En las certificaciones solo se evalua herramientas y puntos escpecificos, esta b
   *Laboratorio*: Hack-mex 
 ]]
 
+Algunas de las herramientas de seguridad de software est CSSLP
+
+== Ejercicio: nombrar 5 certificaciones de interés
+
+CSSLP, 
+
 = Términos
 
 - 0Day: Vulnerabilidad de reciente creación, por lo que no hay un parche
 
 == Desventajas de un solo proveedor
-
 
 
