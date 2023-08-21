@@ -190,10 +190,41 @@ Algunas de las herramientas de seguridad de software est CSSLP
 
 CSSLP, 
 
-= Términos
+= Estándares ISO/SEC de ISMS. Familia 27000
 
-- 0Day: Vulnerabilidad de reciente creación, por lo que no hay un parche
+Tenemos la familia de los 27000 que nos especifican
+- terminologia
+- especificaciones
+- buenas prácticas
+- guias de implementación de medidas de seguridad
+- medición, análisis, evaluación 
+- gestion de información privada
+- etc
 
-== Desventajas de un solo proveedor
+#rect[
+ _*Seguridad de la información vs privacidad*: De la información implica todas las formas, como física, los discos, lo que hablan las personas, etc sobre la información que debemos proteger. En cambio la privacidad lo que hace es que se protegen los datos que permiten identificar personas._
+]
+
+Las certificaciones son 27001, 27002, 27003, 27004, 27005, 27701:2019
+
+== Más categorías del 27000:2018
+
+#rect[
+_*Tarea* entrar en la pagina del ISO e identificar las categorías_
+]
+
+Tenemos:
+- Soporte y control: 27002, 27003, 27004, 27005
+- Controles especificos para diversos sectores: 27010, 27011, 27013, 27015, 27017, 27019
+- Auditoria y cerrificación: 27006, 27007, 27008, 27009
+- Economia y gobernabilidad: 27014, 27016
+
+= NIST, y demás estándares referencia
+
+- NIST: Dictamina estándares que aplican para los Estados Unidos (ver 800-61, )
+- 
 
 
+== Comandos 
+
+- `netstat -autopna`: Muestra la actividad 
