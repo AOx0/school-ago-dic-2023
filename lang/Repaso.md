@@ -91,3 +91,18 @@ $]
 #[#text(size: 0.6em)[_Aplicar una regla a derecha ($S$) para llegar a $N P" "V P$_]]
 #pagebreak()
 
+#[$V^* N V^* -> V^*$]\
+#[#text(size: 0.6em)[_Tipo 0 de gramática, no hay restricciones_]]
+#pagebreak()
+
+#[$alpha N beta -> alpha gamma beta$]\
+#[#text(size: 0.6em)[_Tipo 1 de gramática, el tamño del derivado debe ser igual o menor ($|alpha N beta| <= |alpha gamma beta|$), hay contexto ($alpha$, $beta$)_]]
+#pagebreak()
+
+#[$A -> alpha$]\
+#text(size: 0.6em)[_Tipo 3 de gramática. No hay contexto, en el lado derecho hay solo un $V_T$, $alpha in V^*$_]
+#pagebreak()
+
+#[$A -> alpha B$]\
+#text(size: 0.6em)[_Tipo 3 de gramática. No hay contexto, en el lado derecho hay solo un $V_T$_]
+#pagebreak()

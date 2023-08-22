@@ -488,7 +488,7 @@ $
 V_n = {I, L D} ("No terminales")\
 V_t = {a, b, c, ..., z, 0, 1, 2, ..., 9} ("Terminales")\
 S = I ("Simbolo distinguido")\
-phi = {I -> L, I -> I L, I-> a|b|c|...|z, D -> 0, D -> 1, ..., D -> 9}
+phi = {I -> L, I -> I L, I-> a|b|c|...|z, D -> 0, D -> 1, ..., D -> 9}("Reglas de producción")
 $
 
 Donde $I -> L$ quiere decir que $I$ deriva en $L$. Entonces $I$ es el indificador de la gramatica, podemos cambiar esa $I$ por elementos hasta que en la parte derecha solo aparezcan identificadores $I -> L -> a$, o $I -> I L -> L L$, notemos como en el último paso remplazamos $I$ por $L$, pues en las reglas definidas en $phi$ especificamos que podemos sustituirlo, siempre y cuando no se trate de un digito, ejemplo $I -> I D -> I D D -> L D D$.
