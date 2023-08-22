@@ -52,7 +52,7 @@ $]
 #pagebreak()
 
 #[$A^c = E - A$]\
-#[#text(size: 0.6em)[_*Complemento*: Lo que falta a $A$ para ser $E$_]]
+#[#text(size: 0.6em)[_*Complemento*: Lo que falta a $A$ para ser el universo ($E$)_]]
 #pagebreak()
 
 #[$V = {a, b, c, ...}$]\

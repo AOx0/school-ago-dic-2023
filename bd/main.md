@@ -196,9 +196,62 @@ Una transacción en el contexto de la base de datos es un conjunto de tareas par
 Los SMBD hoy en dia no se almacenan en SSDs, porque son caros y no alcanzan el tamaño que si pueden almacenar discos de estado sólido. Además se puede utilizar el esquema _raid_ que petmite almacenar copias entre multiples discos para siempre asegurar la información.
 
 
+= IP y puerto
+
+El puerto da un identificador a los servicios y programas para que puedan recibirse y enviarse los paquetes asignando a un puerto distinto cada aplicación.
 
 
+= Join 
+
+Por medio de un producto cruz:
+```sql
+SELECT 
+  productCode, productName, 
+  productlines.productLine, 
+  textDescription 
+FROM products, productlines
+WHERE 
+  (productlines.productLine = 'Trains' OR productlines.productLine = 'Planes') 
+  AND productlines.productLine = products.productLine;
+```
+
+En las bases de datos los AND son como multiplicación, los OR son como suma, entonces no es lo mismo $(a + b) * c$ o $a + bc$
+
+Siguiendo con eso el sql anterior se pudo haber escrito como:
 
 
+```sql
+SELECT 
+  productCode, productName, 
+  productlines.productLine, 
+  textDescription 
+FROM products, productlines
+WHERE 
+  (productlines.productLine IN ('Trains', 'Planes') 
+  AND productlines.productLine = products.productLine;
+```
+
+A la hora de hacer el proyecto vamos a querer acumular de acuerdo a la caracteristica, max, min, sum, count, etc
+
+```sql
+SELECT 
+  COUNT(1) as 'Number', 
+  AVG(buyPrice) as 'Buy Avg' 
+FROM products, productlines
+WHERE 
+  productlines.productLine IN ('Trains', 'Planes') 
+  AND productlines.productLine = products.productLine
+GROUP BY 
+  productlines.productLine;
+```
 
 
+Otro ejemplo:
+
+```sql
+SELECT 
+  COUNT(1) AS Numero, productLine
+FROM products
+GROUP BY productLine  
+ORDER BY `Numero` DESC
+```
