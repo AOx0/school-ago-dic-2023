@@ -229,3 +229,44 @@ El gateway es la IP del dispositivo de capa-3, como un router, que le da la cone
 Todos los dispositivos pueden ser condigurados para tener una dirección IPv4 e IPv6.
 
 hacer las 3 practicas y mandar las 8 capturas 
+
+
+== Mascara
+
+Podemos representar la mascara de la forma decimal o de prefijo, es decir `255.0.0.0` o `32/8`, que lo mismo y quiere decir que son 8 bits sobre los 32 que se usan de mascara. Siempre son 1s seguidos y despues son solo 0s, no puede darse `1011_1111.0000_0000.0000_0000.0000_0000`
+
+Cuando en la IPv6 se selecciona que el prefijo de la subnet son, por poner un ejemplo, 64, quiere decir que los primeros 64 bits son con valor `1`. 
+
+Para calcular el tamaño de la red podemos usar la máscara:
+
+$
+  2^"numero de 0s en la ip"-2
+$
+
+Por ejemplo con la máscara `255.255.0.0` tenemos `16` bits que son 0, es decir $2^16 - 2$
+Otro ejemplo `255.255.255.0` o `/24` son $254$ dispositivos.
+
+Un router puede dar gateways a distintas computadoras, la importante para conocer el gateway es al que está conectado la PC.
+
+El `::` significa todo lo que falte por conocer, en este caso significa porner todo lo que haga falta para ser 0s que cumplan con el número de hextetos, o sea 8? 
+
+En la IPv4 se usan 4 octetos de 8 bits, en cambio en IPv6 se usan hextetos (hexadecimal), son 8 con 16 bits en cada uno. 
+
+Un solo hexteto esta separado por `:`, no confundir con `::`
+
+Hay dos modos de configurar la red, como configurar la red a mano o hacerlo de forma DHCP.
+
+
+Interfaz virtual: tenemos distintas capas
+- Capa 1: Hardware
+- Capa 2: Sowftware + Hardware, aqui hay switches, se usa la dirección MAC
+  No hay ningun tipo de configuración sobre IP, hay una interfaz logica del switch, que no es de hardware pero permite adminsitrarlo remoto
+  ```
+    configure terminal
+    interface vlan 1
+    ip address <ip> <mascara>
+    no shutdown
+  ```
+
+  Con eso logramos poenr una IP a la vlan 1, que es una puerta virtual del switch, con la que va a responder, un ejemplo, a alguien no le da red, hacemos ping a todos los switches y vemos cual está apagado
+- Capa 3: 
