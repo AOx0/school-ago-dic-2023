@@ -1,0 +1,20 @@
+sscp:
+  type: Web
+  name: ISC2
+  title: Systems Security Certified Practitioner
+  url: https://www.isc2.org/Certifications/SSCP
+
+cams:
+  type: Web
+  title: Certified Access Management Specialist
+  url: https://identitymanagementinstitute.org/cams/
+
+dca:
+  type: Web
+  title: Docker Certification
+  url: https://training.mirantis.com/certification/dca-certification-exam/
+
+spf:
+  type: Web
+  title: S-SPF Certification
+  url: https://www.seco-institute.org/certifications/secure-software-track/foundation/

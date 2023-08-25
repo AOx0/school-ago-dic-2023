@@ -54,7 +54,7 @@
   v(1fr)
 
   pagebreak()
-  outline(indent: true)
+  // outline(indent: true)
 
   // Main body.
   set par(justify: true)

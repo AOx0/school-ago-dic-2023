@@ -224,6 +224,20 @@ Tenemos:
 - NIST: Dictamina estándares que aplican para los Estados Unidos (ver 800-61, )
 - 
 
+Con las _rainbow_ tables se pueden hacer ataques de fuerza bruta que permiten encontrar colisiones, si se encuentra la colision se puede descifrar la contraeña ? Las _rainbow tables_ es la base de datos por las que comparamos hashes
+
+Probablemente nos den una lista de hashes y debemos encontrar la contraseña y Jon de Ripper en linux opcrack 
+
+
+El NIST tambien emite certificados, por ejemplo en NIST 800-61 que trata sobre como reaccionar a indicentes. Tenemos que hacer lo mismo
+
+El ISO y el NIST son diferentes en el tema de que ISO es internacional 
+
+Los frameworks nos permiten 
+
+Ejemplo, un banco que tiene presencia en otro paises necesitará de servicios en la nube, asi que hay que mantener el sistema que realiza las transacciones disponibles al 100% del tiempo.
+
+Hay que alinear las medidas al negocio. Se necesita diseñar y utilizar sistemas de gestion. Evaluar los riesgos
 
 == Comandos 
 
