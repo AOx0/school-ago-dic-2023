@@ -150,4 +150,61 @@ donde $E$ es el universo y por lo tanto $A sect E = A$
 
 10 min, teoria, comporbar con codigo, etc
 
+= Fuzzy set mapping
 
+Los conjuntos difusos se utilizan más para inteligencia artificial, se establecen dos limites, uno inferior y otro superior
+
+```python
+"""
+Implementa un algoritmo de mapeo de conjuntos difusos
+
+Args:
+    x: El valor de entrada
+    a: Limite inderior del conjunto difuso
+    b: Limite superior del conjunto difuso
+    c: La pendiente dle conjunto difuso
+
+Devuelve el valor de salida del mapero de conjunto difuso
+
+Ejemplo fuzzy_set_mapping(0.5, 0, 1, 1)
+"""
+def fuzzy_set_mapping(x, a, b, c):
+    # No se está usando c
+    if x < a:
+        return 0
+    elif x > b:
+        return 1
+    else:
+        return (x - a) / (b - a)
+```
+
+El código tiene dos parámetros, el limite inferior y superior (0 y 1), entonces esta función se encarga de decir si alguien está o no en el conjunto, en caso de que no puede dar un intervalo, que puede servir de preferencia.
+
+Ejemplo Taylor Swift tiene una holgura de 0.9, The Weekend 0.7, Peso Pluma 0.5. Es asi que la pendiente nos da una holgura para estar posicionado entre si o no, ser famoso esta distribuido en el intervalo dado de 0 a 1.
+
+En el conjunto difuso se le da la oportunidad de entrar en el limite inferior y superior con una holgura dada.
+
+La holgura se asigna dependiendo de la actividad. 
+
+Ejemplo de pedazos de coche, un pistón no puede tener mucha diferencia, ni siquiera milimetrico, este es un ejemplo de diferencia, de holgura que hay entre las piezas. La holgura y tolerancia se la damos para determinar si cierto objeto puede ser elemento a un dado conjunto.
+
+#rect[
+*Tarea*: En la tarea hay que describir qué está haciendo, están considerados como aptos para pertenecer al conjunto hasta cierto punto, hay que decir de qué nos serviría en nuestra carrera, las modificaciones que haríamos y explicarlo.
+]
+
+= Temas de investigación
+
++ Resolver sistemas de ecuaciones lineales con el metodo de gauss no se que acelerado, en cualquier sistema se le puede meter una impedancia para acelerar el procedimiento
++ Integrar funciones multiples por el metodo se simpson 3/4 y 1/2
++ Resolver ecuaciones 
++ Ecuaciones lineales por el metodo de roca meta no se que verga
++ Resolver ecuaciones parciales por el metodo de diferencias finitas
+
+- Como hacer el metodo, como se resuleve matematicamente, tenemos que saber el principio, y hacer el código.
+
+1. Como calcular la raiz de un polinomio 2500 iteraciones
+1. Explicar qué son los métodos cerrados y métodos abiertos, bien detallado y las condiciones del intervalo que trabajan, de ahi:
+    - Metodos cerrados: El método de disección solamente
+    - Método abierto: El método de la secante y el método de newton-rapson
+    - Apliccación, el código, cómo lo hicimos, qué habilita
+    - 2500 iteraciones
