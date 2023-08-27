@@ -1,26 +1,30 @@
 // use fuzzy_match::*;
-type F = dashu_ratio::RBig;
-use dashu_float::{round::Rounding, DBig};
+
+type F = fraction::BigFraction;
 
 fn main() {
     #[cfg(feature = "dhat")]
     let _profiler = dhat::Profiler::new_heap();
 
-    let mut p = F::from(10);
+    let mut p = F::from(100);
     let sr = SR::new(
-        &|x: F| x.pow(2) - F::from(2),
-        &|x| F::from(2u64) * x,
+        &|x: F| x.clone() * x - F::new(2u64, 1u64),
+        &|x| F::new(2u64, 1u64) * x,
         p.clone(),
     )
-    .with_iter(2500);
+    .with_iter(15);
 
+    const P: usize = 200;
+
+    let mut p = format!("{:.P$}", p);
     for (i, s) in sr.into_iter().enumerate() {
-        if p == s {
-            println!("Equal sol iter {i}, val: {s:.60}");
+        let res = format!("{:.P$}", s);
+        if res == p {
+            println!("Equal sol iter {i}, val:\n{}", res);
             break;
         }
-        p = s.clone();
-        println!("{:.60?}", s.to_f64_fast());
+        println!("{res}");
+        p = res;
     }
 }
 
