@@ -1,5 +1,5 @@
 
-#let project(title: "", authors: (), date: none, materia: none, body) = {
+#let project(title: "", authors: (), date: none, materia: none, index: false, body) = {
   // Set the document's basic properties.
   set document(author: authors.map(a => a.name), title: title)
   set page(numbering: "1", number-align: center)
@@ -54,7 +54,9 @@
   v(1fr)
 
   pagebreak()
-  // outline(indent: true)
+  if index {
+    outline(indent: true)
+  }
 
   // Main body.
   set par(justify: true)

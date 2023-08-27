@@ -18,3 +18,16 @@ spf:
   type: Web
   title: S-SPF Certification
   url: https://www.seco-institute.org/certifications/secure-software-track/foundation/
+
+iso:
+  type: Book
+  title: Information technology — Security techniques — Information security management systems — Overview and vocabulary
+  year: 2018
+  organization: ISO/IEC JTC 1/SC 27
+
+iso15:
+  type: Web
+  title: SO/IEC TR 27015:2012. Information technology — Security techniques — Information security management guidelines for financial services
+  year: 2012
+  organization: ISO/IEC JTC 1/SC 27
+  url: https://www.iso.org/standard/43755.html
