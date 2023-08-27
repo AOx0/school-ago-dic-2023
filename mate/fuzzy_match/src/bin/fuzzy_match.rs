@@ -1,15 +1,15 @@
 // use fuzzy_match::*;
 
-use num::BigRational;
+type F = fraction::Fraction;
 
 fn main() {
     #[cfg(feature = "dhat")]
     let _profiler = dhat::Profiler::new_heap();
 
-    let mut p = BigRational::from_float(10.).unwrap();
+    let mut p = F::from(10);
     let sr = SR::new(
-        &|x| x.pow(2) - BigRational::from_float(612.).unwrap(),
-        &|x| BigRational::from_float(2.).unwrap() * x,
+        &|x: F| (x * x) - F::new(612u64, 1u64),
+        &|x| F::new(2u64, 1u64) * x,
         p.clone(),
     )
     .with_iter(5000);
@@ -20,24 +20,20 @@ fn main() {
             break;
         }
         p = s.clone();
-        println!("{:.500}", s);
+        println!("{:.60}", s);
     }
 }
 
 struct SR<'a> {
-    f: &'a dyn Fn(BigRational) -> BigRational,
-    fp: &'a dyn Fn(BigRational) -> BigRational,
-    sol: BigRational,
+    f: &'a dyn Fn(F) -> F,
+    fp: &'a dyn Fn(F) -> F,
+    sol: F,
     iter: Option<usize>,
 }
 
 impl<'a> SR<'a> {
     #[must_use]
-    fn new(
-        f: &'a dyn Fn(BigRational) -> BigRational,
-        fp: &'a dyn Fn(BigRational) -> BigRational,
-        guess: BigRational,
-    ) -> Self {
+    fn new(f: &'a dyn Fn(F) -> F, fp: &'a dyn Fn(F) -> F, guess: F) -> Self {
         Self {
             f,
             fp,
@@ -54,7 +50,7 @@ impl<'a> SR<'a> {
 }
 
 impl<'a> Iterator for SR<'a> {
-    type Item = BigRational;
+    type Item = F;
     fn next(&mut self) -> Option<Self::Item> {
         matches!(self.iter, Some(x) if x > 0).then(|| {
             *self.iter.as_mut().unwrap() -= 1;
