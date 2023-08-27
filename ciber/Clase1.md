@@ -239,6 +239,32 @@ Ejemplo, un banco que tiene presencia en otro paises necesitará de servicios en
 
 Hay que alinear las medidas al negocio. Se necesita diseñar y utilizar sistemas de gestion. Evaluar los riesgos
 
+== El error no solo es de computadoras
+
+La famosa capa 8, la persona, es el eslavón más debil, puede ser vulnerado fácilmente, por lo que se necesita mucha capacitación para las personas en el entorno. Un ejemplo muy famoso es el de Kevin Nip..algo que aseguraba que podia entrar a cualquier computadora sin hacer nada en el lado de ella.
+
+NoB4 vende cursos de consciencia
+
+- *Identificar*
+- *Proteger*
+- *Detección:* Contamos con herramientas como antivirus o elementos de monitoreo para saber cuando hay eventos, dependiendo del análisis de los eventos podemos determinar si se trata de un incidente
+- *Responder*
+- *Recuperar*
+
+Se debe informar al INAI si hay incidentes por ley, y después se debe realizar la respuesta correspondiente 
+
+== Como realizar un ataque 
+
+1. *Reconocimiento*: (OSINT) Identificar la estructura que está expuesta de la organización
+  - Realizar una audotiria, buscar información en redes, o deep-web
+  - El reconocimiento es pasivo, es empaparnos de información
+  - OSINT: Obtener
+2. *Escaneo*: El escaneo nunca es pasivo
+
+https://securitytrails.com/blog/google-hacking-techniques
+
 == Comandos 
 
 - `netstat -autopna`: Muestra la actividad 
+- `appliance`: Una computadora/servidor que está dedicado a realizar una sola función. Por ejemplo tenemos un servidor que se usa para enviar actualizaciones a toda la org 
+- `OSINT`: Open Source Intelligence, busqueda de información en fuentes abiertas
