@@ -1,6 +1,6 @@
 // use fuzzy_match::*;
-
-type F = fraction::Fraction;
+type F = dashu_ratio::RBig;
+use dashu_float::{round::Rounding, DBig};
 
 fn main() {
     #[cfg(feature = "dhat")]
@@ -8,11 +8,11 @@ fn main() {
 
     let mut p = F::from(10);
     let sr = SR::new(
-        &|x: F| (x * x) - F::new(612u64, 1u64),
-        &|x| F::new(2u64, 1u64) * x,
+        &|x: F| x.pow(2) - F::from(2),
+        &|x| F::from(2u64) * x,
         p.clone(),
     )
-    .with_iter(5000);
+    .with_iter(2500);
 
     for (i, s) in sr.into_iter().enumerate() {
         if p == s {
@@ -20,7 +20,7 @@ fn main() {
             break;
         }
         p = s.clone();
-        println!("{:.60}", s);
+        println!("{:.60?}", s.to_f64_fast());
     }
 }
 
