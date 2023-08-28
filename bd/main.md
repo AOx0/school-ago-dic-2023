@@ -255,3 +255,14 @@ FROM products
 GROUP BY productLine  
 ORDER BY `Numero` DESC
 ```
+
+#rect[
+  *Transacción*: Se ejecutan todos o ninguno, bloque de instrucciones
+]
+
+== Tipos de SQL
+
+1. DDL: Data Definition Language, permite construir nuevos objetos, elementos de la base de datos.
+2. DML: Todos los comandos de SQL que nos permiten administrar los datos en si
+3. DCL: Para definir permisos, de control
+4. DTC: Control de transacción, lo necesario para decir un conjunto de operaciones.

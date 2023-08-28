@@ -255,11 +255,11 @@ Se debe informar al INAI si hay incidentes por ley, y después se debe realizar 
 
 == Como realizar un ataque 
 
-1. *Reconocimiento*: (OSINT) Identificar la estructura que está expuesta de la organización
+1. *Reconocimiento/Identificación*: (OSINT) Identificar la estructura que está expuesta de la organización
   - Realizar una audotiria, buscar información en redes, o deep-web
   - El reconocimiento es pasivo, es empaparnos de información
   - OSINT: Obtener
-2. *Escaneo*: El escaneo nunca es pasivo
+2. *Escaneo/Enumeración*: El escaneo nunca es pasivo. Tanto el escaneo como el reconocimiento son clave pues son las bases para poder desarrollar lo màs posible el resto de etapas relacionadas con el ataque, si no 'reconocemos' algo, no podemos hacer algo con el
 
 https://securitytrails.com/blog/google-hacking-techniques
 
