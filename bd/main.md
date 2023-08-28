@@ -215,7 +215,7 @@ WHERE
   AND productlines.productLine = products.productLine;
 ```
 
-En las bases de datos los AND son como multiplicación, los OR son como suma, entonces no es lo mismo $(a + b) * c$ o $a + bc$
+En las bases de datos los AND son como multiplicación, los OR son como suma, entonces no es lo mismo $(a + b) * c$ o $a + b c$
 
 Siguiendo con eso el sql anterior se pudo haber escrito como:
 
@@ -313,4 +313,37 @@ Recordemos que el DBMS garantiza:
 
 Estos principios son amenazados por:
 - Ataque por fuerza bruta: Intentar determinar algo (como contraseña) por medio de prueba y error de forma automatizada. Por lo general se hace con un diccionario de valores, similar al de hash.
-- Robo por sniffing: 
+- Robo por sniffing: Asi como wireshark, que permite ver el tráfico que hay en un medio. Aunque no podemos prohbir los _sniffers_, podemos cifrar de punta a punta los datos que se transportan, como usando `HTTPS`. Hoy en día es muy facil y esta normalizado.
+- Propagación por URL: Mandar información sensible como sesiones mandadas por URL, permite identificarse como necesario.
+
+#rect[
+  *Contexto propagación por URL*
+  
+  `HTTP` sirve para la transferencia de archivos (información), de hecho, originalmente estaba pensando para ser del estilo _broadcast_, no estaba pensado para saber quién se está conectano, solo para enviar datos. 
+
+  Otro ejemplo contrario es `FTP`, que es un servicio con _estado_, es decir que sabe a quién se conecta y que puede hacer. HTTP es entonces un servicio sin estado.
+
+  Para lograr automatización se invita el concepto de _sesión_, que es un número que se intercambia constantemente para hacer la identificación del usuario y servirle los datos.
+
+  Las sesiones se ocurrio poner los datos del estado en una cookie. Una cookie es un archivo de texto, asociado a un dominio, que puede leer y modificarla. Cada que hay una solicitud se mandan/intercambian las cookies de forma constante.
+
+  A algunos desarrolladores se les ocurrio poder mandar la sesión por la URL, lo que abre una infinidad de posibilidades para ataques. *_Hay que asegurarnos de que estos datos solo se transfieren por cookies_*
+]
+
+- Robo en servidor compartido: Ponemos una maquina grande y te rento un cacho de la misma, en este método original no habia forma de virtualización ni de contener, lo que permite a los demás hacer acciones que permiten realizar operaciones como otros usuarios, usando sus recursos. Un ambiente compartido da la posibilidad de que pase.
+- Robo por Cross-Site Scripting: En cuanto tenemos formularios, se implica que los datos serán procesados en el servidor. En este tipo de formularios se pueden enviar comandos, que buscan atacar el servidor inyectando codigo malicioso. Esto se evita sanitizando, entendiendo la gramática de los datos ideales y no aceptando datos con caracteres que puedan ingresar codigo.
+- Inyección de SQL: Similar, se inyecta SQL que es procesado como llegó en el servidor, mostrando datos que no se deberían ver.
+- Cross-Site Request Forgery: A los formularios le ponemos un numero de folio, si no generamos nosotros ese identificador, no aceptamos los datos.  
+
+
+=== Incidencias evitables
+
+1. Passwords débiles, por defecto: Es totalmente evitable y deberia hacerse a toda costa.
+#rect[Julian Asagne, fundador de WikiLeaks, logró entrar a servidores "ultra-protegidos" sin contraseña]
+2. Preferencia de privilegios de usuario por privilegios de grupo: Tenemos un usuario al que le asignamos privilegios que son de acuerdo a un grupo, cuando quitamos al usuario del grupo nos aseguramos que pierde todo el privilegio del grupo de privilegios.
+3. Caracteristicas de base de datos innecesarios: Poner todo los plugins de una base de datos solo agrega más piedras a la carga, es mejor dejar lo que se usa y se sabe como se usa.
+4. Configuracion de seguridad ineficiente: Si a todos le damos permiso de lectura/escritura, entonces todo puede valer. Dale exactamente lo que necesita a cada usuario.
+5. Desbordamiento de Buffer: Con un sistema mal configurado, estamos metiendo más datos de los necesarios y de un tipo que no corresponde. Habria que ver la manera de evitar ese tipo de problemas, como restringir el tamaño.
+  - Hacer que el sistema sea tolerante a fallos, y que verifique.
+  - Que el error no salga en pantalla, que solo mande un error, cuando estemos en desarrollo habilitamos todas las alertas y mensajes para los desarrolladores, pero en producción que solo sea lo necesario pensando en el usuario final.
+6. 
