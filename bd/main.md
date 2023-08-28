@@ -259,6 +259,9 @@ ORDER BY `Numero` DESC
 #rect[
   *Transacción*: Se ejecutan todos o ninguno, bloque de instrucciones
 ]
+#rect[
+  *Amenazan la integridad*: Delete, drop, update
+]
 
 == Tipos de SQL
 
@@ -266,3 +269,48 @@ ORDER BY `Numero` DESC
 2. DML: Todos los comandos de SQL que nos permiten administrar los datos en si
 3. DCL: Para definir permisos, de control
 4. DTC: Control de transacción, lo necesario para decir un conjunto de operaciones.
+
+
+=== DDL
+
+- `CREATE`
+
+=== DML
+
+- `ALTER`: Permite alterar un dato ya existente, si cambiamos un dato, hay que encargarnos de que en todos lados esté congruente
+- `DROP`: Borra contenido y tabla
+- `TRUNCATE`: Si queremos borrar todo el contenido de una tabla, no la tabla en si
+- `LOCK TABLE`: Mientras esté bloqueado un elemento no se puede acceder mientras este bloqueado
+  - `Compartido`: Permites solo lectura
+  - `Absoluto`: No permites hacer nada
+  - Se puede usar al hacer transacciones, al generar indices, etc.
+
+
+=== DCL : Son de control
+
+- `GRANT`: Da privilegios a un usuario para que pueda realizar ciertas acciones
+- `REVOKE`: Elimina privilegios para un usuario
+
+#rect[Alternativa a borrar en sí podemos usar banderas que indican si una cosa está oculta, en realidad borrar no hace nada, solo se borran los datos en si cuando se usa `PACK`, que elimina los bits vacios]
+
+=== TCL : Transacción
+
+#rect[Las operaciones se hacen en un espacio de memoria aparte, que hace que los cambios no se efectuen hasta que demos la oredn]
+
+- `COMMIT`: Efectua en la base de datos el conjunto de cambios, todas las operaciones que hicimos, materiaízalas.
+- `ROLLBACK`: Descarta los cambios en el espacio temporal de una transacción
+
+== Seguridad, Permisos, Privilegios
+
+La seguridad es necesaria en toda la cadena que forma una organización, incluyendo en las bases de datos. 
+
+En los 90 la internet se hace publica/comercial. Con esto, las amenazas que se presentaban aumentaban, pues ahora hay comunicación con fuentes externas no confiables.
+
+Recordemos que el DBMS garantiza:
+- Integridad: Que la información sea veridica y correcta
+- Disponibilidad: La información es accessible
+- Confidencialidad: Solo quienes tienen que lo pueden ver
+
+Estos principios son amenazados por:
+- Ataque por fuerza bruta: Intentar determinar algo (como contraseña) por medio de prueba y error de forma automatizada. Por lo general se hace con un diccionario de valores, similar al de hash.
+- Robo por sniffing: 
