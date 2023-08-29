@@ -581,7 +581,7 @@ La lógica en las expresiones es la misma que en los conjuntos, primero van par�
 Los _tokens_ de un lenguaje de programación pueden ser definidos en términos de expresiones regulares y lenguajes regulares.
 
 #rect(width: 100%)[
-    De ahora en adelante, cuando sea mínimo uno y después repetido le llamaré ${a}+$ y es igual a ${a}a$
+    De ahora en adelante, cuando sea mínimo uno y después repetido le llamaré ${a}^+$ y es igual a ${a}a$
 ]
 
 
