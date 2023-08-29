@@ -564,4 +564,34 @@ Ahora toca ver si es independiente del contexto, es decir ver que alhpa no tenga
 
 Buscando _ejemplos de gramaticas_.
 
-felix martinez dfmartin
+== Definición de expresión regular (def 4.1, pag 169): 
+
+Una expresión regular es aquella donde las expresiones pueden ser contruidas usando las reglas:
+
+1. $phi.alt$ es una expresión regular que denota un conjunto vacío
+2. $epsilon$ es una expresión regular que denota que el lenguaje consiste solamente de cadenas vacías, es decir ${epsilon}$
+3. $a$, donde $a in V_T$ es una expresión regular que denota un lenguaje consistiendo de un simbolo $a$ es decir el lenguaje ${ a }$
+4. If $e_1$ y $e_2$ son expresiones regulares denotando los lenguajes $L_1$ y $L_2$, entonces:
+    - $\(e_1\)|\(e_2\)$ es una expresión regular que denota $L_1 union L_2$
+    - $\(e_1\)\(e_2\)$ es una expresión regular de denota $L_1 L_2$
+    - ${ e_1 }$ es una expresión regular que denota $L_1^*$, es decir que viene $e_1$ que se repite 0 a n veces
+
+La lógica en las expresiones es la misma que en los conjuntos, primero van paréntesis, luego concatenación $\(*\)$ y por último `or` $\(|\)$, similar a $union$ y $or$ pues.
+
+Los _tokens_ de un lenguaje de programación pueden ser definidos en términos de expresiones regulares y lenguajes regulares.
+
+#rect(width: 100%)[
+    De ahora en adelante, cuando sea mínimo uno y después repetido le llamaré ${a}+$ y es igual a ${a}a$
+]
+
+
+== Definición de Aceptores de estado finito determinístico
+
+También conocidos como autómatas deterministas finitos, un aceptor, para cualquier estado y entrada de caracteres tiene máximo una transición de estado, si no hay transición de estado definido, entonces la cadena, la entrada se rechaza como inválidad.
+
+Es una 5-tupla $(K, V_T, M, S, Z)$ donde:
+- K es un conjunto finito no vacio de elementos llamados estados.
+- $V_T$ es un alfabeto llamado el alfabeto de entrada
+- $M$ es un mapeo del conjunto $K times V_T$ a $K$, o sea que mapea $(a, b) "donde" a in K, b in V_T$ con elementos de $K$, es decir, dado un estado y un elemento de entrada en $V_T$, pasamos a un estado en $K$.
+- $S in K$, se llama un estado inicial.
+- $Z subset.eq K$ es un conjunto no vacio llamado estados finales.
