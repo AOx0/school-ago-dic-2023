@@ -1,3 +1,4 @@
+#import "@preview/commute:0.1.0": node, arr, commutative-diagram
 
 #outline(indent: 2em)
 
@@ -608,13 +609,30 @@ Si uno tiene muchas entradas, es decir una cadena $S = T t$, entonces T es una c
 
 Un autónoma finito no determinista es dificil de representar porque requiere que exploremos todas las definiciones para poder probar algo.
 
-La unica diferencia es que $M$ mapea $K times V_T$ con $x in 2K$
+La unica diferencia es que $M$ mapea $K times V_T$ con $x in 2^K$, es decir, que un valor de entrada $x in V_T$ en un estado $k in K$ no solamente deriva en un estado de $K$, sino que mapea a múltiples estados en $K$ tal que puede llevar a $2^K$
 
-En Scanners, pag 176, 
+#figure(
+    align(center)[#commutative-diagram(
+      node((0, 0), [$A^(a)$]),
+      node((0, 1), [$B^(b)$]),
+      node((0, 2), [$C$]),
+      arr((0, 0), (0, 1), [$a$]),
+      arr((0, 1), (0, 2), [$b$]),
+    )],
+    caption: [Del capítulo _Scanners_, página 176],
+) <nodeter1>
+
+En este tipo de autómatas, la única manera de probar que una cadena será aceptada por este tipo de autómatas es probando todas las rutas posibles, no podemos terminar directamente pues puede que no hayamos cubierto todas las rutas posibles.
+
 
 === Movimiento 
 
-- Si no entra nadai ($epsilon$) se queda en el estado $Q$
+Cuando decimos $M(A, a b) = { A, B }$, queremos dar a entender que desde el estado $A$, vamos a obtener todos los estados a los que podemos llegar con una cadena `"ab"`, específicamente usando el caracter `a`, en el caso de la figura @nodeter1, podemos llegar tanto al estado $A$, como al $B$, lo que recordemos que hace en sí al autómata no determinado, pues mapea a más de un estado en cualquiera de sus relaciones en $M$.
+
+En el caso de la máquina de @nodeter1 queda como $M(A, ab) = { A, B } -> M({A, B}, b) = { B, C}$, en un momento de buscar recursivamente llegamos a $C$, que es un estado final, y por lo tanto la cadena `"ab"` es aceptada.
+
+Podemos describir este movimiento con:
+- Si no entra nada ($epsilon$) se queda en el estado $Q$
 - Si entra algo entra a TODOS, a la union de todos los estados $P$ a los que podemos llegar con el inicio de la entrada $union.big_(P in M(Q, T))$, devolviendo un $M(P, t)$, en este enunciado, $P$ no es más que el conjunto de estados donde podemos movernos desde el inicio de la cadena.
 
 Es facil identificar un autómata no determinista viendo si devuelve un conjunto el mapeo en $M$ o no.
@@ -653,5 +671,5 @@ En la figura 4-11 estan las 3 formlas de Thompson. Tengo un ejemplo en el cuarde
 
 Las formulas nos dejaron con un automata finito no determinista con transiciones vacias.
 
-
 Hay un ejemplo en mi cuaderno, el autómata que hicimos no esta simplificado, tiene estados que sobran, no los reduzcamos, la proxima clase es ver como obtener una grámatica regular a partir del autómata finito determinista.
+
