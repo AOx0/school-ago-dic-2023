@@ -270,3 +270,160 @@ Interfaz virtual: tenemos distintas capas
 
   Con eso logramos poenr una IP a la vlan 1, que es una puerta virtual del switch, con la que va a responder, un ejemplo, a alguien no le da red, hacemos ping a todos los switches y vemos cual está apagado
 - Capa 3: 
+
+
+== Protocolos
+
+Los protocolos dan:
+- Emisor y receptor 
+- Idioma y gramatica comun
+- Valocidad y momento de entrega 
+- Requisitos de confirmación o acuse de recibido (ACK)
+
+Requisitos de los protocolos:
+- Codificar los mensajes, pasar de mensaje a binario, o a nubes, etc
+- Formatear y encapsular el mensaje
+- Tamaño del mensaje
+- Sincronización del mensaje
+- Opciones de entrega del mensaje
+
+=== Codificación
+
+Al mensaje lo codificamos, lo enviamos por el medio y el receptor decodifica el mensaje y lo interpreta, esto implica que el receptor debe tener el mismo conocimiento que nosotros en el formato del mensaje y cómo lo codificamos.
+
+=== Formato
+
+Suele existir un encabezado con _metadata_ sobre a quién va, que versión, y demás información, despues se envia el mensaje(s).
+
+El tamaño del mensaje se limita por el tamaño de la red, dependiendo del medio se usan mensajes de tamaño distintos, en el rango de 64 bytes a 1500 bytes, es por esto que después se dividen los paquetes en múltiples. Si un paquete es menor de 64 o mayor a 1500 se considerará como corrupto el mensaje.
+
+=== Temporización
+
+Control de flujo, administrar la estrategia usada para enviar/recibir paquetes
+Tiempo de espera: El timeout si no recibe más paquetes.
+El método de accseo: Permite que los paquetes colisionen lo menos posible.
+
+=== Opciones de entrega
+
+- Unicast: Se transmite a un solo dispositivo
+- Multicast: Se transmite a uno o varios
+- Broadcast: Se transmite a todos
+
+Esto en realidad pasa que se envia el paquete a todas las máquinas, las que no son las receptoras tiran el paquete, lo ignoran, la o las máquinas que si son receptoras lo procesan.
+
+En la seguridad puede que para cuando logremos descifrar la persona ya haya cambiado la contraseña o la situación de la información, es decir que la información perdió valor.
+
+=== Funciones
+
+Los protocolos de red funcionan de forma aceptable. Los protocolos son un poco anárquicos, hacen su mejor esfuerzo, lo intentan enviar lo mejor que pueden, mas no se puede garantizar que funcione.  
+
+Pone por ejemplo una aduana, no se revisa a todas las persona, se reviza solo a algunas personas para apaciguar a posibles personas que piensen en hacer algo malo. Otro ejemplo es medio revisar a todos, muy por encima, y reducir el numero de verificaciones que deben ser hechas con precision al minimo.
+
+=== Capas de protocolos
+
+Los protocolos interactuan, hay 4 capas
+- HTTP: 
+- TCP/QDP : Que tipo de paquete tengo, si veracidad o velocidad
+- IP: 
+- Ethernet: 
+
+=== Suites de protocolos
+
+Se clasifica en:
+- Es el Medio, transport layer
+- Usa Contenido, 
+- No se que
+
+Cada empresa solia tener sus propios suites de protocolos, el conjunto de ellos lograba la conexión, comunicación y procesamiento de los paquetes. Hoy en dia está estandarizado el TCP/IP.
+
+
+=== Ejemplos
+
+1. Network
+- ARP: Para identificar con MAC e IP
+- Ethernet: para conexión fisica
+- WLAN: Lo mismo wireless
+2. Internet
+- NAT: Convierte IP privada a publica
+- IPv4, IPv6
+- Routing Protocols: Estrategia de ruteo
+3. 
+- TCP
+- UDP
+4. Aplicación
+- DNS: Resolución de dominios
+- DHCPC: Asignación dinámica de IP
+- De correos
+
+=== Como funciona
+
+Cualquier dato que se quiera enviar lo encapsulamos, le ponemos un encabezado TCP/IP, le decimos IP de destino en otro encabezado y agregamos un encabezado que se le llama Frame. Todo eso como binario se manda al cliente, que desencapzula, interpreta, procesa, etc.
+
+== Estandares
+
+IEEE: La de ingenieros
+IANA: Direccionamiento IP, se encarga de administrar los dominios y su direccionamiento a la IP
+IETF: Hardware 
+Intenet Society: Investigación especifica del internet
+  - Normativas, investigacion
+  - 
+
+Por ejemplo, hacer que cualquier norma inalambrica nueva, sea totalmente retrocompatible con elementos de hace 25 años.
+
+
+=== Modelo en capas, importante
+
+Es la norma ISO del modelo OSI, se usa a nivel mundial para todo tipo de comunicaciones
+- Basada en 7 capas:
+  + Fisica, Physicial: Hardware
+  + Enlace de datos, Data link: Aqui rescide el frame, atiende fisico y soft
+  + Redes, Network: Red, IPs, etc
+  + Transporte
+  + Sesión, Session: Sesión entre aplicaciones, como se comunican entre si aplicaciones
+  + Presentacion: Formato, como mp4, bin, etc
+  + Aplicación: Aplicaciones que procesan los datos
+  + Persona, la ignoracia del usuario: Por ejemplo, no esta conectada la computadora.
+
+El modelo ISO/OSI en la red es la TCP/IP
+  + Acceso de red, Network Access, 1 y 2
+  + Internet, 3
+  + Transporte, 4
+  + Aplicación 
+
+Los dos modelos están muy relacionados. Los beneficios de trabajar en un modelo por capas es que puedes concentrarte/especializarte en la capa de tu interés sin tener en cuenta cómo están funcionando capas por debajo y por arriba de tu área de especialización.
+
+== Segmentación de datos
+
+Dividir y conquistar, ayuda a aumentar la velocidad, despeja el tiempo que se usa un camino de comunicación por un solo paquete, aumenta la eficiencia. Igualito que Unix, donde vamos segmentando el recibir un paquete en multiples fracciones.
+
+Esto implica que los paquetes tienen forma de identificar la secuencia de los mismos. Para lograrlo hay una estructura de datos que se debe respetar:
+
+- Data 64-1500 bytes
+- Segmento: Si es TCP/UDO
+- Paquete: 
+- Frame
+- A bits
+
+Los paquetes llevan un checksum para verificar que el paquete está integro, llevan bits como mecanismos de seguridad. Usar algun tipo de verificación es necesario, aun cuando sean mecanismos sencillos pueden ayudar a reducir la probabilidad de error.
+
+=== Capa 3, direccionamiento 
+
+Se arma un paquete con direccion de origen y destino, pueden ser IPv4 o IPv6, aunque tenga dos direcciones al final va a mandar los paquetes en un tipo de red.
+
+== Dispositivos en la misma red
+
+Podemos identificar distinas sub-redes viendo los cables que salen de un solo router. Cuando un dispositivo quiere mandar paquetes a computadoras en su misma red se hace de forma directa, si no está en su rango se lo envía a su _gateaway_, el _gateaway_ (router) se encarga de enviar el paquete a donde debe ser para que lo reciba la máquina en la otra red, lo _enruta_.
+
+Cuando el paquete va viajando en el tramo Origen a destino tienen la IP de destino final, más la IP de la maquina a la que va esta incluida, que es la MAC, asi las computadoras en realidad se comunican por MAC. 
+
+Entonces aunque diga que tiene una ip para otra maquina fuera de la red, entonces se incluye la IP peeero la dirección MAC de destino será el Gateaway, cada salto entre routers hay cambio de dirección MAC, mas la IP final es la misma.
+
+Los routers deciden por donde se va a enviar el paquete, solo deciden a cuál de los routers simplemente deciden a qué siguiente router enviarlo, más no fijan toda la ruta, cada router hace su propio calculo para enviar el paquete segun su información. Los routers solo deciden el _next hub_. Siempre se termina tomando la mejor decision.
+
+#rect[
+  Las redes se congestionan rapido, cuando una red se congestiona, los paquetes se van acumulados y van al router de la universidad, que despues van al internet. Mientras vamos llegando hasta arriba de la cadena de la red que sale a internet ponemos switches especiales que permiten servir de router que optimiza. 
+
+  Un switch sirve como balanceador de carga
+]
+
+#rect[Nota, los switches son de capa 2, no pueden ser gateaways, a menos que se un switch especial que puede ser gateaway]

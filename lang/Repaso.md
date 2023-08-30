@@ -104,5 +104,5 @@ $]
 #pagebreak()
 
 #[$A -> alpha B$]\
-#text(size: 0.6em)[_Tipo 3 de gramática. No hay contexto, en el lado derecho hay solo un $V_T$_]
+#text(size: 0.6em)[_Tipo 4 de gramática. No hay contexto, en el lado derecho hay solo un $V_T$_]
 #pagebreak()
