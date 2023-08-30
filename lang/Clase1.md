@@ -585,7 +585,7 @@ Los _tokens_ de un lenguaje de programación pueden ser definidos en términos d
 ]
 
 
-== Definición de Aceptores de estado finito determinístico
+== Definición de Aceptores/Autómatas de estado finito determinístico
 
 También conocidos como autómatas deterministas finitos, un aceptor, para cualquier estado y entrada de caracteres tiene máximo una transición de estado, si no hay transición de estado definido, entonces la cadena, la entrada se rechaza como inválidad.
 
@@ -595,3 +595,63 @@ Es una 5-tupla $(K, V_T, M, S, Z)$ donde:
 - $M$ es un mapeo del conjunto $K times V_T$ a $K$, o sea que mapea $(a, b) "donde" a in K, b in V_T$ con elementos de $K$, es decir, dado un estado y un elemento de entrada en $V_T$, pasamos a un estado en $K$.
 - $S in K$, se llama un estado inicial.
 - $Z subset.eq K$ es un conjunto no vacio llamado estados finales.
+
+Son finitos porque el conjunto de estados es finito, son deterministicos porque cada estado mapea a otro.
+
+
+Definición 4-n Lo unico que cambia en este otro autómata es que no va de K a K, sino que va de K a cualquier subconjunto de K, es decir puede ir a multiples estados.
+
+Si uno tiene muchas entradas, es decir una cadena $S = Tt$, entonces T es una cadena y t es un caracter. EN este caso se mueve del estado 
+
+
+== Auómata finito no determinista (pag 174)
+
+Un autónoma finito no determinista es dificil de representar porque requiere que exploremos todas las definiciones para poder probar algo.
+
+La unica diferencia es que $M$ mapea $K times V_T$ con $x in 2K$
+
+En Scanners, pag 176, 
+
+=== Movimiento 
+
+- Si no entra nadai ($epsilon$) se queda en el estado $Q$
+- Si entra algo entra a TODOS, a la union de todos los estados $P$ a los que podemos llegar con el inicio de la entrada $union.big_(P in M(Q, T))$, devolviendo un $M(P, t)$, en este enunciado, $P$ no es más que el conjunto de estados donde podemos movernos desde el inicio de la cadena.
+
+Es facil identificar un autómata no determinista viendo si devuelve un conjunto el mapeo en $M$ o no.
+
+Tratemos de programar el autómata en la figura 4-7, pagina 177
+
+
+== Autómatas finitos con transiciones vacías $epsilon$, es decir no deterministas (pag 180, def 4-4)
+
+Sin nosotros hacer nada el autómata cambia de estado, esto mismo es lo que los hace no deterministas. Se dice que es no determinista pues si no recibe nada se puede quedar en su estado original $A$ o puede irse a otro(s) estados $K - {A}$
+En el vocabulario se debe incluir $epsilon$
+
+== Cerradura vacia de un estado ()
+
+En un automata no determinista, es el conjunto de todos los estados que se pueden lograr con puras transiciones vacias.
+
+En la tabla 4-5, ese autómata puede ir por transiciones vacias a $q_1$ y el estado inicial $q_0$, es decir ${q_0, q_1}$
+
+
+== Equivalencia entre gramatica regular y un autómata (pag 183. def 4-5)
+
+El chiste es convertir las gramáticas en autómatas, porque eso lo podemos ejecutar en la computadora.
+
+Hacer el ejercicio de escanear cada token de un lenguaje, sin nada de hacer espacios, aunque vengan sin ellos.
+
+Una gramática se puede convertir en autómatas finitos no deterministas con transiciones vacías, ese autómata a su vez se puede convertir en automatas finitos deterministas.
+
+Para lograr la transformación se pueden usar las formulas de Thompson, 
+
+
+#rect[El primer ejercicio del examen es, dada una gramática, debemos clasificarla. Dado una gramática que ya es regular obtener la expresión regular asociada. Una expresión regular, debemos de obtener el automata finito no determinista con transiciones vacias, y de ahi el automata finito determinista, y con esto obtener una gramática regular]
+
+De cualquier autómata finito determinista hay asociada una gramática regular que podemos obtener a partir de él, eso viene definifo en el mismo cuerpo de 4-5.
+
+En la figura 4-11 estan las 3 formlas de Thompson. Tengo un ejemplo en el cuarderno, pongamos todos los vacios necesarios, no afectan, el problema viene cuando faltan vacíos.
+
+Las formulas nos dejaron con un automata finito no determinista con transiciones vacias.
+
+
+Hay un ejemplo en mi cuaderno, el autómata que hicimos no esta simplificado, tiene estados que sobran, no los reduzcamos, la proxima clase es ver como obtener una grámatica regular a partir del autómata finito determinista.
