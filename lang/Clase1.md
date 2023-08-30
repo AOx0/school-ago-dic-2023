@@ -601,7 +601,7 @@ Son finitos porque el conjunto de estados es finito, son deterministicos porque 
 
 Definición 4-n Lo unico que cambia en este otro autómata es que no va de K a K, sino que va de K a cualquier subconjunto de K, es decir puede ir a multiples estados.
 
-Si uno tiene muchas entradas, es decir una cadena $S = Tt$, entonces T es una cadena y t es un caracter. EN este caso se mueve del estado 
+Si uno tiene muchas entradas, es decir una cadena $S = T t$, entonces T es una cadena y t es un caracter. EN este caso se mueve del estado 
 
 
 == Auómata finito no determinista (pag 174)
