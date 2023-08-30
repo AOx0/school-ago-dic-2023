@@ -338,12 +338,73 @@ Estos principios son amenazados por:
 
 === Incidencias evitables
 
-1. Passwords débiles, por defecto: Es totalmente evitable y deberia hacerse a toda costa.
+- Passwords débiles, por defecto: Es totalmente evitable y deberia hacerse a toda costa.
 #rect[Julian Asagne, fundador de WikiLeaks, logró entrar a servidores "ultra-protegidos" sin contraseña]
-2. Preferencia de privilegios de usuario por privilegios de grupo: Tenemos un usuario al que le asignamos privilegios que son de acuerdo a un grupo, cuando quitamos al usuario del grupo nos aseguramos que pierde todo el privilegio del grupo de privilegios.
-3. Caracteristicas de base de datos innecesarios: Poner todo los plugins de una base de datos solo agrega más piedras a la carga, es mejor dejar lo que se usa y se sabe como se usa.
-4. Configuracion de seguridad ineficiente: Si a todos le damos permiso de lectura/escritura, entonces todo puede valer. Dale exactamente lo que necesita a cada usuario.
-5. Desbordamiento de Buffer: Con un sistema mal configurado, estamos metiendo más datos de los necesarios y de un tipo que no corresponde. Habria que ver la manera de evitar ese tipo de problemas, como restringir el tamaño.
+- Preferencia de privilegios de usuario por privilegios de grupo: Tenemos un usuario al que le asignamos privilegios que son de acuerdo a un grupo, cuando quitamos al usuario del grupo nos aseguramos que pierde todo el privilegio del grupo de privilegios.
+- Caracteristicas de base de datos innecesarios: Poner todo los plugins de una base de datos solo agrega más piedras a la carga, es mejor dejar lo que se usa y se sabe como se usa.
+- Configuracion de seguridad ineficiente: Si a todos le damos permiso de lectura/escritura, entonces todo puede valer. Dale exactamente lo que necesita a cada usuario.
+- Desbordamiento de Buffer: Con un sistema mal configurado, estamos metiendo más datos de los necesarios y de un tipo que no corresponde. Habria que ver la manera de evitar ese tipo de problemas, como restringir el tamaño.
   - Hacer que el sistema sea tolerante a fallos, y que verifique.
   - Que el error no salga en pantalla, que solo mande un error, cuando estemos en desarrollo habilitamos todas las alertas y mensajes para los desarrolladores, pero en producción que solo sea lo necesario pensando en el usuario final.
-6. 
+- Escalada de privilegios
+- Ataque de denegación de servicio: Multiples solicitudes por recursos que saturan la capacidad del servidor de dar servicio, este tipo de ataques pueden ser usados para generar logs de error hasta llenar el disco, por ejemplo, buscar archivos en disco (lento) y demás.
+- Datos sin cifrar: Los sensibles son aquellos que nos permiten segmentar de la población, como gustos, religión, etc. Podemos tener esos datos con el consentimiento de la persona a la que pertenecen y debemos cifrarlo. Si llegan a hackear nuestra plataforma y se comprueba que los datos sensibles no estaban cifrados, conlleva a multas. El INAI es el organo que verifica esto.
+
+== Protección 
+
+Para protegernos debemos:
+- Verificar accessos, hacer la administración correcta de los permisos que tienen los miembros de una organización.
+- Inferencias: No dar ningun tipo de información que permita al atacante saber el stack de tecnología que se usó para la plataforma, que no le permita _inferir_.
+- Ingenieria social: Phishing, dejar USB con Malware en el sitio de trabajo, correos, etc. Para prevenir esto es necesario educar a los miembros de la organización.
+- Flujo: En los sistemas que tengamos debemos saber el flujo de datos que hay y monitorear los puntos del camino para asegurarnos que se mantiene intacto y eficaz.
+- Cifrar datos: Cifrar nunca està mal, mínimo lo sensible. Las contraseñas se almacanan directamente cifradas, no hay NINGUNA necesidad de almacenar la contraseña en sí, sino que solo guardar su versión cifrada, usar sistemas de digestión (que lo cifren/procesen de forma)
+- Seguimiento del rastro: Debemos tener auditorías en el hardware.
+
+=== Metodología
+
++ Identificar su sensibilidad: Analizar el sistema y determinar las partes que son más sensibles, como lo es la tabla con datos sensibles.
++ Evaluación de la vulnerabilida/configuración: Teniendo en cuenta los componentes, su contexto, localización, acceso y demás variables.
++ Endurecimiento: Arreglar los posibles huecos, hacer las medidas necesarias para que el sistema como un todo sea más seguro.
++ Auditar: Evaluar las medidas, el resultado de los cambios en el ambiente/sistema/organización, utilizar los nuevos recursos/medidas para ampliar el conocimiento sobre el sistema.
++ Monitoreo: Ver en tiempo real la actividad del sistema, detectar señales/eventos, usar herramientas que analicen, hagan de forma automatizada/efectiva el monitoreo.
++ Pistas de auditoría: Actuar para resolver lo observado en el monitoreo.
++ Autenticación, control de acceso y gestión de derechos: IAM, gestion de permisos, acceso, etc.
+
+Es un proceso que nunca termina, debe de hacerse de forma continua.
+
+#rect[
+  Si no mides, no sabes lo que está pasando. Hace unos años estaba pensada la seguridad como forma de ver que nadie entrara, pero esto no es asi, el chiste es que si entran (y lo harán), reducir el daño posible que puedan hacer.
+]
+
+== Operaciones por prioridad
++ Eliminar
++ Alterar, no cualquiera debe de poder modificar la estructura del sistema
++ Relacionar, agregar CONSTRAINTS, lo que puede deshabilitar operaciones de insertar/borrar/etc
++ Indizar, es un proceso caro y puede alentar el servicio, no cualquiera debe de poder hacerlo
++ Borrar (un registro)
++ Actualizar
++ Insertar
++ Leer
+
+Un usuario máximo debe de poder llegar hasta actualizar/borrar.
+
+== Privilegios y roles
+
+Los privilegios son aquello que puede hacer el usuario.
+
+
+== Repaso
+
+1. Lo que se degrada es la confidencialidad, disponibilidad, integridad de la base de datos.
+2. El ataque de fuerza es dificil pero funciona, porque seguimos poniendo contraseñas malas
+3. El robo por _sniffing_ requiere primero que puedas meter un _sniffer_, que se pudo meter a la red.
+4. Cookie, archivo que va y viene y acompaña todo el tráfico del usuario
+5. Hacer un ataque por sitio compartido hoy en dia está dificil
+6. XSS: Cross site scripting, que es inyección de codigo malicioso, lo que se previene sanitizando, haciendo que el codigo no se ejecute/cambiandolo.
+7. Muchas solicitudes hasta saturar el servidor, solicitudes incorrectas. DDoS, es lo mismo que DoS pero Distribuido, de ahi la D extra, es decir muchos dispositivos.
+8. Cifrar: Cifrar implica que se puede descifrar, que no es lo mismo a un digestor, que no tiene vuelta atrás.
+9. Cifrados:
+  - Simetrico: Cifras y descifras con la misma llave, es mucho más rápido, hay combinaciones de cifrados para optimizar el proceso, por ejemplo usar un cifrado simétrico pero para compartir la llave unica se usa un mecanismo que usa cifrado asimétrico
+  - Asimetrico: Llave publica y privado
+
+Que no diga alarcon
