@@ -208,3 +208,97 @@ Ejemplo de pedazos de coche, un pistón no puede tener mucha diferencia, ni siqu
     - Método abierto: El método de la secante y el método de newton-rapson
     - Apliccación, el código, cómo lo hicimos, qué habilita
     - 2500 iteraciones
+
+#pagebreak()
+
+// Unidad 2
+= Teoría de números
+
+La teoría de números es una de las ramas de la matematicas que estudia los números naturales ($NN$) y los enteros, de los enteros ($ZZ$) estudia sus propiedades.
+
+Recordemos que:
+- Los numeros enteros son ${ ..., -1, 0, 1, ... }$
+- Nuestra definición de naturales no invluye 0 por defecto
+
+== Conjetura de Goldbash
+
+En teoría de números cambian las definiciones con respecto a las matemáticas tradicionales. Goldbash dice que 
+- Para los números pares, los pares mayores a 2 $PP + PP$, se pueden extraer de la suma de dos números primos, ej. $3 > 2 <=> 3 = 2 + 1$
+- Para los números impares mayores a 5 $PP + PP + PP$, todos son igualables a la suma de tre números primos, ej $7 = 2 + 2 + 3$
+
+== Teorema de Fermat
+
+Partiendo de Pitágoras $a^2 + b^2 = c^2$, Fermat exploró qué sucede con las expresiones al ser de grado $n$ de la forma $a^n + b^n = c^n$. El dice que es imposible encontrar 3 números enteros positivos tal que $a^n + b^n = c^n$ cuando $n > 2$.
+
+== Ejemplos de demostraciones
+
+La forma para representar $2^2 = 4$ podemos dibujar 4 puntos en un cuadrado, haciendo gráficamente un cuadrado con 4 puntos, si es $3^2$ hacemos un cuadrado de 9 puntos.
+
+Asi como vemos que existen números cuadrados pueden existir números _triangulares_, en el caso de los números cuadrados es $n^2$, para los triangulares tenemos ${3, 6, 10, 15, ...}$, en la teoría de números debemos buscar una función que pueda modelar la representación.
+
+$
+    ((n)(n + 1))/2
+$
+
+Debemos de hacer el análisis que logre describir la serie de números para resolver los problemas que se nos presenten. La teoría de números se emplea en distintos tipos de entrada.
+
+No vamos a estar haciendo en loops sumas, series, que pueden moldearse en una función que permite describir para cualquier posición $t$ el valor.
+
+=== Suma 
+
+Otro ejemplo de fórmula, la fórmula que describe cualquier suma consecutiva de números
+
+$
+(n(1 + n))/2 
+$
+
+Es decir, vamos a empezar a demostrar de forma inductiva, por medio de una función. 
+
+=== Paridad de enteros
+
+Partiendo de $n in ZZ$, podemos definir:
+- Par: $2n$
+- Impar: $2n + 1$
+
+Y podemos analizar las propiedades:
+- par + par = par
+- par + impar = impar
+- impar + impar = par
+- par $times$ par = par
+- impar $times$ impar = impar
+
+Y podemos demostrar, por ejemplo par $times$ par = par de la forma: 
+
+$
+    (2n + 1)(2n + 1)\
+    &= (2n + 1)^2\ 
+    &= 4n^2 + 4n + 1\
+    & therefore "impar"
+$
+
+=== Divisores
+
+Sea $a, b in ZZ$ tal que $a != 0$ y se dice que $a$ debe ser _divisor_ de $b => K$, donde $K in ZZ$ que satisface $b = k a$. Si depejamos $k = b/a$.
+
+El teorema de divisor lleva, naturalmente, a los números primos.
+
+=== Divisor trivial
+
+Con _trivial_ hablamos de proposiciones que no es necesario demostrar, la sola proposición lo demuestra.
+
+El divisor trivial es $$
+
+Entonces los primos son aquellos que tienen divisores triviales.
+
+=== Teorema fundamental de la aritmética
+
+Cada entero puede ser factorizado por el producto de números primos, por ejemplo $6 = 3 times 2$. 
+
+=== Primos de Mersenne
+
+Aquellos números que están derivados de la expresión $M(p) = 2^p - 1$, donde $p = "primos"$, este tipo de primos son muy usados en computación.
+
+
+== Actividad
+
+Con los primeros 20 primos de la teoría de la aritmética, hallar los 20 primeros números primos de Mersenne
