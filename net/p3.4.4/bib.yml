@@ -1,0 +1,45 @@
+jon:
+  type: Article
+  organization: Wikipedia
+  url: https://es.wikipedia.org/w/index.php?title=Jon_Postel&oldid=151946767
+
+wiki:
+  type: Web
+  organization: Wikipedia
+  name: Wikipedia
+  url: https://wikipedia.org/
+
+vint:
+  type: Article
+  organization: Wikipedia
+  url: https://en.wikipedia.org/w/index.php?title=Vint_Cerf&oldid=1172142156
+
+rfc1700:
+  type: Article
+  name: RFC 1700
+  url: https://datatracker.ietf.org/doc/html/rfc1700  
+
+rfc349:
+  type: Article
+  name: RFC 349
+  url: https://datatracker.ietf.org/doc/html/rfc349  
+
+w3c:
+  type: Article
+  organization: Wikipedia
+  url: https://en.wikipedia.org/w/index.php?title=World_Wide_Web_Consortium&oldid=1172138744
+
+ieeew:
+  type: Article
+  organization: Wikipedia
+  url: https://en.wikipedia.org/w/index.php?title=Institute_of_Electrical_and_Electronics_Engineers&oldid=1167790208
+
+ieeelo:
+  type: Article
+  url: https://van.physics.illinois.edu/ask/listing/729
+  date: 2023-08-30
+
+wpa2:
+  type: Article
+  organization: Wikipedia
+  url: https://en.wikipedia.org/w/index.php?title=IEEE_802.11i-2004&oldid=1151799528
