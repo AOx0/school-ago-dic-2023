@@ -296,9 +296,45 @@ Cada entero puede ser factorizado por el producto de números primos, por ejempl
 
 === Primos de Mersenne
 
-Aquellos números que están derivados de la expresión $M(p) = 2^p - 1$, donde $p = "primos"$, este tipo de primos son muy usados en computación.
+Aquellos números que están derivados de la expresión $M(p) = 2^p - 1$, donde $p in PP$.
+Con los primeros 20 primos de la teoría de la aritmética, hallar los 20 primeros números primos de Mersenne.
 
+El código resultante, delegando la generación de los números primos al _crate_ `primes`, es:
 
-== Actividad
+```rust
+use primes::{PrimeSet, Sieve};
 
-Con los primeros 20 primos de la teoría de la aritmética, hallar los 20 primeros números primos de Mersenne
+fn main() {
+    for p in Sieve::new().iter().take(20) {
+        println!("{}", 2u128.pow(p as u32) - 1);
+    }
+}
+
+```
+
+Con la salida del programa:
+```bash
+   Compiling primos v0.1.0 (/Users/alejandro/repos/primos)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.40s
+     Running `target/debug/primos`
+3
+7
+31
+127
+2047
+8191
+131071
+524287
+8388607
+536870911
+2147483647
+137438953471
+2199023255551
+8796093022207
+140737488355327
+9007199254740991
+576460752303423487
+2305843009213693951
+147573952589676412927
+2361183241434822606847
+```
