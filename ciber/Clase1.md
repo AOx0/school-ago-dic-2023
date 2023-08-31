@@ -265,13 +265,50 @@ https://securitytrails.com/blog/google-hacking-techniques
 
 198, 10, 127 son privadas.
 
+== Protegerse
+
+- Las computadoras que cumplen distintos roles deben estar en distintas sub-redes, no pueden estar en la misma red máquinas de un administrador y de las personas de le limpieza.
+- Hay que tener sistemas de gestión para manejar las alertas que se reciben
+
+== Formas verbales en los estándares
+- Shall: indica un requerimiento
+- Should: recomendación
+- May: Algo está permitido
+- Can: Algo es posible
+
+== Estructura del ISO/IEC 27000:2018
+
++ Objetivo
++ Referencias normativas
++ Términos y definiciones
++ ISMS: Sistemas de gestión de la seguridad
++ Familia de estándares ISMS
++ Bibliografía 
+
+== Terminología
+
+- Vulnerabilidad: Debilidad de un activo que por definición puede ser explotada 
+- Amenaza: Todo aquello que puede explotar una vulnerabilidad
+- Riesgo: Efecto de incertidumbre sobre los objetivos
+- Análisis de riesgo: Proceso de comprender la naturaleza de riesgo y determinar su nivel
+- Propietario del riesgo: Quien debe gestionar un riesgo
+- Tratamiento del riesgo: Modificarlo, mitigarlo
+  - Evitar
+  - Aceptar
+  - Mitigar 
+  - Transferir
+- Gestion de riesgos: Aplicación sistemática de gestion de politicas, procedimientos y prácticas de actividades de comunicar, consultar, establecer contexto, analizar, evaluar, tratar, monitorear y revisar el riesgo.
+- Control: medida que modifica un riesgo
+
 == Comandos 
 
 - `netstat -autopna`: Muestra la actividad 
 - `appliance`: Una computadora/servidor que está dedicado a realizar una sola función. Por ejemplo tenemos un servidor que se usa para enviar actualizaciones a toda la org 
 - `OSINT`: Open Source Intelligence, busqueda de información en fuentes abiertas
+- activo: persona o 
 
 == Aplicaciones
 
 - En `Wireshark` captura todos los paquetes que encuentre el dispositivo en la red
 - En `NetworkMiner` procesa todos los paquetes e identifica los dispositivos, su información, IP, etc.
+
