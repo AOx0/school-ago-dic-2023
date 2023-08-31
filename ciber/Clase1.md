@@ -263,8 +263,15 @@ Se debe informar al INAI si hay incidentes por ley, y después se debe realizar 
 
 https://securitytrails.com/blog/google-hacking-techniques
 
+198, 10, 127 son privadas.
+
 == Comandos 
 
 - `netstat -autopna`: Muestra la actividad 
 - `appliance`: Una computadora/servidor que está dedicado a realizar una sola función. Por ejemplo tenemos un servidor que se usa para enviar actualizaciones a toda la org 
 - `OSINT`: Open Source Intelligence, busqueda de información en fuentes abiertas
+
+== Aplicaciones
+
+- En `Wireshark` captura todos los paquetes que encuentre el dispositivo en la red
+- En `NetworkMiner` procesa todos los paquetes e identifica los dispositivos, su información, IP, etc.
