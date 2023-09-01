@@ -338,3 +338,85 @@ Con la salida del programa:
 147573952589676412927
 2361183241434822606847
 ```
+
+
+#pagebreak()
+
+== Divisores
+
+Sean $a, b and C$ números enteros ($ZZ$) donde $a != 0$:
++ Si $a|b and a|c => a|(b + c)$, donde $a|b = b/a$, por ejemplo $4|12 = 12/4 in ZZ, k := 3, b:= 12, a:= 4$
+
+    Prueba con $b = k_1 a and c = k_2 a$
+
+    $
+    b + c\
+        &= k_1 a + k_2 a \
+        &= (k_1 + k_2) a => a | (b + c)
+    $
+
++ Sea $a|b => a|b c$, para todo entero $c$, es decir, que si $a$ es divisor de $b$, entonces también será divisor de todo $b c$ donde $c in ZZ$
+
+    Ejemplo $2|10 => 2|(10 times 3) => 30/2 = 15$
+
+
++ Si $a|b and b|c => a|c$, es decir, que si $a$ es divisor de $b$, y $b$ es divisor de $c$, entonces $a$ será divisor de $c$
+
+    Prueba, usando la definición anterior, $a|b => b = k_1 a$ y $b|c => c = k_2 b$:
+
+    Sustituimos b
+    $
+        c = k_2 k_1 a => a|c
+    $
+
+== Numeros perfectos
+
+Se dice que $m$ es un número perfecto si es que $m in ZZ^+$ y resulta de la suma de sus divisores, a excepción de la base, la suma de todos sus divisores da como resultado la base misma, por ejemplo $6 = 1 + 2+ 3$ 
+
+Hay 49 números perfectos y 49 primos de Mercenne, para obtenerlo podemos hacer:
+
+$
+M = 2^(p - 1) (2^p -1) = 2^(p-1) (M(P))
+$
+
+Con esta fórmula podemos obtener números perfectos a partir de primos de Mercenne
+
+$
+M_1(p) = 2^2 - 1 = 4 - 1 = 3\
+M_2(p) = 2^(2 - 1) (3) = 2 times 3 = 6
+$
+
+Los números tan grandes son dificiles de manejar, hace que se pierda precisión, que es base, en parte, para la criptografía.
+
+=== Código
+
+2, 3, 5, 7, 11, 13, 17, Si el número primo de Mercenne es primo, entonces obtener el número perfecto, si no, descartarlo.
+
+Si al evaluar los primos en la función de Mercenne da un primo, entonces al valor que genere le calculamos el perfecto. Debe salir el número original, el de Mersene y el perfecto.
+
+
+```rust
+extern crate primes;
+use primes::{PrimeSet, Sieve};
+
+fn main() {
+    for p in Sieve::new().iter().take(7) {
+        let m = 2u128.pow(p as u32) - 1;
+        if Sieve::new().is_prime(m as u64) {
+            println!("{p}: {m} => {}", 2u128.pow((p - 1) as u32) * m)
+        }
+    }
+}
+```
+
+=== Demostración
+
+$
+M = 2^(p - 1) (2^p - 1)\
+$
+
+En este caso tenemos $2$ elevado a $p-1$, que tiene divisores $1, 2, 4, ..., 2^(p-1)$, si sumáramos todos los valores quedaría $2^0 + 2^1 + 2^2 + ... + 2^(p-1) = 2^p$
+
+Si sus dos triviales son $1$ y $2^p$ y tomando en cuenta que la suma de los divisores debe de dar el número perfecto, entonces, si el número es la suma de los divisores ($1 + 2^p - 1 = 2^p$).
+
+Ahora tenemos $2^p (2^p - 1) - 2^(p-1) (2^p - 1)$, si factorizamos queda $2^(p-1)(2^p - 1)(2-1) = 2^(p-1) (2^p - 1)$
