@@ -81,31 +81,31 @@
 
 + ¿Wi-Fi Alliance es una organización de estandarización sin fines de lucro? ¿Cuál es su objetivo?
 
-  *A*: 
+  *A*: Son dueños del logotipo "Wi-Fi Certified", una marca registrada que sólo se permite en equipos que saquen el certificado, que implica mejor interoperabilidad en los formatos de radio y datos, como garantía sobre los protocolos de seguridad, calidad de servicio y de gestión de energía, asi como demostrar que pueden funcionar bien en redes con otros productos con la misma certificación. @wifia
 
 + ¿Quién es Hamadoun Touré?
 
-  *A*: 
+  *A*: Es un ingeniero nacido en Mali que sirvió de secretario de ITU del 2007 al 2014 @ham
 
 + ¿Qué es la Unión Internacional de Telecomunicaciones (UIT) y dónde está ubicada su sede central?
 
-  *A*: 
+  *A*: UIT son las siglas en ingés de la _International Telecommunication Union_, es el organismo especializado de las Naciones Unidas para las tecnologías de la información y la comunicación, su meta es comunicar a todo el mundo. @uit
 
 + Nombre los tres sectores de la UIT.
 
-  *A*: 
+  *A*: ITU-R: Sector de Radiocomunicaciones (ITU-R), Sector de Normalización de las Telecomunicaciones (ITU-T), Sector de Desarrollo de las Telecomunicaciones (ITU-D) @uitw
 
 + ¿Qué significa RS en RS-232 y qué organismo lo introdujo?
 
-  *A*: 
+  *A*: RS-232 (Recommended Standard 232) es una interfaz que designa una norma para el intercambio serie de datos binarios entre un DTE (Equipo terminal de datos) y un DCE (Data Communication Equipment, Equipo de Comunicación de datos), emitido por la _Energy Information Administration_ (EIA) @rs232
 
 + ¿Qué es SpaceWire?
 
-  *A*: 
+  *A*: SpaceWire es una red de comunicación entre naves espaciales basada en parte en la norma de comunicaciones IEEE 1355.  Está coordinada por la Agencia Espacial Europea (ESA) en colaboración con agencias espaciales internacionales como la NASA, JAXA y RKA @spacewire.
 
 + ¿Cuál es la misión de la ISOC y dónde está ubicada su sede central?
 
-  *A*: 
+  *A* Sus oficinas están en Reston, Virginia, Estados Unidos, y Geneva, Suiza @isoc. Su misión es "promover el desarrollo, la evolución y el uso abiertos de Internet en beneficio de todas las personas del mundo" @isoc.
 
 + ¿Qué organizaciones supervisa el IAB? Escriba sus respuestas aquí.
 

@@ -43,3 +43,41 @@ wpa2:
   type: Article
   organization: Wikipedia
   url: https://en.wikipedia.org/w/index.php?title=IEEE_802.11i-2004&oldid=1151799528
+
+wifia:
+  type: Article
+  organization: Wikipedia
+  url: https://en.wikipedia.org/w/index.php?title=Wi-Fi_Alliance&oldid=1167379509
+
+ham:
+  type: Article
+  organization: Wikipedia
+  url: https://en.wikipedia.org/w/index.php?title=Hamadoun_Tour%C3%A9&oldid=1140733713
+
+uit:
+  name: A
+  type: Article
+  organization: ITU
+  date: 2023-08-31
+  url: https://www.itu.int/es/about/Pages/default.aspx
+
+uitw:
+  type: Article
+  organization: Wikipedia
+  url: https://es.wikipedia.org/w/index.php?title=Uni%C3%B3n_Internacional_de_Telecomunicaciones&oldid=150249323
+
+rs232:
+  type: Article
+  organization: Universidad Politécnica de Madrid
+  name: RS-232
+  url: https://www.etsist.upm.es/estaticos/ingeniatic/index.php/tecnologias/item/581-rs-232.html
+
+spacewire:
+  type: Article
+  organization: Wikipedia
+  url: https://en.wikipedia.org/w/index.php?title=SpaceWire&oldid=1172978229
+
+isoc:
+  type: Article
+  organization: Wikipedia
+  url: https://en.wikipedia.org/w/index.php?title=Internet_Society&oldid=1170317440
