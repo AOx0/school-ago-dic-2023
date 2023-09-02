@@ -629,7 +629,7 @@ En este tipo de autómatas, la única manera de probar que una cadena será acep
 
 Cuando decimos $M(A, a b) = { A, B }$, queremos dar a entender que desde el estado $A$, vamos a obtener todos los estados a los que podemos llegar con una cadena `"ab"`, específicamente usando el caracter `a`, en el caso de la figura @nodeter1, podemos llegar tanto al estado $A$, como al $B$, lo que recordemos que hace en sí al autómata no determinado, pues mapea a más de un estado en cualquiera de sus relaciones en $M$.
 
-En el caso de la máquina de @nodeter1 queda como $M(A, ab) = { A, B } -> M({A, B}, b) = { B, C}$, en un momento de buscar recursivamente llegamos a $C$, que es un estado final, y por lo tanto la cadena `"ab"` es aceptada.
+En el caso de la máquina de @nodeter1 queda como $M(A, a b) = { A, B } -> M({A, B}, b) = { B, C}$, en un momento de buscar recursivamente llegamos a $C$, que es un estado final, y por lo tanto la cadena `"ab"` es aceptada.
 
 Podemos describir este movimiento con:
 - Si no entra nada ($epsilon$) se queda en el estado $Q$
@@ -673,3 +673,10 @@ Las formulas nos dejaron con un automata finito no determinista con transiciones
 
 Hay un ejemplo en mi cuaderno, el autómata que hicimos no esta simplificado, tiene estados que sobran, no los reduzcamos, la proxima clase es ver como obtener una grámatica regular a partir del autómata finito determinista.
 
+== Ejercicio
+
+Ejercicio del capitulo 4, tipo examen pag 172, 5
+
+Para sacar una gramática regular del automata, para cada transicion escribimos una regla
+
+En la conversion del Automata FInito no determinista al autómata finito determinista no garantiza que sea reducido.
