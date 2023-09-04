@@ -300,12 +300,24 @@ https://securitytrails.com/blog/google-hacking-techniques
 - Gestion de riesgos: Aplicación sistemática de gestion de politicas, procedimientos y prácticas de actividades de comunicar, consultar, establecer contexto, analizar, evaluar, tratar, monitorear y revisar el riesgo.
 - Control: medida que modifica un riesgo
 
+
+== Detección de vulnerabilidades
+
+La gestión y detección de vulnerabilidades son necesarias para poder realizar 
+
+Este tipo de acciones no solo aplican a lo relacionado a IT, sino que engloba toda la organización.
+
+Un sistema de gestion es un conjunto de elementos para establecer objetivos que permitan
+
+Todos los estándares de ISO están basados en el ciclo de Deming, de mejora constante
+
 == Comandos 
 
 - `netstat -autopna`: Muestra la actividad 
 - `appliance`: Una computadora/servidor que está dedicado a realizar una sola función. Por ejemplo tenemos un servidor que se usa para enviar actualizaciones a toda la org 
 - `OSINT`: Open Source Intelligence, busqueda de información en fuentes abiertas
-- activo: persona o 
+- `activo`: persona o 
+- `IDS`: Sistema de detección
 
 == Aplicaciones
 

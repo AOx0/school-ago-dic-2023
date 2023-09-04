@@ -1,6 +1,7 @@
 jon:
   type: Article
   organization: Wikipedia
+  title: Jon Postel
   url: https://es.wikipedia.org/w/index.php?title=Jon_Postel&oldid=151946767
 
 wiki:
@@ -12,6 +13,7 @@ wiki:
 vint:
   type: Article
   organization: Wikipedia
+  title: Vint Cerf
   url: https://en.wikipedia.org/w/index.php?title=Vint_Cerf&oldid=1172142156
 
 rfc1700:
@@ -27,11 +29,13 @@ rfc349:
 w3c:
   type: Article
   organization: Wikipedia
+  title: World Wide Web Consortium
   url: https://en.wikipedia.org/w/index.php?title=World_Wide_Web_Consortium&oldid=1172138744
 
 ieeew:
   type: Article
   organization: Wikipedia
+  title: Institute of Electrical and Electronics Engineer
   url: https://en.wikipedia.org/w/index.php?title=Institute_of_Electrical_and_Electronics_Engineers&oldid=1167790208
 
 ieeelo:
@@ -42,16 +46,19 @@ ieeelo:
 wpa2:
   type: Article
   organization: Wikipedia
+  title: IEEE 801.11i-2004
   url: https://en.wikipedia.org/w/index.php?title=IEEE_802.11i-2004&oldid=1151799528
 
 wifia:
   type: Article
   organization: Wikipedia
+  title: WiFi Alliance
   url: https://en.wikipedia.org/w/index.php?title=Wi-Fi_Alliance&oldid=1167379509
 
 ham:
   type: Article
   organization: Wikipedia
+  title: Hamadoun Tour
   url: https://en.wikipedia.org/w/index.php?title=Hamadoun_Tour%C3%A9&oldid=1140733713
 
 uit:
@@ -64,6 +71,7 @@ uit:
 uitw:
   type: Article
   organization: Wikipedia
+  title: Unión Internacional de Telecomunicaciones
   url: https://es.wikipedia.org/w/index.php?title=Uni%C3%B3n_Internacional_de_Telecomunicaciones&oldid=150249323
 
 rs232:
@@ -75,9 +83,22 @@ rs232:
 spacewire:
   type: Article
   organization: Wikipedia
+  title: SpaceWire
   url: https://en.wikipedia.org/w/index.php?title=SpaceWire&oldid=1172978229
 
 isoc:
   type: Article
   organization: Wikipedia
+  title: Internet Society
   url: https://en.wikipedia.org/w/index.php?title=Internet_Society&oldid=1170317440
+
+iabman:
+  type: Web
+  title: Internet Standards Organizations (ISOC, IAB, IESG, IETF, IRSG, IRTF)
+  url: http://www.tcpipguide.com/free/t_InternetStandardsOrganizationsISOCIABIESGIETFIRSGI.htm
+
+isowiki:
+  type: Article
+  organization: Wikipedia
+  title: Organización Internacional de Normalización
+  url: https://es.wikipedia.org/w/index.php?title=Organizaci%C3%B3n_Internacional_de_Normalizaci%C3%B3n&oldid=153518983#Afiliaci%C3%B3n

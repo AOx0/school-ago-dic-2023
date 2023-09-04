@@ -109,15 +109,15 @@
 
 + ¿Qué organizaciones supervisa el IAB? Escriba sus respuestas aquí.
 
-  *A*: 
+  *A*: IETF y IRTF. @iabman
 
 + ¿Qué organización supervisa el IAB?
 
-  *A*: 
+  *A*: The Internet Society (ISOC) @iabman
 
 + ¿Cuándo se fundó la ISO y dónde está ubicada su sede central? Escriba sus respuestas aquí.
 
-  *A*: 
+  *A*: 23 de febrero de 1947, su sede está en Ginebra (Suiza). @isowiki
 
 
 
@@ -125,15 +125,15 @@
 
 1. ¿Cómo permiten los estándares de Internet un mayor comercio? ¿Qué posibles problemas podríamos tener si no contáramos con el IEEE?
 
-  *A*: 
+  *A*: Podríamos tener protocolos distintos en cada dispositivo, por ejemplo, para conectarnos a internet en lugar de lo que hoy es WPA2, lo que puede que mejore el refinamiento/competencia de protocolos pero como resultado todos los dispositivos serían incompatibles entre si, algunos inseguros.
 
 2. ¿Qué posibles problemas podríamos tener si no contáramos con el W3C?
 
-  *A*: 
+  *A*: No habría WEB como la conocemos ahora ni evolucionaría como lo está haciendo, proyectos como WebAssembly requieren la participación coordinada de todos para formar estándares e implementarlos, sin W3C simplemente no sería posible el internet.
 
 3. ¿Qué podemos aprender del ejemplo de Wi-Fi Alliance con respecto a la necesidad de estándares de redes?
 
-  *A*: 
+  *A*: Son necesarios para poder garantizar la funcionalidad, compatibilidad, seguridad y _performance_ de los equipos, lo que requiere una forma de ser medido. 
 
 
 #bibliography("bib.yml")
