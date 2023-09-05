@@ -12,8 +12,10 @@
 
 = Resultados
 
-#align(center)[
- #image("exito.png", width: 70%)
-]
-
-= Preguntas
+#image("msg1.jpg")
+#image("msg2.jpg")
+#image("msg3.jpg")
+#image("msg4.jpg")
+#image("msg5.jpg")
+#image("msg6.jpg")
+#image("msg7.jpg")
