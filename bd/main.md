@@ -408,3 +408,18 @@ Los privilegios son aquello que puede hacer el usuario.
   - Asimetrico: Llave publica y privado
 
 Que no diga alarcon
+
+
+= Normalización
+
+Busca reducir la redundancia, que los datos estén una sola vez presentes. Las formas normales conocidas son 5, aunque en la práctica llegamos hasta la 3era forma normal. La 4ta y 5ta normalización causa sobre-normalización, dando efectos absurdos, como una tabla por registro.
+
+- 1era Forma Normal: _Una llave para cada resgistro._ Lo que buscamos es que en cada registro haya una llave única, lo que puede implicar llaves compuestas, la primera forma normal pide que cada registro tenga una llave que sirva para encontrar un solo registro.
+- 2da Forma Normal: _Sacar todo lo que no depende de la llave compuesta_. Sin dependencias parciales de llaves concatenadas. Si unta tabla tiene llaves compuestas, todos demás campos de dicha tabla tienen que depender de dicha llave forzosamente, por los n-campos de la llave compuesta. Es por eso que si un campo no depende de, por ejemplo, los 3 campos que forman la llave compuesta, sino que solo por 2, entonces no se cumple la regla.
+- 3ra Forma Normal: _Sacar todo lo que no depende de la llave_. Lo mismo pero con llaves simples
+
+Pone el ejemplo de una llave (num_factura, prod_num), el campo fecha no depende de ambos campos, depende exclusivamente de num_factura, de forma similar el precio depende exclusivamente del producto, no de la factura.
+
+Los campos derivados no van, máximo una vista. Es necesaria la normalización en las bases de datos relacionales, es sencillo y nos permite un mejor manejo de los datos.
+
+- Si hay una relación muchos a muchos, siempre hay una tabla en medio que resuelve la realación, aunque surge de forma natural con el simple hecho de normalizar.
