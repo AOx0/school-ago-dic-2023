@@ -680,3 +680,230 @@ Ejercicio del capitulo 4, tipo examen pag 172, 5
 Para sacar una gramática regular del automata, para cada transicion escribimos una regla
 
 En la conversion del Automata FInito no determinista al autómata finito determinista no garantiza que sea reducido.
+
+#rect(width: 100%)[
+Tareas:
+    - Equipo_N
+Examenes:
+    - Nombre_Apellido
+]
+
+== Flex
+
+Le da tristeza que en las universidades no le dan atención a esto cuando hay muchas tareas que puede realizar Flex perfectamente.
+
+Flex es un _scanner_, reconoce texto y permite extraer _tokens_.
+
+Pregunta de examen: De donde sacamos el manual de flex? De GNU>doc>flex>version>flex.html
+
+Un archivo de flex es un archivo de texto plano que tiene una estructura:
+- Definiciones
+- Reglas
+- Código de usuario
+
+Separando entre las secciones con el símbolo %%
+
+Todos los comandos y expresiones de flez se deben de escribir en la columna 1
+
+Un archivo de flex es un archivo de texto plano que tiene una estructura:
+- Definiciones
+- Reglas
+- Código de usuario
+
+Separando entre las secciones con el símbolo %%
+
+Todos los comandos y expresiones de flez se deben de escribir en la columna 1, es importante tener control sobre los caracteres que se usan porque pueden influir en si flex correrá bien o no.
+
+La carpeta donde están los ejecutables está en GNUWin32>bin, ahi esta flex, bison, sugar, etc. Esa carpeta tiene que estar puesta en las variables del entorno, en el `$PATH`.
+
+Cuando agregamos una variable tenemos que guardarlo y reiniciar el equipo.
+
+La estructura del archivo se ve de la forma:
+```c
+definiciones
+%%
+reglas
+%%
+codigo
+```
+
+Para nuestros ejercicios solo vamos a usar 3 operaciones regulares, no vamos a usar las opciones más poderosass, flex puede tener infinitas expresiones regulares, que hace que busque en el texto de entrada todas las expresiones y decide verificar cuál hace match, las reglas:
+- La que más caracteres empareje de la entrada es la que se dispara
+- La que primero salga entre todas las que tienen el mismo número de caracteres
+
+
+Malic, programación en C++
+
+Ejemplo de un programa:
+
+```c
+/*   
+     Sección de definiciones
+     
+     Todo el codigo que queremos al inicio del programa va al inicio entre 
+     corchetes y llave   
+*/
+%{
+     #include <stdio.h>
+     unsigned int num_lines = 0, num_chars = 0;
+%}
+
+/* 
+     Reglas, cuenta todas las lineas y caracteres 
+     PATRON(expr-reg)         ACCION(codigo c++)
+*/
+%%
+\n        {    
+               ++num_lines; // Encontramos una nueva linea
+               ++num_chars; // Encontramos un caracter
+          }
+.         ++num_chars; // Matchea todo menos nueva linea
+%%
+
+int main() {
+     yylex(); // Función predefinida que invoca Flex
+
+     // Podemos acceder a las variables estáticas que declaramos
+     printf( "# of lines = %d, # of chars = %d\n", num_lines, num_chars);
+}
+```
+
+Flex como es Open Source y Windows tiene sus cosas hay que evitar caracteres raros. La extensión normal de los archivos de flex es `.lex`.
+
+== Invocar flex
+
+Podemos ver las opciones de flex con `flex -h`, hay que tener cuidado porque hay ciertos caracteres que no son vàlidos para flex, como caracteres que se ven iguales a un paréntesis pero en realidad no lo son.
+
+El codigo generado, `lex.yy.c`, contiene todo lo que escribimos, podemos ver de entre todo lo generado nuestro código:
+
+```c
+case 1:
+/* rule 1 can match eol */
+YY_RULE_SETUP
+#line 16 "flex.lex"
+{    
+   ++num_lines; // Encontramos una nueva linea
+   ++num_chars; // Encontramos un caracter
+}
+YY_BREAK
+```
+
+Podemos ver el `#line N`, que son instrucciones del pre-compilador de flex qué cosa agregar en este lugar de otro archivo. Lo primero que haremos es ver cómo hacer que flex no use instrucciones de pre-compilador.
+
+Para lograrlo debemos usar `-L`, que hace que se ponga directamente el código, copiado. Ahora se muestra:
+
+```c
+case 1:
+/* rule 1 can match eol */
+YY_RULE_SETUP
+{    
+   ++num_lines; // Encontramos una nueva linea
+   ++num_chars; // Encontramos un caracter
+}
+YY_BREAK
+```
+
+== Compilar VSCode
+
+Creamos un nuevo programa de C++ para consola, 'Proyecto Vacio de Consola', todos los proyectos los pondrá ahi de ahora en adelante, en la ruta personalizada que él indico.
+
+En archivos de origen que agregue un elemeno existente, ahi tenemos que agregar el `lex.yy.lex`, hacerlo de esta forma hace que sea un símbolo que apunta al archivo dado. Después de agregarlo simplemente compila.
+
+=== Warnings
+
+Le salió un error que dice que la función `fileno` está _deprecated_, no conviene ponerse a pelear con este tipo de errores., para evitar esto deshabilita los warnings que molesten en la sección de definiciones, por ejemplo:
+
+```
+#pragma warning(disable:4996 6011 6385 4013)
+```
+
+Hace lo mismo con la 6011, 6385, etc. De forma que solo se muestre el error en VSCode Studio. Luego de hacer esto tiene que volver a recompilar con flex y por último recompilar en VSCode
+
+=== Error
+
+Hay un error que `yywrap` no está definida, entonces tenemos que hacerlo:
+- Definir una función `yywrap` con la nomenclatura que pide flex
+- Deshabilitarlo con `%option noyywrap`
+
+
+#rect[
+    El proyecto hay que entregarlo sin warnings ni errores, se deshabilitan los warnings siempre y cuando sean en el código de flex, si es de nuestro código entonces debemos arreglarlo.
+]
+
+Con las modificaciones de supresión de errores y warnings es:
+
+```cpp
+/*   
+     Sección de definiciones 
+     Todo el codigo que queremos al inicio del programa va al inicio entre 
+     corchetes y llave   
+*/
+%{
+     #include <stdio.h>
+     unsigned int num_lines = 0, num_chars = 0;
+     #pragma warning(disable:4996 6011 6385 4013)
+%}
+
+/* Quitar funcion yywrap */
+%option noyywrap 
+
+/* 
+     Reglas, cuenta todas las lineas y caracteres 
+     PATRON(expr-reg)         ACCION(codigo c++)
+*/
+%%
+\n        {    
+               ++num_lines; // Encontramos una nueva linea
+               ++num_chars; // Encontramos un caracter
+          }
+.         ++num_chars; // Matchea todo menos nueva linea
+%%
+
+int main() {
+     yylex(); // Función predefinida que invoca Flex
+
+     // Podemos acceder a las variables estáticas que declaramos
+     printf( "# of lines = %d, # of chars = %d\n", num_lines, num_chars);
+}
+```
+
+O, en lugar de des-habilitar `yywrap` hay que agregar la función directamente:
+
+```c
+/*   
+     Sección de definiciones 
+     Todo el codigo que queremos al inicio del programa va al inicio entre 
+     corchetes y llave   
+*/
+%{
+     #include <stdio.h>
+     unsigned int num_lines = 0, num_chars = 0;
+     #pragma warning(disable:4996 6011 6385 4013)
+%}
+
+/* Quitar funcion yywrap */
+%option noyywrap 
+
+/* 
+     Reglas, cuenta todas las lineas y caracteres 
+     PATRON(expr-reg)         ACCION(codigo c++)
+*/
+%%
+\n        {    
+               ++num_lines; // Encontramos una nueva linea
+               ++num_chars; // Encontramos un caracter
+          }
+.         ++num_chars; // Matchea todo menos nueva linea
+%%
+
+/* Agregamos aqui la firma esa */
+
+int main() {
+     yylex(); // Función predefinida que invoca Flex
+
+     // Podemos acceder a las variables estáticas que declaramos
+     printf( "# of lines = %d, # of chars = %d\n", num_lines, num_chars);
+}
+```
+
+Probemos a hacer este programa nosotros jaa. El termina de insertar información con `CTRL-Z` para windows.
