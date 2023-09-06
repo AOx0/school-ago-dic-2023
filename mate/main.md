@@ -420,3 +420,96 @@ En este caso tenemos $2$ elevado a $p-1$, que tiene divisores $1, 2, 4, ..., 2^(
 Si sus dos triviales son $1$ y $2^p$ y tomando en cuenta que la suma de los divisores debe de dar el número perfecto, entonces, si el número es la suma de los divisores ($1 + 2^p - 1 = 2^p$).
 
 Ahora tenemos $2^p (2^p - 1) - 2^(p-1) (2^p - 1)$, si factorizamos queda $2^(p-1)(2^p - 1)(2-1) = 2^(p-1) (2^p - 1)$
+
+#pagebreak()
+
+== Divisibilidad
+
+Para cualquier $a, c in ZZ^+$, donde $a != 0$, entoncesi $a|b and a|c => a|(m b + n c)$ donde $m, n in ZZ^+$
+
+Entonces, se cumple:
+
+$
+5|10 and 5|20 &=> 5 | (2 times 10 + 20 times 40)\
+&=> 5 | (20 + 80)\
+&=> 5 | 100
+$
+
+== Def, algoritmo de division
+
+Sea $a, b in ZZ$, y $b in ZZ^+$, tal que al expresar la división se conforma como $a = b q + r$, donde $q, r in ZZ$ y son únicos. Aqui la $q$ es el cociente, $r$ el residuo, donde debe cumplirse $0 <= r < b$.
+
+Se le llama entero único porque se trabaja con la aritmética regular. Solo habrá una combinación de $r, q$ que cumpla con el intervalo que logre dar el resultado. Por ejemplo $3/7$ solo permite tener un residuo $0 <= r < 7$.
+
+=== Prueba de existencia
+
+En esta prueba mostramos que los números $q and r$ cumplen con la igualdad
+
+$
+-3, -2, -1, 0, 1, 2, 3\
+-3b, -2b, -1b, 0b, 1b, 2b, 3b\
+$
+
+Y vemos que sea $0 <= r < b$
+
+Partiendo de:
+
+$
+a = b q + r\
+b q <= a <= (q + 1) b
+$
+
+Es decir, que el valor en $a$ debe ser mayor a 0 y debe ser menor al que sigue ($(q + 1)b$) de forma que podamos hacer $r = a - b q$
+
+=== Prueba Unicidad
+
+En esta prueba verificamos que $q, r$ son únicos.
+
+Si tenemos el teorema de divisibilidad $a = b q + r$, entonces, si nos encontramos con una combinación que da el mismo resultado, $a = b q_1 + r_1 and a = b q + r$. Entonces $r < r_1 < b$, si los dos valores de $a$ son iguales en ambos lados, siendo dos combinaciones diferentes, podemos:
+
+$
+b q_1 + r_1 = b q + r
+$
+
+Si tenemos $b q_1 + r_1 = b q + r$, podemos despejar de la forma:
+
+$
+b q_1 + r_1 = b q + r\
+r_1 - r = b q - b q_1\
+r_1 - r = b(q - q_1)
+$
+
+Entonces, si $0 <= r_1 -r < b$, se tiene que no es posible tener $b | (r_1 -r)$, solo es posible si $r_1 = r => q = q_1$, y particularmente solo con $0$. 
+
+$
+(r_1 - r)/b in QQ => exists.not
+$
+
+== Aritmética modular
+
+En la igualdad, dada en el algoritmo de división, queda $a = b q + r$, donde:
+- $a$ es el _dividendo_
+- $b$ es el _divisor_
+- $q$ es el _cociente_
+- $r$ es el residuo
+- A $q$ se le conoce como $q = a "división" b = [a/b]$, donde $a in ZZ$
+- A $r$ se le conoce como $r = a "modulo" b = a - b$, donde $b in ZZ^+$
+
+Ejemplo, sea $101 div 12$ quedaría descompuesto de la forma $101 = 12 times 8 + 5$, donde se cumple la condición de $0 <= 5 <= 12$.
+
+Expresado como módulo quedaría $5 = 101 "mod" 12$, y como división $8 = 101 "div" 12$
+
+Ejemplo: $191 div 3$:
+- $191 = 14 times 13 + 9$
+- $14 = 191 "div" 13$
+- $9 = 191 "mod" 13$
+
+Ejemplo: $-11 div 3$:
+- $-11 = 3 times -3 - 2$
+    - En este caso $0 <= -2 < 3$ no se cumple, no es una $q$ válida
+- $-11 = 3 times -4 +1$
+    - En este caso $0 <= 1 < 3$ si se cumple, es una $q$ válida
+
+#rect[
+    *Nota*: El residuo o resto no puede ser negativo, tener en cuenta que el número entero $a$ es divisible por el número $b$, sii el ressiduo $r = 0 => [a/b]$
+]
