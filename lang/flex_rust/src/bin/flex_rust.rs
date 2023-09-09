@@ -2,40 +2,57 @@ use std::{fs::OpenOptions, io::Read};
 
 use flex_rust::*;
 
-use logos::Logos;
+use logos::{Lexer, Logos};
+
+fn currency<'a>(slice: &'a str, name: &'a str) -> Option<f64> {
+    let neg = slice.starts_with("-");
+
+    let slice = slice
+        .trim_start_matches('+')
+        .trim_start_matches('-')
+        .trim_start_matches('$')
+        .trim_end_matches(name)
+        .trim();
+
+    let n: f64 = slice.parse().ok()?; // skip 'k'
+    Some(if neg { -n } else { n })
+}
+
+fn dolar(lex: &mut Lexer<Token>) -> Option<f64> {
+    currency(lex.slice(), "USD").map(|v| v)
+}
+
+fn peso(lex: &mut Lexer<Token>) -> Option<f64> {
+    currency(lex.slice(), "MXN").map(|v| v * 0.057)
+}
 
 #[derive(Logos, Debug, PartialEq)]
-enum Tokens {
-    #[regex("([-+]?[1-9][0-9]*)|0", priority = 1)]
-    Digit,
+#[logos(subpattern numb = r#"[1-9][0-9]*"#)]
+#[logos(subpattern curr = r#"([-+]?\$ *(?&numb)|\$ *0)(\.[0-9]*)?"#)]
+enum Token {
+    #[regex("(?&curr) USD", dolar)]
+    #[regex("(?&curr) MXN", peso)]
+    Digit(f64),
 }
 
 fn main() {
     #[cfg(feature = "dhat")]
     let _profiler = dhat::Profiler::new_heap();
 
-    let file = std::env::args().skip(1).next();
     let mut buff = String::new();
+    let mut res: f64 = 0.;
 
-    let mut input: Box<dyn Read> = if let Some(file) = file {
+    if let Some(file) = std::env::args().skip(1).next() {
         Box::new(OpenOptions::new().read(true).open(file).unwrap())
     } else {
-        Box::new(std::io::stdin())
-    };
+        Box::new(std::io::stdin()) as Box<dyn Read>
+    }
+    .read_to_string(&mut buff)
+    .unwrap();
 
-    input.read_to_string(&mut buff).unwrap();
-
-    let mut lexer = Tokens::lexer(&buff);
-    let mut res: i128 = 0;
-
-    while let Some(c) = lexer.next() {
-        match c {
-            Ok(Tokens::Digit) => {
-                res += i128::from_str_radix(lexer.slice(), 10).unwrap();
-            }
-            _ => {
-                print!("{}", lexer.slice());
-            }
+    for c in Token::lexer(&buff) {
+        if let Ok(Token::Digit(d)) = c {
+            res += d;
         }
     }
 
