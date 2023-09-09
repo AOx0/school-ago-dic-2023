@@ -907,3 +907,59 @@ int main() {
 ```
 
 Probemos a hacer este programa nosotros jaa. El termina de insertar información con `CTRL-Z` para windows.
+
+
+#align(center)[#rect[
+    Hubo un error en el ejercicio que hicimos entre todos, debio quedar:
+
+    $
+    {a} (b{b}c|a) equiv {a}b{b}c | a{a}
+    $
+]]
+
+== Flex 2
+
+Supongamos que queremos hacer un ejemplo sencillo, dado un texto, donde hay números enteros, queremos reconocer los números enteros y sumarlos.
+
+`yywrap`, cuando encuentra el final del archivo invoca yywrap para poder realizar acciones al terminar todo el procesamiento de la entrada.
+
+Por default, flex lee los caracteres del flujo de entrada, el `stdin`. Podemos hacer que el ejecutable tome como flujo de entrada el archivo, podemos hacerlo desde el OS con `<<`.
+
+O podemos hacer lo siguiente, notemos que se salta el primer argumento.
+
+```c
+int main(int argc, char* argv[]) {
+    ++argv; // Se salta uno
+    --argc;
+    if (argc > 0) {
+        yyin = fopen(argv[0], "r");
+    } else {
+        
+    }
+    yylex();
+}
+```
+
+Lo que vamos a hacer es que vamos a copiar ambos a donde deben estar en VS Code.
+Tiene
+Proyetco/
+    aqui lo puso
+
+En visual studio > proyecto > tiene nivel advetencia 3
+
+El hace que en los dos lugares esté igual
+
+En VSCode, para pasar argumentos en el debugger debemos: Proyecto > Propiedades > Depuración > Argumentos de Comandos
+
+Tip para subir el examen:
+1. Quitamos toda la basura
+    - Borrar `.vs`
+    - Borrar `Debug`
+    - Dejar solo la carpeta del Proyecto > Projecto y el `.sln`
+2. El archivo pdf va a la altura de `.sln`
+3. Nombre `FelixMartinez`
+
+
+Si hay errores de versiones Proyecto > Propiedades > Escogemos la pasada
+
+Ejercicio, tengo 5 dolares, el profe quiere que hagamos uno donde se pueda escribir tengo 5 dolares, 3 pesos, debo un dolares, debe de poder hacer la suma en dólares y pesos.
