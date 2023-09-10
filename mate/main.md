@@ -513,3 +513,137 @@ Ejemplo: $-11 div 3$:
 #rect[
     *Nota*: El residuo o resto no puede ser negativo, tener en cuenta que el número entero $a$ es divisible por el número $b$, sii el ressiduo $r = 0 => [a/b]$
 ]
+
+#pagebreak()
+
+
+Sea $a, b in ZZ^+$
+- Si $a = b q$ para $q in ZZ^+$, entonces $-a = (-q) b$
+    En este caso, cuando $-a "si" (< 0)$ es dividido por un $b "si" (> 0)$ al cociente es $-9 "donde" (< 0)$ y el residuo es $r = 0$
+- Si $a = b q + r$ para un cociente $q in NN$ y se encuentra $0 < r < b$ entonces
+    $-a = (-q) b - r$
+
+    En este caso el valor de $b$ tiene que mantenerse absoluto, por lo que: 
+    $-a = (-q) b + b - b - r$
+
+    Si los juntamos queda:
+    $-a = (-q) b - b + b - r$
+
+    Estamos sumando/restando $b$ para no modificar la expresión, ahora podemos factorizar:
+    $-a = (-q - 1) b + (b - r)$
+
+    Con esto logramos que $r$ entre en el intervalo de $0 < r < b$
+
+    En este caso $r$ nos da positivo porque al restarle el valor de $b$ que es mayor a el queda como positivo, o algo asi.
+
+
+    Ejemplo:
+
+    $
+    -11 = (-4)(3) + 1
+    $
+
+=== Pseudocogido
+
+#rect[
+    Para el caso 2, cuando el dividendo ($-a$) es menor a 0, es dividido por $b$ donde $b > 0$, el cociente es $-q - 1$ y el residuo es $b - r$, siempre y cuando $0 < b - r < b$ 
+]
+
+```python
+Donde a, b in ZZ:
+q := cociente
+r := residuo
+
+si a = 0
+    q = 0
+    r = 0
+si no
+    r = abs(a)
+    q = 0
+
+    mientras r >= b 
+        r = r - b 
+        q = q + 1 #el cociente afecta el sig valor
+
+    si a > 0 #no pasa nada
+        q = q
+        r = r
+
+    # Ultimos dos casos, donde tenemos valor de divisor negativo y de residuo 0, 
+    # no necesitamos agregar un resultado maś
+    sino si r = 0 # Primer punto de hoy
+        q = -q
+        r = r
+    sino #segundo punto de hoy
+        q = -q - 1
+        r = b - r
+        
+```
+
+```rust
+fn div(a: i64, b: i64) -> (i64, i64) {
+    let mut res = (0, 0);
+    let (ref mut q, ref mut r) = res;
+
+    if a == 0 {
+        return res;
+    }
+
+    *r = a.abs();
+
+    while *r >= b {
+        *r -= b;
+        *q += 1
+    }
+
+    if a > 0 {
+        // Cuando son positivos no hacemos nada
+    } else if *r == 0 {
+        // Si el residuo es 0 existe la posibilidad
+        // de que podamos tener un cociente negativo
+        *q = -*q;
+    } else {
+        // Si no, un residuo
+        *q = -*q - 1;
+        *r = b - *r;
+    }
+
+    res
+}
+```
+
+== Aritmética modular
+
+Si $a and b$ son números enteros y $m in ZZ^+$, entonces $a$ es congruente con $b "mod" n$ si $m$ divide a $a  b$, es decir: $m | (a - b) => (a-b)/m in ZZ$
+
+Vamos a trabajar con puros residuos, donde congruente es _idéntico_, como en JS con ```javascript ===```
+
+Axiomas:
++ La notación $a eq.triple b "mod" m$ (donde congruente es $eq.triple$) es una congruencia (en geometria, misma forma/tamaño) y que $m$ es su módulo
++ 2 números enteros son congruentes de $"mod" m$ si y solo si, y solo si, se tienen los mismos residuos cuando se dividen por $m$.
+
+
+Determina si $17$ es congruente con $5 "mod" 6$ y $24$ $14 "mod" 5$:
+- $a equiv b "mod" m$, entonces $15 equiv 5 mod 6$, si $m | (a-b)$:
+    $17 - 5 = 12 / 6 => 2 ", es congruente"$
+- $24 equiv 14 mod 5$:
+    $24 - 14 = 10 / 5 -> 2 ", es congruente"$
+    
+- $24 equiv 14 mod 6$:
+    $24 - 14 = 10 / 6 in QQ ", no es congruente"$
+    $24 equiv.not 14 "mod" 6$
+
+En el examen viene hasta aqui. Viene:
+- Teoria de conjuntos
+- Codigo, relacionado con divisibilidad. Hay que tener relacionados los divisores de sumas
+
+= Unidad 2
+
+Gauss, intervino en las leyes de Maxwell y también en teoría de números. El dice
+
+*Teorema 2*: Sea $m in ZZ^+$ tal que $a and b$ son congruentes para un módulo de $m$, si existe un $K in ZZ$ que satisface la expresión:
+
+$
+a = b + K m
+$
+
