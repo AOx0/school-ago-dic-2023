@@ -1,3 +1,5 @@
+#import "@preview/tablex:0.0.5": tablex, cellx
+
 
 #table(
   columns: (1fr, 1fr),
@@ -13,7 +15,7 @@
 = Resultados
 
 #align(center)[
- // #image("exito.png", width: 70%)
+  #image("exito.png")
 ]
 
 = Preguntas
@@ -92,3 +94,137 @@
   En el Packet Tracer es un cable coaxial, es decir de una compañia de table.
 
   En mi casa es un cable de fibra optica que se conecta directamente el Modem-router.
+
+== Parte 2
+
+=== Paso 1
+
++ Tracer en la red del Packet Tracer
+
+  #align(center)[
+    #image("tracer.png", width: 40%)
+  ]
+
++ `traceroute` de mi red
+
+
+  #align(center)[
+    #image("tracer2.png", width: 100%)
+  ]
+
++ En su propia red, ¿cuál es la tecnología para el bucle local que está utilizando? ¿Cable? ¿DSL? ¿Satélite? ¿Celular? Si se trata de una conexión por cable, vea si puede encontrar el cable que sale de su red doméstica. ¿A dónde va? ¿A un poste telefónico? ¿Bajo tierra?
+
+  *A*: En mi caso el bucle local involucra un cable de fibra optica que sale de mi casa y va bajo tierra.
+
++ El segundo salto en el comando traceroute en tu dispositivo suele ser el POP de tu ISP. ¿Cuál es la dirección IP del POP de su ISP?
+
+  *A*: Basado en la salida de `traceroute` podemos decir que la dirección IP del POP de mi ISP es `200.38.193.226`.
+
+=== Paso 3
+
++ De acuerdo a https://whatismyip.live/ip/200.38.193.226 y https://ipinfo.io/200.38.193.226
+
+  #align(center)[
+  #tablex(
+    columns: 2,
+    cellx(fill: gray)[ISP POP], cellx(fill: gray)[],
+    [Dirección IPv4 de segundo salto], [200.38.193.226],
+    [ISP], [Reasignacion UniNet],
+    [Ciudad], [Mexico city],
+    [Región], [Mexico city],
+    [País], [México]
+  )
+  ]
+
+=== Paso 5
+
++ ¿Cuál es la dirección IPv4 deltercer salto en el resultado del traceroute de Packet Tracer?
+
+  *A*: `10.110.178.133`
+
++ ¿Qué router e interfaz en el edificio monterey.ca está configurado con esta dirección IPv4?
+
+  *A*: El Router-PT, llamado `rur02.monterey.ca.sfba.comcast.net`, está configurado con esa IPv4 en `GigabitEthernet0/0`
+
++ ¿Cuál es la dirección IPv4 del cuarto salto en en el resultado del traceroute de Packet Tracer?
+
+  *A*: `10.139.198.129`
+
+
++ ¿Qué router e interfaz en el edificio monterey.ca está configurado con esta dirección IPv4?
+
+  *A*: El Router-PT llamado `rur01.monterey.ca.sfba.comcast.net`, está configurado con esa IPv4 en `GigabitEthernet0/0`
+
++ ¿Por qué cree que las direcciones IP de las otras interfaces no se muestran en el resultado del traceroute?
+
+  *A*: Estas interfaces son el origen de los paquetes que se envían al destino del siguiente salto. Las direcciones IP de origen no se muestran en la salida de traceroute, solo las de destino.
+
+  Por ejemplo, la interfaz que conecta ambos Router-PT, solo se muestra el de destino.
+
++ Enumere los saltos en su propio resultado de traceroute que pertenecen a su ISP local.
+
+
+  ```
+  2  dsl-servicio-l200.uninet.net.mx (200.38.193.226)  11.736 ms  11.679 ms  11.587 ms
+  3  bb-dallas-bryan-18-be11.uninet.net.mx (201.154.119.222)  46.739 ms  46.712 ms  46.642 ms
+  ```
+
+  Lo sabemos por el dominio `uninet.net.mx`
+
+  #align(center)[
+  #tablex(
+    columns: (1.2cm, 2fr, 1fr, 1fr),
+    cellx(fill: gray)[salto], cellx(fill: gray)[Nombre de dominio], cellx(fill: gray)[Interfaz], cellx(fill: gray)[IPv4],
+    [5],[santaclara.ca.sfba.comcast.net],[GigabitEthernet0/0],[10.151.78.177],
+    [6],[sunnyvale.ca.ibone.comcast.net],[GigabitEthernet0/0],[10.110.41.121],
+    [7],[sunnyvale.ca.ibone.comcast.net],[GigabitEthernet0/0],[10.110.46.30],
+    [8],[9greatoaks.ca.ibone.comcast.net],[GigabitEthernet0/0],[10.110.37.178],
+    [9],[9greatoaks.ca.ibone.comcast.net],[GigabitEthernet0/0],[10.110.32.246],
+  )
+  ]
+
++ ¿Cuál es el edificio, router, interfaz y dirección IPv4 para el enlace saliente a Los Ángeles?
+
+  *A*: El edificio de `greatoaks.calibone`, desde el router `pe11.9greatoaks.ca.ibone.comcast.net` en la interfaz `GigabitEthernet1/0` e ip 172.16.69.142
+
+=== Paso 7
+
++ ¿Cuál es la interfaz para el 10º salto?
+
+  *A*: GigabitEthernet0/0
+
+=== Paso 9
+
++ El rack tiene un router, que se conecta al Área de la Bahía de San Francisco y un cable submarino que cruza el Océano Pacífico. ¿Cuál es la interfaz utilizada para este 11º salto en el resultado de traceroute?
+
+  *A*: GigabitEthernet0/0
+
+=== Paso 10
+
++ ¿Cuántos cables submarinos terminan en Hermosa Beach?
+
+  *A*: Segun https://www.fiberatlantic.com/cls/LgVj, 3: Américas (HKA), JUPITER y SEA-US.
+
+
++ ¿Cuál es el nombre del cable submarino que va desde Hermosa Beach hasta Hawai?
+
+  *A*: SEA-US
+
++ ¿Cuál es el nombre del punto de aterrizaje en Hawai?
+
+  *A*: Makaha
+
++ ¿Cuántos cables submarinos terminan en este punto de aterrizaje en Hawai?
+
+  *A*: Según https://www.fiberatlantic.com/cls/BgKx, son 4.
+
++ ¿Qué interfaz está asignada al 12º salto?
+
+  *A*: GigabitEthernet0/0
+
+=== Paso 11
+
+
++ ¿Qué interfaz está asignada al 13º salto?
+
+  *A*: GigabitEthernet0/0
