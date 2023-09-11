@@ -285,7 +285,17 @@ https://securitytrails.com/blog/google-hacking-techniques
 + Familia de estándares ISMS
 + Bibliografía 
 
-== Terminología
+== Detección de vulnerabilidades
+
+La gestión y detección de vulnerabilidades son necesarias para poder realizar 
+
+Este tipo de acciones no solo aplican a lo relacionado a IT, sino que engloba toda la organización.
+
+Un sistema de gestion es un conjunto de elementos para establecer objetivos que permitan
+
+Todos los estándares de ISO están basados en el ciclo de Deming, de mejora constante
+
+== Comandos & Términos
 
 - Vulnerabilidad: Debilidad de un activo que por definición puede ser explotada 
 - Amenaza: Todo aquello que puede explotar una vulnerabilidad
@@ -300,27 +310,101 @@ https://securitytrails.com/blog/google-hacking-techniques
 - Gestion de riesgos: Aplicación sistemática de gestion de politicas, procedimientos y prácticas de actividades de comunicar, consultar, establecer contexto, analizar, evaluar, tratar, monitorear y revisar el riesgo.
 - Control: medida que modifica un riesgo
 
-
-== Detección de vulnerabilidades
-
-La gestión y detección de vulnerabilidades son necesarias para poder realizar 
-
-Este tipo de acciones no solo aplican a lo relacionado a IT, sino que engloba toda la organización.
-
-Un sistema de gestion es un conjunto de elementos para establecer objetivos que permitan
-
-Todos los estándares de ISO están basados en el ciclo de Deming, de mejora constante
-
-== Comandos 
-
 - `netstat -autopna`: Muestra la actividad 
 - `appliance`: Una computadora/servidor que está dedicado a realizar una sola función. Por ejemplo tenemos un servidor que se usa para enviar actualizaciones a toda la org 
 - `OSINT`: Open Source Intelligence, busqueda de información en fuentes abiertas
 - `activo`: persona o 
 - `IDS`: Sistema de detección
+- Matriz Raci: Es un arbol de responsabilidades
+- Control: Modifica un riesgo
 
 == Aplicaciones
 
 - En `Wireshark` captura todos los paquetes que encuentre el dispositivo en la red
 - En `NetworkMiner` procesa todos los paquetes e identifica los dispositivos, su información, IP, etc.
+- `owasp` (https://owasp.org/) tiene distintas herramientas de codigo libre, cada 4 años ve que vulnerabilidades encuentra la gente.
+
+= ISMS
+
+Las responsabilidades de gestion de la información.
+
+La seguridad suele ser un area pequeña del departamento de IT, lo que pasa cuando se implementa un ISMS la seguridad pasa de ser solo un sub area de IT a ser un departamento a parte, el Departamento de Direccion de Seguridad.
+
+Dividido en Geation, Pentesting, actualizaciones, diseño de politicas, centro de Operaciones de seguridad (SOC) donde se monitorea, responde, etc. Asi como DevSecOps es una mezcla de DevOps y de seguridad, para proteger toda la cadena de _suministro_.
+
+Hacer esto deja mas acceso directo al CEO para reportar riesgos.
+
+Cuando Seguridad ae encuentra dentro de IT, se crea un conflicto porque la prioridad de IT es mantener siempre en funcionamiento los sistemas, no tanto la seguridad.
+Si el area de seguridad depende de TI se le da mucho mas peso a la produccion.
+
+En el sistema de gestion permite prevenir y responder a incidentes porque se tienen procesos, politicas y herramientas.
+
+Los sistemas de gestion de la seguridad de la informacion tienen base en calidad.
+
+Tiene:
+- Base regulatorias:
+    -    
+- Catologo de controles
+    - Dominios
+    - Generales
+
+Es un proceso que involucra todas las areas.
+
+
+derechos sarco: Derecho, por ser dueños de nuestra informacion. Nos dan la facultad de elefir a quien darle nuestros datos personales y cuando quitarselos.
+
+
+estas politicas deben estar documentadas, disponibles para wuien lo necesite en la organizacion
+
+
+
+Clausulas geberales, la tiene todo sistema. Cambia el tema definicines y eso
+
+Particulaes tienen lo mismo pero se orientan especifico al tema a gestionar.
+
+Control: Mitigar un riezgo, medodas wue permiten mitigar un riesgo
+
+Control se estructura por:
+- Dominio: Procesos para la seguridad de la informacion, es un proceso.
+    Ejemplo en el ISO esta el proceso de politicas de seguridad 
+    las politicas se deben revisar una vez al año para ver si fue efectico
+    
+Politica, tiene una estructura de sistema de gestion, muy similar. 
+
+De la politica general nacen las politicas especificas.
+
+
+a partir de una politica se pueden establecer procesos de gestion, que involucran recursos
+
+[Imagen de las flechas]
+
+Un proceso da paso a la creacion de procesimientos, por ejemplo para escanear vulnerabilidades.
+
+En el video es claro como la empresa tirne un sistema de monitoreo
+
+== Politica
+
+De la politica general se derivan distintas politicas específicas. Establecer el sistema de gestión permite crear politicas > procesos > procedimientos. Hay que tener en cuenta que no todas las personas que lean el documento saben todos los terminos, por lo que es necesario explicarlo
+
+- *Politicas*:
+  - *Proceso*: El proceso es lo que vamos a realizar, son como objetivos.
+    - *Procedimiento*: Son los pasos a realizar para cumplir el proceso, ya dentro del procedimiento se espcifican las herramientas. El procedimiento es solo una parte del proceso
+      - *Capacitación*: Está involucrado en el sistema de gestión
+        - *Implementación de herramintas*: Está onvolucrado en el sistema de gestion
+
+También es parte del sistema de gestión *operaciones/monitoreo*, *herramientas,appliances de seguridad*.
+
+#rect[
+  Ejemplo de Politica https://www.mtss.go.cr/perfiles/lineamientos_circulares_directrices_politicas_internas/lineamientos-circulares-directrices-politicas%20internas/DGAF-DTIC-OF-191-2020.pdf
+]
+
+Secciones:
+- Alcance: Quién tiene que aplicar los contenidos de la politica
+- Organigrama/Gobernancia
+- 
+
+Cada país tiene una secretaría que permite acceder a las Normas ISO, por ejemplo, a mejor precio. Cada país tiene sus "normas" que son prácticamente la traducción, entonces cada pais tiene su ""propia"" norma pero no se la inventó, la tradujo el país.
+No poner en documentos públicos marcas ni versiones
+
+#rect[OWASP realiza una encuesta cada 4 años donde pregunta por la vulnerabilidades más comunes https://owasp.org/www-project-top-ten/]
 
