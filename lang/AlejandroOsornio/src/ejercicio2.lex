@@ -58,6 +58,11 @@ int main(int argc, char * argv[]) {
 
      num1 = atoi(argv[0]);
      num2 = atoi(argv[1]);
+
+     if (num2 == 0) {
+          printf("Error: N2 no puede ser 0");
+          exit(1);
+     }
      
 
      FILE * in = fopen(argv[2], "r");

@@ -21,8 +21,9 @@
      PATRON(expr-reg)         ACCION(codigo c++)
 */
 %%
-\n lineas++; catacteres++;
-[^ ] {
+\n lineas++; caracteres++;
+[ \t\r] caracteres++;
+[^ \t\r\n]+ {
      caracteres += yyleng;
      palabras++;
 }
