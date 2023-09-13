@@ -423,3 +423,115 @@ Pone el ejemplo de una llave (num_factura, prod_num), el campo fecha no depende 
 Los campos derivados no van, máximo una vista. Es necesaria la normalización en las bases de datos relacionales, es sencillo y nos permite un mejor manejo de los datos.
 
 - Si hay una relación muchos a muchos, siempre hay una tabla en medio que resuelve la realación, aunque surge de forma natural con el simple hecho de normalizar.
+
+
+
+= Paginas web
+
+Para poder hacer una pagina hay dos cosas fundamentales:
+- Frontend: HTML, JS, CSS
+- Backend:
+  - WebServer: Apache, Nginx
+  - App: JS, PHP, Python
+  - Data: SQL
+
+= Vistas
+
+Creó una vista para mostrar por cada orden la cantidad a pagar.
+
+```sql
+CREATE VIEW salesPerOrder AS
+SELECT orderNumber, (quantityOrdered * priceEach) AS Total
+  FROM orderdetails
+ GROUP BY orderNumber
+ ORDER BY total DESC;
+```
+
+Podemos editar el codigo de la vista si le damos click en el menu
+
+= Procedure
+
+El stored procedure no tiene por qué devolver un valor
+
+Subio el thread stack al doble de mysql
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE GetAllProducts()
+ BEGIN
+       SELECT * FROM products
+   END //
+
+DELIMITER;
+```
+
+= Triggers
+
+
+Ejemplo, ahora va a crear una tabla nueva que va a registrar todos los eventos en cambios sobre la tabla employees.
+
+Primero crea la tabla de employees:
+
+```sql
+CREATE TABLE employees_audit(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    employeeNumber INT NOT NULL,
+    lastname VARCHAR(50) NOT NULL, /* ? cambio de nombre */
+    changedate DATETIME DEFAULT NULL, /* Fecha que se cambio */
+    action VARCHAR(50) DEFAULT NULL /* Que operación se hizo */
+);
+```
+
+Y ahora si va a crear el TRIGGER para cuando se integre la integridad de las tablas:
+
+```sql
+  CREATE TRIGGER before_employee_update
+  BEFORE UPDATE ON employees -- Ejecutar antes de que se haga el cambio en si
+FOR EACH ROW -- Para toda la tabla
+  INSERT INTO employees_update
+     SET action = 'update',
+         employeeNumber = OLD.employeeNumber, -- Valor antes de actualizarse
+         lastname = OLD.lastname,
+         changedate = NOW()
+;
+```
+
+
+Ahora usará un procedure
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE InsLog(
+  IN pENum INT, -- IN porque entra
+  IN PLName VARCHAR(50),
+  IN pDate DATETIME,
+  IN action VARCHAR(50)
+)
+BEGIN
+  -- Aqui va el insert/acción
+  INSERT INTO employees_audit
+  (employeeNumber, lastname, changedate, action)
+  VALUES
+  (pENum, pLNAME, pDate, pAct);
+END //
+
+DELIMITER ;
+```
+
+Y puede probar la macro:
+
+```sql
+CALL InsLog(1, 'test'. NOW(), 'test');
+```
+
+Y modifica el trigger para que quede:
+
+```sql
+  CREATE TRIGGER before_employee_update
+  BEFORE UPDATE ON employees -- Ejecutar antes de que se haga el cambio en si
+FOR EACH ROW -- Para toda la tabla
+    CALL InsLog(OLD.employeeNumber, OLD.lastname, NOW(), 'update')
+;
+```
