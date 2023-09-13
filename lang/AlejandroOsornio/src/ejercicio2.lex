@@ -7,7 +7,9 @@
      #include <stdio.h>
      #pragma warning(disable:4996 6011 6385 4013)
      #define MAX_DIGITOS 25
-     char nuevo[MAX-DIGITOS+1] = {0}; 
+     char nuevo[MAX_DIGITOS+1] = {0};
+     int num1;
+     int num2;
 %}
 
 /* Quitar funcion yywrap */
@@ -18,11 +20,11 @@
      PATRON(expr-reg)         ACCION(codigo c++)
 */
 %%
-[48]|[1-9]+[2480] {
+[1-9][0-9]* {
      int numero = atoi(yytext);
 
-     if (numero%4 == 0) {
-          numero+=5;
+     if (numero%num2 == 0) {
+          numero+=num1;
 
           int digitos = 0;
           int tnum = numero;
@@ -50,23 +52,28 @@ int main(int argc, char * argv[]) {
      --argc;
      ++argv;
 
-     if (argc != 2) {
+     if (argc != 4) {
           puts("Debe especificarse una entrada y una salida y ya.\n");
      }
 
-     FILE * in = fopen(argv[0], "r");
+     num1 = atoi(argv[0]);
+     num2 = atoi(argv[1]);
+     
+
+     FILE * in = fopen(argv[2], "r");
      if (in == NULL) {
           printf("Fallo al abrirse el archivo '%s'.\n", argv[0]);
           exit(1);
      }
 
-     FILE * out = fopen(argv[1], "w");
+     FILE * out = fopen(argv[3], "w");
      if (out == NULL) {
           printf("Fallo al crear/abrir el archivo '%s'.\n", argv[1]);
           exit(1);
      }
      yyin = in;
      yyout = out;
+     
      
      yylex();
 }
