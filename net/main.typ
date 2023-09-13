@@ -427,3 +427,126 @@ Los routers deciden por donde se va a enviar el paquete, solo deciden a cuál de
 ]
 
 #rect[Nota, los switches son de capa 2, no pueden ser gateaways, a menos que se un switch especial que puede ser gateaway]
+
+
+== Capa de enlace
+
+Comunicación entre tarjetas de intrerfaz de red
+
+La capa 2 es la que atiende las tramas. Es la única que depende de la capa física.
+
+=== Normas
+
+- Ethernet
+- WLAN
+- PAM (p. ej. Bluetooth)
+
+Logrado por:
+- IEEE
+- ANSI
+- ISO
+- ITU
+
+
+En esta capa se hace referencia al siguiente segmento de la red. 
+
+=== Topología
+
+- Fisica: Cableado, donde estan fisicamente las cosas, etc
+- Logica: Hace referencia solo a los dispositivos y sus interfaces, como sus conecciones
+
+Topologia WAN (interconecta redes):
+- Punto a punto: Origen destino
+- Hub and spoke: Uno a varios
+- Malla: Todos con todos, o casi todos. En todos con todos es _full mesh_ o malla completa. Tipicamente es un router y N AP, el profe tiene 3 routers
+
+Topologia LAN (interna):
+- Estrella
+- Estrella expandida: Varias estrellas conectadas con switches
+- Anillo: Se suele usar con la fibra optica
+- Bus: Usa un cable negro obscuro.
+
+=== Comunicación
+
+- Sem-duplex: Se puede mandar o recibir, más no ambos, se usa un medio compartido
+- Full duplex: Hay un medio para mandar y otro para recibir -> y <-
+
+=== Acceso a medios compartidos
+
+Por lo general por un solo medio se mandan mensajes de multiples dispositivos. Si dos dispositivos quieren mandar por un medio al mismo tiempo, se produce una colisión. El protocolo de acceso al medio se tiene:
+
+- *Basado en la contención*  
+  - Cada quien cuando ve que alguien más está mandando mensajes no mandan mensajes
+  - Sin embargo se puede dar que ambas escuchen el medio sin mensajes al mismo tiempo y se dispare que ambas manden, generando una colisión
+  - Se puede hacer que cada máquina tiene un timer aleatorio para elegir si mirar el medio, haciendo que lo más probable es que ambas maquinas vean nunca al mismo tiempo, aunque aun asi puede dar que entre los _n_ equipos a dos les quede el mismo aleatorio y asi.
+- *Acceso controlado*: 
+  - Es determinista
+  - Token Ring: Son Tokens para escribir, quien tiene el token puede mandar mensajes, al terminar lo pasamos al siguiente en el anillo. Se suele usar más en fibra óptica.
+
+
+=== Trama 
+
+Las tramas tienen siempre una estructura que suele ser:
+- Encabezado de trama: Bits mágicos que indican que se trata de una trama, puede ser de inicio o de fin de serie.
+- Encabezado: Mac origen, destino, version de ip, time-to-leave (timeout, se mide en saltos, si no se logra en 7 saltos mejor cancelalo, por ejemplo)
+- Datos
+- Tráiler
+- Frame Stop para validar
+
+
+
+#rect[
+  Tipicamente son 7 routers, 7 saltos, para recorrer el mundo.
+]
+
+
+== Tramas Ethernet (802.2, 802.3)
+
+Es un tipo de trama, la más utilizada.
+
+== Dirección MAC Ethernet
+
+- Tiene un primer identificador de la organización, pueden tener más de uno para la empresa, para distintos producttos por ejemplo.
+  - Si toda una organización usa dispositivos con la misma MAC 
+  - Aunque también cosas como una USB tiene MAC
+- Indentificador dado por el fabricante para el dispositivo
+
+
+Los datos dentro de la red local se comunican usando MAC, no es necesario tener internet, porque los dispositivos locales se comunican usando la MAC.
+
+- Difusión MAC:
+  - La dirección destino tiene FF-FF-FF-FF-FF-FF, todos lo interpretan como que les hablan
+- Multidifusión:
+  -
+
+
+== Tabla de divisiones MAC
+
+=== Los switches
+
+El hub es similar, casi no se usa, lo que hacia es que recibia un paquete en un puerto y el manda a todos los demás puertos el mismo mensaje.
+
+Un switch lo que hace es que, cuando recibe un paquete por primera vez lo manda por todos lados, escucha cual de las puertas responde al mensaje y de ahora en adelante se lo mandará a la puerta que respondio.
+
+Examen: Tenemos un switch, en el pierto uno tnemeos la direccion 00-0A y que en la puerta 4 esta la 00-0B
+
+==== Velocidades de switch
+
++ Dos metodos de envio
+- Almacenamiento y reenvio: El switch obtiene tooodos los paquetes que forman el paquete, calcula la suma y verifica, y lo envia.
+  Si no se verifica se sale y se hace que el origen lo re-envie
+- Conmutación de re: Cuando pasan n bytes del paquete revisa el encabezado y se busca la MAC de destino, para tener todo listo para enviarlo inmediatamente, no hace validación, pero es más rapido. El destinatario será quien lo verifica.
+
+=== Memoria intermedia en los conmutadores 
+
+Todo los switches tienen un buffer donde guardan parte del paquete a enviar. Podemos tener un switch 10|100, donde una computadora puede ser de 10 y la otra se 100, se genera un cuello de botella. El buffer va almacenando los bytes para poder.
+
+=== Configuración de velocida y duplex
+
+=== Auto-MDIX
+
+Algunos switches vienen con configuracia
+
+
+
+ 
