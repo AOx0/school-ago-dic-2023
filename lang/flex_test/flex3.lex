@@ -2,7 +2,7 @@
   #include <math.h>
   #include <stdlib.h>
   #include <stdio.h>
-  float suma = 0.0;
+  double suma = 0.0;
   #pragma warning(disable:4996 6011 6385 4013)
 %}
 
@@ -20,13 +20,13 @@ NUMERO [+-]?{NO_CEROS}{DIGITOS}*|0
 NUMERO_F {NUMERO}(\.[0-9]+)?
 
 %%
-{NUMERO_F}[ ]+dolares {
+{NUMERO_F}[ ]+USD {
   suma += atof(yytext);
 }
-{NUMERO_F}[ ]+pesos {
+{NUMERO_F}[ ]+MXN {
   suma += atof(yytext) * 0.057;
 }
-.   ECHO;
+.|\n {}
 %%
 
 /* Hacer ECHO Muestra en la pantalla el caracter */

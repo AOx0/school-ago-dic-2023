@@ -963,3 +963,18 @@ Tip para subir el examen:
 Si hay errores de versiones Proyecto > Propiedades > Escogemos la pasada
 
 Ejercicio, tengo 5 dolares, el profe quiere que hagamos uno donde se pueda escribir tengo 5 dolares, 3 pesos, debo un dolares, debe de poder hacer la suma en dólares y pesos.
+
+
+
+== Sintaxis, Scanning y Semántica
+
+Terminamos con el scanner, que puede sacar los componentes (_scanning_), pero ahora cómo verificar que están en orden, que sirven una gramática (_sintaxis_), que verifica que las cadenas sigan las reglas del lenguaje.
+
+Aun asi puede estar bien en componentes y sintaxis pero que no sea _semánticamente_ correcto.
+
+La alternativa es usar fuerza bruta, que hace que todas las posibilidades verifiquen si es correcto o no. El algoritmo prueba caracter por caracter todas las reglas para ver si hacen _match_.
+
+Gramaticas recursivas por:
+- $S -> Sab$: Recursividad por la izquierda, puede convertirse a recursividad por la izquierda.
+- $S -> abS$: Recursividad por la derecha 
+
