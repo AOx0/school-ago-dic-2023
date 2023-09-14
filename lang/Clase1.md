@@ -978,3 +978,31 @@ Gramaticas recursivas por:
 - $S -> Sab$: Recursividad por la izquierda, puede convertirse a recursividad por la izquierda.
 - $S -> abS$: Recursividad por la derecha 
 
+
+== Dudas
+
++ De la tarea ejercicio 1 y 2, si es solo numeros enteros o también flotantes.
+
+    *A*:
+
++ Para errores cosas como numeros mal escritos, identificadores mal escritos
+
++ De la 3 y 4 consideramos palabra como solo letras y números, o cualquier cadena de caracteres que no contenga espacios, saltos de linea ni tabs
+
+    *A*: El 3 que si tenga numeros y eso y en el 4 que solo sean palabras de caracteres
+
++ Los pipes de las reglas, 
+
+C -> aC|a  solo se puede sacar el pipe en ese caso {a}a
+{a}|emptyset, como {a} incluye emptyset, podemos dejar solo repeticiones de {a}
+
+Ejemplo, este otro tiene la solucion directa:
+B -> Bb|c c{b}, no es una gramatica regular porque la parte derecha debe comenzar con un terminal y despues un no terminal
+
+Le dio un error, asi que quitar el 4996 y el otro. Marca esas funciones como errores porque ella fijo eso
+
+ctrl Z para final en el de Windows
+
+Para pasar archivos externos:
+- F10 para debug
+

@@ -22,8 +22,8 @@
 */
 %%
 \n lineas++; caracteres++;
-[ \t\r] caracteres++;
-[^ \t\r\n]+ {
+. caracteres++;
+(?i:[a-z0-9])+ {
      caracteres += yyleng;
      palabras++;
 }

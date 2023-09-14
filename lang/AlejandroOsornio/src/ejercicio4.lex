@@ -20,11 +20,8 @@
      PATRON(expr-reg)         ACCION(codigo c++)
 */
 %%
-[^ \t\r\n]+ {
+(?i:[a-z])+ {
      if (strcmp(yytext, palabra) == 0) ++apariciones;
-     else {
-          
-     }
 }
 .|\n {}
 %%
@@ -32,13 +29,10 @@
 struct Rango {
      char inicio;
      char fin;
-} rango;
+};
 
-int trim(char * texto, int * len,  Rango no_en) {
+int trim(char * texto, int * len, struct Rango no_en) {
      /* Primero limpiamos el frente */
-     if (texto[0] < inicio || texto[0] > fin) {
-          
-     }
 }
 
 int main(int argc, char * argv[]) {
