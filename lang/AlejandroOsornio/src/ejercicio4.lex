@@ -9,6 +9,7 @@
 
      char * palabra = NULL;
      size_t apariciones = 0;
+     char es_palabra_letras = 1;
 %}
 
 /* Quitar funcion yywrap */
