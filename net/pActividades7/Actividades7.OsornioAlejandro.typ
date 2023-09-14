@@ -15,3 +15,4 @@
 #image("quest1.png")
 #image("quest2.png")
 #image("quest3.png")
+#image("quest4.png")
