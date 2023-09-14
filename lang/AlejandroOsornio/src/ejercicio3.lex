@@ -34,7 +34,7 @@ int main(int argc, char * argv[]) {
      ++argv;
 
      if (argc != 1) {
-          puts("Debe especificarse una entrada y una salida y ya.\n");
+          puts("Debe especificarse unicamente un archivo de entrada.\n");
      }
     
 

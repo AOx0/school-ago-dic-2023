@@ -1,4 +1,3 @@
-
 /*   
      Sección de definiciones 
      Todo el codigo que queremos al inicio del programa va al inicio entre 
@@ -8,9 +7,8 @@
      #include <stdio.h>
      #pragma warning(disable:4996 6011 6385 4013)
 
-     size_t caracteres = 0;
-     size_t lineas = 0;
-     size_t palabras = 0;
+     char * palabra = NULL;
+     size_t apariciones = 0;
 %}
 
 /* Quitar funcion yywrap */
@@ -21,35 +19,46 @@
      PATRON(expr-reg)         ACCION(codigo c++)
 */
 %%
-\n lineas++; caracteres++;
-[ \t\r] caracteres++;
 [^ \t\r\n]+ {
-     caracteres += yyleng;
-     palabras++;
+     if (strcmp(yytext, palabra) == 0) ++apariciones;
+     else {
+          
+     }
 }
+.|\n {}
 %%
+
+struct Rango {
+     char inicio;
+     char fin;
+} rango;
+
+int trim(char * texto, int * len,  Rango no_en) {
+     /* Primero limpiamos el frente */
+     if (texto[0] < inicio || texto[0] > fin) {
+          
+     }
+}
 
 int main(int argc, char * argv[]) {
      --argc;
      ++argv;
 
-     if (argc != 1) {
-          puts("Debe especificarse una entrada y una salida y ya.\n");
+     if (argc != 2) {
+          puts("Debe especificarse una palabra y un archivo de entrada.\n");
      }
     
 
-     FILE * in = fopen(argv[0], "r");
+     FILE * in = fopen(argv[1], "r");
      if (in == NULL) {
           printf("Fallo al abrirse el archivo '%s'.\n", argv[0]);
           exit(1);
      }
 
+     palabra = argv[0];
      yyin = in;
-     
      
      yylex();
 
-     printf("  Caracteres: %zu\n", caracteres);
-     printf("      Lineas: %zu\n", lineas);
-     printf("    Palabras: %zu\n", palabras);
+     printf("La palabra %s aparece %zu veces en el archivo de entrada\n", palabra, apariciones);
  }

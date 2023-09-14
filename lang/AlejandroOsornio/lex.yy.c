@@ -352,8 +352,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 4
-#define YY_END_OF_BUFFER 5
+#define YY_NUM_RULES 3
+#define YY_END_OF_BUFFER 4
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -361,9 +361,9 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static const flex_int16_t yy_accept[9] =
+static const flex_int16_t yy_accept[8] =
     {   0,
-        0,    0,    5,    3,    2,    1,    3,    0
+        0,    0,    4,    1,    2,    1,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -403,24 +403,24 @@ static const YY_CHAR yy_meta[4] =
         1,    2,    2
     } ;
 
-static const flex_int16_t yy_base[10] =
+static const flex_int16_t yy_base[9] =
     {   0,
-        0,    0,    5,    0,    6,    6,    0,    6,    3
+        0,    0,    5,    0,    6,    0,    6,    3
     } ;
 
-static const flex_int16_t yy_def[10] =
+static const flex_int16_t yy_def[9] =
     {   0,
-        8,    1,    8,    9,    8,    8,    9,    0,    8
+        7,    1,    7,    8,    7,    8,    0,    7
     } ;
 
 static const flex_int16_t yy_nxt[10] =
     {   0,
-        4,    5,    6,    7,    8,    3,    8,    8,    8
+        4,    5,    5,    6,    7,    3,    7,    7,    7
     } ;
 
 static const flex_int16_t yy_chk[10] =
     {   0,
-        1,    1,    1,    9,    3,    8,    8,    8,    8
+        1,    1,    1,    8,    3,    7,    7,    7,    7
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -445,9 +445,8 @@ char *yytext;
      #include <stdio.h>
      #pragma warning(disable:4996 6011 6385 4013)
 
-     size_t caracteres = 0;
-     size_t lineas = 0;
-     size_t palabras = 0;
+     char * palabra = NULL;
+     size_t apariciones = 0;
 /* Quitar funcion yywrap */
 /* 
      Reglas, cuenta todas las lineas y caracteres 
@@ -695,7 +694,7 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 9 )
+				if ( yy_current_state >= 8 )
 					yy_c = yy_meta[yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -726,22 +725,17 @@ do_action:	/* This label is used only to access EOF actions. */
 			goto yy_find_action;
 
 case 1:
-/* rule 1 can match eol */
-YY_RULE_SETUP
-lineas++; caracteres++;
-	YY_BREAK
-case 2:
-YY_RULE_SETUP
-caracteres++;
-	YY_BREAK
-case 3:
 YY_RULE_SETUP
 {
-     caracteres += yyleng;
-     palabras++;
+     if (strcmp(yytext, palabra) == 0) ++apariciones;
 }
 	YY_BREAK
-case 4:
+case 2:
+/* rule 2 can match eol */
+YY_RULE_SETUP
+{}
+	YY_BREAK
+case 3:
 YY_RULE_SETUP
 ECHO;
 	YY_BREAK
@@ -1041,7 +1035,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 9 )
+			if ( yy_current_state >= 8 )
 				yy_c = yy_meta[yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -1069,11 +1063,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 9 )
+		if ( yy_current_state >= 8 )
 			yy_c = yy_meta[yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 8);
+	yy_is_jam = (yy_current_state == 7);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1753,21 +1747,20 @@ int main(int argc, char * argv[]) {
      --argc;
      ++argv;
 
-     if (argc != 1) {
-          puts("Debe especificarse una entrada y una salida y ya.\n");
+     if (argc != 2) {
+          puts("Debe especificarse una palabra y un archivo de entrada.\n");
      }
     
-     FILE * in = fopen(argv[0], "r");
+     FILE * in = fopen(argv[1], "r");
      if (in == NULL) {
           printf("Fallo al abrirse el archivo '%s'.\n", argv[0]);
           exit(1);
      }
 
+     palabra = argv[0];
      yyin = in;
      
      yylex();
 
-     printf("  Caracteres: %zu\n", caracteres);
-     printf("      Lineas: %zu\n", lineas);
-     printf("    Palabras: %zu\n", palabras);
+     printf("La palabra %s aparece %zu veces en el archivo de entrada\n", palabra, apariciones);
  }
