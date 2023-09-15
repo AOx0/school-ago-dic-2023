@@ -437,22 +437,12 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-/*   
-     Sección de definiciones 
-     Todo el codigo que queremos al inicio del programa va al inicio entre 
-     corchetes y llave   
-*/
      #include <stdio.h>
      #pragma warning(disable:4996 6011 6385 4013)
 
      char * palabra = NULL;
-     size_t apariciones = 0;
-     char es_palabra_letras = 1;
-/* Quitar funcion yywrap */
-/* 
-     Reglas, cuenta todas las lineas y caracteres 
-     PATRON(expr-reg)         ACCION(codigo c++)
-*/
+     char * remplazo = NULL;
+     size_t tamano = 0;
 
 #define INITIAL 0
 
@@ -728,13 +718,18 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 {
-     if (strcmp(yytext, palabra) == 0) ++apariciones;
+     if (strcmp(yytext, palabra) == 0) {
+          printf("Cambiando %s por %s\n", yytext, remplazo);
+          yytext = remplazo;
+          yyleng = tamano;          
+     }
+     ECHO;
 }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-{}
+ECHO;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
@@ -1744,34 +1739,36 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-struct Rango {
-     char inicio;
-     char fin;
-};
-
-int trim(char * texto, int * len, struct Rango no_en) {
-     /* Primero limpiamos el frente */
-}
-
 int main(int argc, char * argv[]) {
      --argc;
      ++argv;
 
-     if (argc != 2) {
-          puts("Debe especificarse una palabra y un archivo de entrada.\n");
+     if (argc != 3) {
+          puts("Debe especificarse una palabra, su remplazo y el archivo donde trabajar.\n");
      }
     
-     FILE * in = fopen(argv[1], "r");
+     FILE * in = fopen(argv[2], "r");
      if (in == NULL) {
           printf("Fallo al abrirse el archivo '%s'.\n", argv[0]);
           exit(1);
      }
 
      palabra = argv[0];
+     remplazo = argv[1];
+     tamano = strlen(remplazo);
+
      yyin = in;
-     
+
+     FILE * out = fopen(".tmpejer5", "w");
+     if (out == NULL) {
+          printf("Fallo al abrirse el archivo '%s'.\n", argv[0]);
+          exit(1);
+     }
+
+     yyout = out;
+
      yylex();
 
-     printf("La palabra %s aparece %zu veces en el archivo de entrada\n", palabra, apariciones);
+     rename(".tmpejer5", argv[2]);
  }
 

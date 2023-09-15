@@ -14,7 +14,7 @@ def main():
         print("Ingrese un número de ejercicio válido 1..=6")
         sys.exit(1)
 
-    print(f"{ejercicio}")
+    # print(f"{ejercicio}")
 
     if not os.path.exists("./out/"):
         os.makedirs("./out/")

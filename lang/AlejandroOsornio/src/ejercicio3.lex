@@ -1,9 +1,3 @@
-
-/*   
-     Sección de definiciones 
-     Todo el codigo que queremos al inicio del programa va al inicio entre 
-     corchetes y llave   
-*/
 %{
      #include <stdio.h>
      #pragma warning(disable:4996 6011 6385 4013)
@@ -13,13 +7,8 @@
      size_t palabras = 0;
 %}
 
-/* Quitar funcion yywrap */
 %option noyywrap 
 
-/* 
-     Reglas, cuenta todas las lineas y caracteres 
-     PATRON(expr-reg)         ACCION(codigo c++)
-*/
 %%
 \n lineas++; caracteres++;
 . caracteres++;
