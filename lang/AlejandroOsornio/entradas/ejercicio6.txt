@@ -1,0 +1,23 @@
+inicio
+	A
+	B
+	C
+fin
+INICIO
+	A
+	B
+	C
+	9
+	A__
+	A__A
+	A_A
+	A_A_A
+	A_A__A
+	__A_A
+	9nombre
+	nombre
+	A0
+FIN
+4 * 4
+4 <> 3
+4-3 = 3 * 1
