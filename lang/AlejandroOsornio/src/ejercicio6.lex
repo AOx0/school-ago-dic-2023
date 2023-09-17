@@ -1,19 +1,19 @@
 %{
-     #include <stdio.h>
-     #pragma warning(disable:4996 6011 6385 4013)
+    #include <stdio.h>
+    #pragma warning(disable:4996 6011 6385 4013)
 
-     char * palabra = NULL;
-     char * remplazo = NULL;
-     size_t tamano = 0;
+    char * palabra = NULL;
+    char * remplazo = NULL;
+    size_t tamano = 0;
 %}
 
 %option noyywrap 
 %x COMENTARIO
-     
+    
 %%
 
 
-     /* Palabras reservadas */
+    /* Palabras reservadas */
 (?i:inicio)       { printf("    Reservado: %s\n", yytext);  }
 (?i:fin)          { printf("    Reservado: %s\n", yytext);  }
 (?i:leer)         { printf("    Reservado: %s\n", yytext);  }
@@ -66,8 +66,8 @@
 "#".*             { printf("   Comentario: %s\n", yytext); }
 
 "(*"              { 
-                    BEGIN(COMENTARIO); 
-                    printf("   Comentario: %s", yytext); 
+                BEGIN(COMENTARIO); 
+                printf("   Comentario: %s", yytext); 
 }
 <COMENTARIO>"*)"  { BEGIN(INITIAL); printf("%s\n", yytext); }
 <COMENTARIO>.     { ECHO; }
@@ -93,20 +93,20 @@
 /* .* { printf("Error: %s", yytext);  } */
 
 int main(int argc, char * argv[]) {
-     --argc;
-     ++argv;
+    --argc;
+    ++argv;
 
-     if (argc != 1) {
-          puts("Debe especificarse una palabra, su remplazo y el archivo donde trabajar.\n");
-     }
-    
+    if (argc != 1) {
+       puts("Debe especificarse una palabra, su remplazo y el archivo donde trabajar.\n");
+    }
 
-     FILE * in = fopen(argv[0], "r");
-     if (in == NULL) {
-          printf("Fallo al abrirse el archivo '%s'.\n", argv[0]);
-          exit(1);
-     }
 
-     yyin = in;
-     yylex();
+    FILE * in = fopen(argv[0], "r");
+    if (in == NULL) {
+       printf("Fallo al abrirse el archivo '%s'.\n", argv[0]);
+       exit(1);
+    }
+
+    yyin = in;
+    yylex();
  }
