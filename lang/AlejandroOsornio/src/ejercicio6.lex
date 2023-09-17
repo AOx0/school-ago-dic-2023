@@ -8,59 +8,86 @@
 %}
 
 %option noyywrap 
-
+%x COMENTARIO
+     
 %%
 
+
      /* Palabras reservadas */
-(?i:inicio) { printf("Encontrado: %s\n", yytext);  }
-(?i:fin) { printf("Encontrado: %s\n", yytext);  }
-(?i:mod) { printf("Encontrado: %s\n", yytext);  }
-(?i:o) { printf("Encontrado: %s\n", yytext);  }
-(?i:y) { printf("Encontrado: %s\n", yytext);  }
-(?i:no) { printf("Encontrado: %s\n", yytext);  }
-(?i:leer) { printf("Encontrado: %s\n", yytext);  }
-(?i:escribir) { printf("Encontrado: %s\n", yytext);  }
-(?i:si) { printf("Encontrado: %s\n", yytext);  }
-(?i:entonces) { printf("Encontrado: %s\n", yytext);  }
-(?i:si_no) { printf("Encontrado: %s\n", yytext);  }
-(?i:fin_si) { printf("Encontrado: %s\n", yytext);  }
-(?i:mientras) { printf("Encontrado: %s\n", yytext);  }
-(?i:hacer) { printf("Encontrado: %s\n", yytext);  }
-(?i:fin_mientras) { printf("Encontrado: %s\n", yytext);  }
-(?i:repetir) { printf("Encontrado: %s\n", yytext);  }
-(?i:hasta_que) { printf("Encontrado: %s\n", yytext);  }
-(?i:para) { printf("Encontrado: %s\n", yytext);  }
-(?i:desde) { printf("Encontrado: %s\n", yytext);  }
-(?i:hasta) { printf("Encontrado: %s\n", yytext);  }
-(?i:paso) { printf("Encontrado: %s\n", yytext);  }
-(?i:fin_para) { printf("Encontrado: %s\n", yytext);  }
+(?i:inicio)       { printf("    Reservado: %s\n", yytext);  }
+(?i:fin)          { printf("    Reservado: %s\n", yytext);  }
+(?i:leer)         { printf("    Reservado: %s\n", yytext);  }
+(?i:escribir)     { printf("    Reservado: %s\n", yytext);  }
+(?i:si)           { printf("    Reservado: %s\n", yytext);  }
+(?i:entonces)     { printf("    Reservado: %s\n", yytext);  }
+(?i:si_no)        { printf("    Reservado: %s\n", yytext);  }
+(?i:fin_si)       { printf("    Reservado: %s\n", yytext);  }
+(?i:mientras)     { printf("    Reservado: %s\n", yytext);  }
+(?i:hacer)        { printf("    Reservado: %s\n", yytext);  }
+(?i:fin_mientras) { printf("    Reservado: %s\n", yytext);  }
+(?i:repetir)      { printf("    Reservado: %s\n", yytext);  }
+(?i:hasta_que)    { printf("    Reservado: %s\n", yytext);  }
+(?i:para)         { printf("    Reservado: %s\n", yytext);  }
+(?i:desde)        { printf("    Reservado: %s\n", yytext);  }
+(?i:hasta)        { printf("    Reservado: %s\n", yytext);  }
+(?i:paso)         { printf("    Reservado: %s\n", yytext);  }
+(?i:fin_para)     { printf("    Reservado: %s\n", yytext);  }
 
-"mod" { printf("Operador: %s\n", yytext); }
-"**" { printf("Operador: %s\n", yytext); }
-"<" { printf("Operador: %s\n", yytext); }
-"<=" { printf("Operador: %s\n", yytext); }
-">" { printf("Operador: %s\n", yytext); }
-">=" { printf("Operador: %s\n", yytext); }
-"==" { printf("Operador: %s\n", yytext); }
-"<>" { printf("Operador: %s\n", yytext); }
-"+" { printf("Operador: %s\n", yytext); }
-"-" { printf("Operador: %s\n", yytext); }
-"*" { printf("Operador: %s\n", yytext); }
-"/" { printf("Operador: %s\n", yytext); }
+ /* Operadores lógicos */
+(?i:o)            { printf("       Logico: %s\n", yytext);  }
+(?i:y)            { printf("       Logico: %s\n", yytext);  }
+(?i:no)           { printf("       Logico: %s\n", yytext);  }
 
-     /* Indicador */
+ /* Operadores relacionales */
+"<"               { printf("   Relacional: %s\n", yytext); }
+"<="              { printf("   Relacional: %s\n", yytext); }
+">"               { printf("   Relacional: %s\n", yytext); }
+">="              { printf("   Relacional: %s\n", yytext); }
+"=="              { printf("   Relacional: %s\n", yytext); }
+"<>"              { printf("   Relacional: %s\n", yytext); }
 
-(?i:[a-z](([a-z0-9]|_[a-z0-9])*[0-9a-z])*) { printf("Identificador: %s\n", yytext);  }
+ /* Operadores aritméticos */
+(?i:mod)          { printf("   Aritmetico: %s\n", yytext);  }
+"+"               { printf("   Aritmetico: %s\n", yytext); }
+"-"               { printf("   Aritmetico: %s\n", yytext); }
+"*"               { printf("   Aritmetico: %s\n", yytext); }
+"/"               { printf("   Aritmetico: %s\n", yytext); }
+"**"              { printf("   Aritmetico: %s\n", yytext); }
 
-     /* Posibles errores */
+ /* Numeros */
+[+-]?[1-9][0-9]*|0                  { printf("     N Entero: %s\n", yytext); }
+([+-]?[1-9][0-9]*|0).[0-9]+         { printf(" N Punto fijo: %s\n", yytext); }
+([+-]?[1-9][0-9]*|0)E[+-]?[0-9]+    { printf("   N Notacion: %s\n", yytext); }
 
-(?i:[a-z0-9_]*__+[a-z0-9_]*) { printf("Identificador erroneo: %s\n", yytext); }
-(?i:[a-z0-9](([a-z0-9]|_[a-z0-9])*[0-9a-z])*) { printf("Identificador erroneo: %s\n", yytext);  }
+ /* Cadena */
+'((\\')|[^'])*'   { printf("       Cadena: %s\n", yytext); }
 
-     /* Cualquier otro */
+ /* Comentarios */
+"#".*             { printf("   Comentario: %s\n", yytext); }
 
-\n {}
-. {}
+"(*"              { 
+                    BEGIN(COMENTARIO); 
+                    printf("   Comentario: %s", yytext); 
+}
+<COMENTARIO>"*)"  { BEGIN(INITIAL); printf("%s\n", yytext); }
+<COMENTARIO>.     { ECHO; }
+<COMENTARIO>\n    { yyleng=2; yytext = "\\n"; ECHO; }
+
+
+ /* Indicador */
+(?i:[a-z](([a-z0-9]|_[a-z0-9])*[0-9a-z])*) { printf("Identificador: %s\n", yytext); }  
+
+
+
+ /* Posibles errores */
+[+\-0-9\.E]+                                  { printf(" Error numero: %s\n", yytext); }
+(?i:[a-z0-9_]*__+[a-z0-9_]*)                  { printf("  Error ident: %s\n", yytext); }
+(?i:[a-z0-9](([a-z0-9]|_[a-z0-9])*[0-9a-z])*) { printf("  Error ident: %s\n", yytext); }
+
+
+ /* Cualquier otro */
+\n|" "|\t|\r {}
+.                { printf("        Error: '%s'\n", yytext); }
 %%
 
 /* .* { printf("Error: %s", yytext);  } */
