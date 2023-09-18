@@ -26,9 +26,9 @@ hacer|fin_mientras|repetir     { printf("    Reservado: %s\n", yytext); }
 hasta_que|para|desde|hasta     { printf("    Reservado: %s\n", yytext); }
 paso|fin_para                  { printf("    Reservado: %s\n", yytext); }
 
-(?i:o|y|no)                         { printf("       Logico: %s\n", yytext); }
+o|y|no                         { printf("       Logico: %s\n", yytext); }
 "<"|"<="|">"|">="|"=="|"="|"<>"     { printf("   Relacional: %s\n", yytext); }
-(?i:mod)|"+"|"-"|"*"|"/"|"**"       { printf("   Aritmetico: %s\n", yytext); }
+mod|"+"|"-"|"*"|"/"|"**"       { printf("   Aritmetico: %s\n", yytext); }
 
 "("                                 { printf("   Paren abre: %s\n", yytext); }
 ")"                                 { printf("  Paren close: %s\n", yytext); }
@@ -40,9 +40,9 @@ paso|fin_para                  { printf("    Reservado: %s\n", yytext); }
  /* Si tiene todos los caracteres de un numero pero no hizo match, entonces debe ser un error */
 [0-9+-.E]+                          { printf(" ERROR Numero: %s\n", yytext); }
 
-(?i:[a-z]({NUMCHAR}|_{NUMCHAR})*)   { printf("Identificador: %s\n", yytext); }  
+[a-z]({NUMCHAR}|_{NUMCHAR})*   { printf("Identificador: %s\n", yytext); }  
  /* Si tiene todos los caracteres de un identificador pero no hizo match, entonces debe ser un error */
-(?i:({NUMCHAR}|_)+)                 { printf("  ERROR Ident: %s\n", yytext); }
+({NUMCHAR}|_)+                 { printf("  ERROR Ident: %s\n", yytext); }
 
 '((\\')|[^'])*'                     { printf("       Cadena: %s\n", yytext); }
 
