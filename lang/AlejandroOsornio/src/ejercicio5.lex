@@ -28,7 +28,8 @@ int main(int argc, char * argv[]) {
     ++argv;
 
     if (argc != 3) {
-        puts("Debe especificarse una palabra, su remplazo y el archivo donde trabajar.\n");
+        puts("Debe especificarse una palabra, su remplazo y el archivo donde se remplazara la palabra.\nEjemplo: ./ejercicio5 perro gato entrada.txt");
+        exit(1);
     }
     
 

@@ -7,28 +7,28 @@
 
     #define MAX_DIGITOS 25
     char nuevo[MAX_DIGITOS+1] = {0};
-    int num1;
-    int num2;
+    unsigned int num1;
+    unsigned int num2;
 %}
 
 %option noyywrap 
 
 %%
 [1-9][0-9]* {
-    int numero = atoi(yytext);
+    unsigned int numero = atoi(yytext);
 
     if (numero%num2 == 0) {
         numero+=num1;
 
-        int digitos = 0;
-        int tnum = numero;
+        unsigned int digitos = 0;
+        unsigned int tnum = numero;
         do {
             tnum/=10;
             digitos++;
         } while (tnum > 0);
 
         if (digitos > MAX_DIGITOS) {
-            printf("Error: %s + 5 (%d) tiene más de %d digitos (%d), saltando.\n", yytext, numero, MAX_DIGITOS,  digitos);
+            printf("Error: %s + 5 (%d) tiene mas de %d digitos (%d), saltando.\n", yytext, numero, MAX_DIGITOS,  digitos);
         } else {
             sprintf(nuevo, "%d", numero);
 
@@ -47,7 +47,8 @@ int main(int argc, char * argv[]) {
     ++argv;
 
     if (argc != 4) {
-        puts("Debe especificarse una entrada y una salida y ya.\n");
+        puts("Debe especificarse N1, N2, el archivo de entrada y el de salida.\nEjemplo: ./ejercicio2 100 2 entrada.txt salida.txt");
+        exit(1);
     }
 
     num1 = atoi(argv[0]);
@@ -61,21 +62,21 @@ int main(int argc, char * argv[]) {
 
     FILE * in = fopen(argv[2], "r");
     if (in == NULL) {
-        printf("Fallo al abrirse el archivo '%s'.\n", argv[0]);
+        printf("Fallo al abrirse el archivo '%s'.\n", argv[2]);
         exit(1);
     }
 
     FILE * out = fopen(argv[3], "w");
     if (out == NULL) {
-        printf("Fallo al crear/abrir el archivo '%s'.\n", argv[1]);
+        printf("Fallo al crear/abrir el archivo '%s'.\n", argv[3]);
         exit(1);
     }
     yyin = in;
     yyout = out;
     
+    printf("Sumando %d a los multiplos de %d\n", num1, num2);
     printf("Leyendo de: %s\n", argv[2]);
     printf("Salidas en: %s\n", argv[3]);
-    printf("Sumando %d a los multiplos de %d\n", num1, num2);
     
     yylex();
 }

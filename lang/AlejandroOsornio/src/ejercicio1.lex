@@ -18,15 +18,15 @@
     if (numero%4 == 0) {
         numero+=5;
 
-        int digitos = 0;
-        int tnum = numero;
+        unsigned int digitos = 0;
+        unsigned int tnum = numero;
         do {
             tnum/=10;
             digitos++;
         } while (tnum > 0);
 
         if (digitos > MAX_DIGITOS) {
-            printf("Error: %s + 5 (%d) tiene más de %d digitos (%d), saltando.\n", yytext, numero, MAX_DIGITOS,  digitos);
+            printf("Error: %s + 5 (%d) tiene mas de %d digitos (%d), saltando.\n", yytext, numero, MAX_DIGITOS,  digitos);
         } else {
             sprintf(nuevo, "%d", numero);
 
@@ -45,7 +45,7 @@ int main(int argc, char * argv[]) {
     ++argv;
 
     if (argc != 2) {
-        puts("Debe especificarse un archivo de entrada y otro de salida.\nEjemplo: ./ejercicio1 entrada.txt salida.t");
+        puts("Debe especificarse un archivo de entrada y otro de salida.\nEjemplo: ./ejercicio1 entrada.txt salida.txt");
         exit(1);
     }
 

@@ -34,10 +34,14 @@ ejercicio_6:
 
 todos:
 	make ejercicio_1
+	@echo "\n\n"
 	make ejercicio_2
+	@echo "\n\n"
 	make ejercicio_3
 	make ejercicio_4
+	@echo "\n\n"
 	make ejercicio_5
+	@echo "\n\n"
 	make ejercicio_6
 
 clean:

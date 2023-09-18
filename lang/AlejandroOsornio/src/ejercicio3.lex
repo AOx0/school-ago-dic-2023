@@ -26,7 +26,8 @@ int main(int argc, char * argv[]) {
     ++argv;
 
     if (argc != 1) {
-        puts("Debe especificarse unicamente un archivo de entrada.\n");
+        puts("Debe especificarse unicamente un archivo de entrada.\nEjemplo ./ejercicio3 entrada.txt");
+        exit(1);
     }
     
 

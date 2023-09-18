@@ -23,13 +23,14 @@ int main(int argc, char * argv[]) {
     ++argv;
 
     if (argc != 2) {
-        puts("Debe especificarse una palabra y un archivo de entrada.\n");
+        puts("Debe especificarse una palabra y un archivo de entrada.\nEjemplo: ./ejercicio4 perro entrada.txt");
+        exit(1);
     }
     
 
     FILE * in = fopen(argv[1], "r");
     if (in == NULL) {
-        printf("Fallo al abrirse el archivo '%s'.\n", argv[0]);
+        printf("Fallo al abrirse el archivo '%s'.\n", argv[1]);
         exit(1);
     }
 
