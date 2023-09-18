@@ -9,10 +9,11 @@
     size_t apariciones = 0;
 %}
 
+%option caseless
 %option noyywrap 
 
 %%
-(?i:[a-z])+ {
+[a-z]+ {
     if (strcmp(yytext, palabra) == 0) ++apariciones;
 }
 .|\n {}

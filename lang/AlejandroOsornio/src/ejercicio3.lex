@@ -10,12 +10,13 @@
     size_t palabras = 0;
 %}
 
+%option caseless
 %option noyywrap 
 
 %%
 \n lineas++; caracteres++;
 . caracteres++;
-(?i:[a-z0-9])+ {
+[a-z0-9]+ {
     caracteres += yyleng;
     palabras++;
 }

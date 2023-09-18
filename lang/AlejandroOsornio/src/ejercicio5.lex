@@ -10,10 +10,11 @@
     size_t tamano = 0;
 %}
 
+%option caseless
 %option noyywrap 
 
 %%
-(?i:[a-z])+ {
+[a-z]+ {
     if (strcmp(yytext, palabra) == 0) {
         yytext = remplazo;
         yyleng = tamano;          

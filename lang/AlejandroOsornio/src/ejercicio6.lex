@@ -9,6 +9,7 @@
 %}
 
 %option noyywrap 
+%option caseless
 %x COMENTARIO
 
 DIGITO [0-9]
@@ -19,11 +20,11 @@ NUMSIGN ([+-]?{NUMERO})|0
 NUMFLOAT {NUMSIGN}.{DIGITO}+
 %%
  /* Palabras reservadas */
-(?i:inicio|fin|leer|escribir|si)    { printf("    Reservado: %s\n", yytext); }
-(?i:entonces|si_no|fin_si|mientras) { printf("    Reservado: %s\n", yytext); }
-(?i:hacer|fin_mientras|repetir)     { printf("    Reservado: %s\n", yytext); }
-(?i:hasta_que|para|desde|hasta)     { printf("    Reservado: %s\n", yytext); }
-(?i:paso|fin_para)                  { printf("    Reservado: %s\n", yytext); }
+inicio|fin|leer|escribir|si    { printf("    Reservado: %s\n", yytext); }
+entonces|si_no|fin_si|mientras { printf("    Reservado: %s\n", yytext); }
+hacer|fin_mientras|repetir     { printf("    Reservado: %s\n", yytext); }
+hasta_que|para|desde|hasta     { printf("    Reservado: %s\n", yytext); }
+paso|fin_para                  { printf("    Reservado: %s\n", yytext); }
 
 (?i:o|y|no)                         { printf("       Logico: %s\n", yytext); }
 "<"|"<="|">"|">="|"=="|"="|"<>"     { printf("   Relacional: %s\n", yytext); }
