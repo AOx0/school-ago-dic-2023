@@ -5,104 +5,76 @@
     #pragma GCC diagnostic ignored "-Wunused-function"
     #pragma GCC diagnostic ignored "-Wsign-compare"
 
-    char * palabra = NULL;
-    char * remplazo = NULL;
-    size_t tamano = 0;
+    size_t comentarios_abiertos = 0;
 %}
 
 %option noyywrap 
 %x COMENTARIO
-    
+
+DIGITO [0-9]
+NOCERO [1-9]
+NUMERO {NOCERO}{DIGITO}*
+NUMCHAR [a-z0-9]
 %%
+ /* Palabras reservadas */
+(?i:inicio|fin|leer|escribir|si)    { printf("    Reservado: %s\n", yytext); }
+(?i:entonces|si_no|fin_si|mientras) { printf("    Reservado: %s\n", yytext); }
+(?i:hacer|fin_mientras|repetir)     { printf("    Reservado: %s\n", yytext); }
+(?i:hasta_que|para|desde|hasta)     { printf("    Reservado: %s\n", yytext); }
+(?i:paso|fin_para)                  { printf("    Reservado: %s\n", yytext); }
 
+(?i:o|y|no)                         { printf("       Logico: %s\n", yytext); }
+"<"|"<="|">"|">="|"=="|"="|"<>"     { printf("   Relacional: %s\n", yytext); }
+(?i:mod)|"+"|"-"|"*"|"/"|"**"       { printf("   Aritmetico: %s\n", yytext); }
 
-    /* Palabras reservadas */
-(?i:inicio)       { printf("    Reservado: %s\n", yytext);  }
-(?i:fin)          { printf("    Reservado: %s\n", yytext);  }
-(?i:leer)         { printf("    Reservado: %s\n", yytext);  }
-(?i:escribir)     { printf("    Reservado: %s\n", yytext);  }
-(?i:si)           { printf("    Reservado: %s\n", yytext);  }
-(?i:entonces)     { printf("    Reservado: %s\n", yytext);  }
-(?i:si_no)        { printf("    Reservado: %s\n", yytext);  }
-(?i:fin_si)       { printf("    Reservado: %s\n", yytext);  }
-(?i:mientras)     { printf("    Reservado: %s\n", yytext);  }
-(?i:hacer)        { printf("    Reservado: %s\n", yytext);  }
-(?i:fin_mientras) { printf("    Reservado: %s\n", yytext);  }
-(?i:repetir)      { printf("    Reservado: %s\n", yytext);  }
-(?i:hasta_que)    { printf("    Reservado: %s\n", yytext);  }
-(?i:para)         { printf("    Reservado: %s\n", yytext);  }
-(?i:desde)        { printf("    Reservado: %s\n", yytext);  }
-(?i:hasta)        { printf("    Reservado: %s\n", yytext);  }
-(?i:paso)         { printf("    Reservado: %s\n", yytext);  }
-(?i:fin_para)     { printf("    Reservado: %s\n", yytext);  }
+"("                                 { printf("    Paren abre: %s\n", yytext); }
+")"                                 { printf("   Paren close: %s\n", yytext); }
+";"                                 { printf("     Separador: %s\n", yytext); }
 
- /* Operadores lógicos */
-(?i:o)            { printf("       Logico: %s\n", yytext);  }
-(?i:y)            { printf("       Logico: %s\n", yytext);  }
-(?i:no)           { printf("       Logico: %s\n", yytext);  }
+([+-]?{NUMERO}|0)                   { printf("       Numero: %s\n", yytext); }
+([+-]?{NUMERO}|0).{DIGITO}+         { printf("       Numero: %s\n", yytext); }
+([+-]?{NUMERO})E[+-]{DIGITO}+       { printf("       Numero: %s\n", yytext); }
+ /* Si tiene todos los caracteres de un numero pero no hizo match, entonces debe ser un error */
+[0-9+-.E]+                          { printf(" ERROR Numero: %s\n", yytext); }
 
- /* Operadores relacionales */
-"<"               { printf("   Relacional: %s\n", yytext); }
-"<="              { printf("   Relacional: %s\n", yytext); }
-">"               { printf("   Relacional: %s\n", yytext); }
-">="              { printf("   Relacional: %s\n", yytext); }
-"=="              { printf("   Relacional: %s\n", yytext); }
-"<>"              { printf("   Relacional: %s\n", yytext); }
+(?i:[a-z]({NUMCHAR}|_{NUMCHAR})*{NUMCHAR}*) { printf("Identificador: %s\n", yytext); }  
+ /* Si tiene todos los caracteres de un identificador pero no hizo match, entonces debe ser un error */
+(?i:({NUMCHAR}|_)+)                 { printf("  ERROR Ident: %s\n", yytext); }
 
- /* Operadores aritméticos */
-(?i:mod)          { printf("   Aritmetico: %s\n", yytext);  }
-"+"               { printf("   Aritmetico: %s\n", yytext); }
-"-"               { printf("   Aritmetico: %s\n", yytext); }
-"*"               { printf("   Aritmetico: %s\n", yytext); }
-"/"               { printf("   Aritmetico: %s\n", yytext); }
-"**"              { printf("   Aritmetico: %s\n", yytext); }
+'((\\')|[^'])*'                     { printf("       Cadena: %s\n", yytext); }
 
- /* Numeros */
-[+-]?[1-9][0-9]*|0                  { printf("     N Entero: %s\n", yytext); }
-([+-]?[1-9][0-9]*|0).[0-9]+         { printf(" N Punto fijo: %s\n", yytext); }
-([+-]?[1-9][0-9]*|0)E[+-]?[0-9]+    { printf("   N Notacion: %s\n", yytext); }
+"#".*                               { printf("   Comentario: %s\n", yytext); }
 
- /* Cadena */
-'((\\')|[^'])*'   { printf("       Cadena: %s\n", yytext); }
-
- /* Comentarios */
-"#".*             { printf("   Comentario: %s\n", yytext); }
-
-"(*"              { 
-                BEGIN(COMENTARIO); 
-                printf("   Comentario: %s", yytext); 
+<COMENTARIO>.                       { ECHO; }
+<COMENTARIO>\n                      { yyleng=2; yytext = "\\n"; ECHO; }
+<INITIAL,COMENTARIO>"(*" {
+    if (++comentarios_abiertos == 1) {
+        BEGIN(COMENTARIO); 
+        printf("   Comentario: %s", yytext); 
+    } else {
+        ECHO;
+    }
 }
-<COMENTARIO>"*)"  { BEGIN(INITIAL); printf("%s\n", yytext); }
-<COMENTARIO>.     { ECHO; }
-<COMENTARIO>\n    { yyleng=2; yytext = "\\n"; ECHO; }
+<COMENTARIO>"*)"  { 
+   if (--comentarios_abiertos == 0) {
+       BEGIN(INITIAL); printf("%s\n", yytext); 
+   } else {
+       ECHO;
+   }
+}
 
-
- /* Indicador */
-(?i:[a-z](([a-z0-9]|_[a-z0-9])*[0-9a-z])*) { printf("Identificador: %s\n", yytext); }  
-
-
-
- /* Posibles errores */
-[+\-0-9\.E]+                                  { printf(" Error numero: %s\n", yytext); }
-(?i:[a-z0-9_]*__+[a-z0-9_]*)                  { printf("  Error ident: %s\n", yytext); }
-(?i:[a-z0-9](([a-z0-9]|_[a-z0-9])*[0-9a-z])*) { printf("  Error ident: %s\n", yytext); }
-
-
- /* Cualquier otro */
-\n|" "|\t|\r {}
-.                { printf("        Error: '%s'\n", yytext); }
+\n|" "|\t|\r|\f                     { /* Ignoramos saltos de linea, espacios, etc. */ }
+.                                   { printf("ERROR Simbolo: '%s'\n", yytext); }
 %%
-
-/* .* { printf("Error: %s", yytext);  } */
 
 int main(int argc, char * argv[]) {
     --argc;
     ++argv;
 
     if (argc != 1) {
-       puts("Debe especificarse una palabra, su remplazo y el archivo donde trabajar.\n");
+       puts("Debe especificarse el archivo del que se leera el pseudocodigo fuente.\nEjemplo: ./ejercicio6 entrada.txt");
+       exit(1);
     }
-
 
     FILE * in = fopen(argv[0], "r");
     if (in == NULL) {

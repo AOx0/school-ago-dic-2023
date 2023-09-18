@@ -39,19 +39,17 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
 
-    palabra = argv[0];
-    remplazo = argv[1];
-    tamano = strlen(remplazo);
-
-    yyin = in;
-
     FILE * out = fopen(".tmpejer5", "w");
     if (out == NULL) {
-        printf("Fallo al abrirse el archivo '.tmpejer5'.\n");
+        puts("Fallo al abrirse el archivo '.tmpejer5'.");
         exit(1);
     }
 
+    palabra = argv[0];
+    remplazo = argv[1];
+    tamano = strlen(remplazo);
     yyout = out;
+    yyin = in;
 
     printf("Reemplazando '%s' por '%s' en el archivo %s\n", palabra, remplazo, argv[2]);
     yylex();
