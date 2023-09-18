@@ -37,7 +37,9 @@ INICIO
 FIN;
 
 (*
-	Deberia de poder incluir (* Algo asi, pues estoy en un comentario *)
+	Deberia de poder incluir (* (* a *) *) Algo asi, pues estoy en un comentario
 	Solo un script de prueba
 
 *)
+
+(* Otro comentario *)

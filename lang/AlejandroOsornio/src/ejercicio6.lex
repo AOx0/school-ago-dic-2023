@@ -15,6 +15,8 @@ DIGITO [0-9]
 NOCERO [1-9]
 NUMERO {NOCERO}{DIGITO}*
 NUMCHAR [a-z0-9]
+NUMSIGN ([+-]?{NUMERO})|0
+NUMFLOAT {NUMSIGN}.{DIGITO}+
 %%
  /* Palabras reservadas */
 (?i:inicio|fin|leer|escribir|si)    { printf("    Reservado: %s\n", yytext); }
@@ -27,17 +29,17 @@ NUMCHAR [a-z0-9]
 "<"|"<="|">"|">="|"=="|"="|"<>"     { printf("   Relacional: %s\n", yytext); }
 (?i:mod)|"+"|"-"|"*"|"/"|"**"       { printf("   Aritmetico: %s\n", yytext); }
 
-"("                                 { printf("    Paren abre: %s\n", yytext); }
-")"                                 { printf("   Paren close: %s\n", yytext); }
-";"                                 { printf("     Separador: %s\n", yytext); }
+"("                                 { printf("   Paren abre: %s\n", yytext); }
+")"                                 { printf("  Paren close: %s\n", yytext); }
+";"                                 { printf("    Separador: %s\n", yytext); }
 
-([+-]?{NUMERO}|0)                   { printf("       Numero: %s\n", yytext); }
-([+-]?{NUMERO}|0).{DIGITO}+         { printf("       Numero: %s\n", yytext); }
-([+-]?{NUMERO})E[+-]{DIGITO}+       { printf("       Numero: %s\n", yytext); }
+{NUMSIGN}                           { printf("       Numero: %s\n", yytext); }
+{NUMFLOAT}                          { printf("       Numero: %s\n", yytext); }
+({NUMFLOAT}|{NUMSIGN})[eE][+-]{DIGITO}+  { printf("       Numero: %s\n", yytext); }
  /* Si tiene todos los caracteres de un numero pero no hizo match, entonces debe ser un error */
 [0-9+-.E]+                          { printf(" ERROR Numero: %s\n", yytext); }
 
-(?i:[a-z]({NUMCHAR}|_{NUMCHAR})*{NUMCHAR}*) { printf("Identificador: %s\n", yytext); }  
+(?i:[a-z]({NUMCHAR}|_{NUMCHAR})*)   { printf("Identificador: %s\n", yytext); }  
  /* Si tiene todos los caracteres de un identificador pero no hizo match, entonces debe ser un error */
 (?i:({NUMCHAR}|_)+)                 { printf("  ERROR Ident: %s\n", yytext); }
 
