@@ -1,6 +1,9 @@
 %{
     #include <stdio.h>
+    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
     #pragma warning(disable:4996 6011 6385 4013)
+    #pragma GCC diagnostic ignored "-Wunused-function"
+    #pragma GCC diagnostic ignored "-Wsign-compare"
 
     char * palabra = NULL;
     size_t apariciones = 0;
@@ -35,5 +38,5 @@ int main(int argc, char * argv[]) {
     
     yylex();
 
-    printf("La palabra %s aparece %zu veces en el archivo de entrada\n", palabra, apariciones);
+    printf("La palabra '%s' aparece %zu veces en el archivo de entrada %s\n", palabra, apariciones, argv[1]);
  }

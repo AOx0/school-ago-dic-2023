@@ -1,6 +1,9 @@
 %{
     #include <stdio.h>
+    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
     #pragma warning(disable:4996 6011 6385 4013)
+    #pragma GCC diagnostic ignored "-Wunused-function"
+    #pragma GCC diagnostic ignored "-Wsign-compare"
 
     char * palabra = NULL;
     char * remplazo = NULL;
@@ -31,7 +34,7 @@ int main(int argc, char * argv[]) {
 
     FILE * in = fopen(argv[2], "r");
     if (in == NULL) {
-        printf("Fallo al abrirse el archivo '%s'.\n", argv[0]);
+        printf("Fallo al abrirse el archivo '%s'.\n", argv[2]);
         exit(1);
     }
 
@@ -43,12 +46,13 @@ int main(int argc, char * argv[]) {
 
     FILE * out = fopen(".tmpejer5", "w");
     if (out == NULL) {
-        printf("Fallo al abrirse el archivo '%s'.\n", argv[0]);
+        printf("Fallo al abrirse el archivo '.tmpejer5'.\n");
         exit(1);
     }
 
     yyout = out;
 
+    printf("Reemplazando '%s' por '%s' en el archivo %s\n", palabra, remplazo, argv[2]);
     yylex();
 
     rename(".tmpejer5", argv[2]);

@@ -7,6 +7,11 @@
 INICIO
 	A = 0
 	X = 10
+	A_A = 1
+	A__ = 2
+	A__B = 2
+	__A = 3
+	AS_0 = 4
 
 	(* Aja *)
 	MIENTRAS A <= 10
@@ -21,14 +26,18 @@ INICIO
 		ERROR 3.
 		ERROR 3E
 	FIN
+	SI A == 10
+	HACER
+		PRINT 'Si es igual a 10'
+	FIN
 
-	# Aqui solo estamos probando un comentario
+	# Aqui solo estamos probando un comentario que pasa que tiene '' y # y ya jaj
 	PRINT 'Este es un ejemplo de cadena'
+	PRINT 'Este es \'otro\' ejemplo de cadena'
 	PRINT 'Esta cadena también tiene' + 2 + '\'comillas\' dentro'  
 FIN
 
 (*
-
 	Solo un script de prueba
 
 *)

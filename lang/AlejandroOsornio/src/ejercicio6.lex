@@ -1,6 +1,9 @@
 %{
     #include <stdio.h>
+    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
     #pragma warning(disable:4996 6011 6385 4013)
+    #pragma GCC diagnostic ignored "-Wunused-function"
+    #pragma GCC diagnostic ignored "-Wsign-compare"
 
     char * palabra = NULL;
     char * remplazo = NULL;

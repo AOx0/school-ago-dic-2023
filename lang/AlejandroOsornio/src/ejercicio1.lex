@@ -1,24 +1,18 @@
-/*   
-    Sección de definiciones 
-    Todo el codigo que queremos al inicio del programa va al inicio entre 
-    corchetes y llave   
-*/
 %{
     #include <stdio.h>
+    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
     #pragma warning(disable:4996 6011 6385 4013)
+    #pragma GCC diagnostic ignored "-Wunused-function"
+    #pragma GCC diagnostic ignored "-Wsign-compare"
+    
     #define MAX_DIGITOS 25
-    char nuevo[MAX-DIGITOS+1] = {0}; 
+    char nuevo[MAX_DIGITOS+1] = {0}; 
 %}
 
-/* Quitar funcion yywrap */
 %option noyywrap 
 
-/* 
-    Reglas, cuenta todas las lineas y caracteres 
-    PATRON(expr-reg)         ACCION(codigo c++)
-*/
 %%
-[48]|[1-9]+[2480] {
+[48]|[1-9]+[24680] {
     int numero = atoi(yytext);
 
     if (numero%4 == 0) {
@@ -67,6 +61,9 @@ int main(int argc, char * argv[]) {
     }
     yyin = in;
     yyout = out;
+
+    printf("Leyendo de: %s\n", argv[0]);
+    printf("Salidas en: %s\n", argv[1]);
     
     yylex();
 }

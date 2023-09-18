@@ -1,6 +1,9 @@
 %{
     #include <stdio.h>
+    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
     #pragma warning(disable:4996 6011 6385 4013)
+    #pragma GCC diagnostic ignored "-Wunused-function"
+    #pragma GCC diagnostic ignored "-Wsign-compare"
 
     size_t caracteres = 0;
     size_t lineas = 0;
@@ -34,10 +37,10 @@ int main(int argc, char * argv[]) {
     }
 
     yyin = in;
-    
-    
+        
     yylex();
 
+    printf("  Contenidos: %s\n", argv[0]);
     printf("  Caracteres: %zu\n", caracteres);
     printf("      Lineas: %zu\n", lineas);
     printf("    Palabras: %zu\n", palabras);

@@ -21,7 +21,7 @@ def main():
 
     if ejercicio is not None and 1 <= ejercicio <= 6:
         os.system(f"flex -L src/ejercicio{ejercicio}.lex")
-        os.system(f"gcc lex.yy.c -o ./out/ejercicio{ejercicio}")
+        os.system(f"gcc -Wall -Wextra lex.yy.c -o ./out/ejercicio{ejercicio}")
 
     if len(sys.argv) >= 4 and sys.argv[2] == "--":
         print(f"Ejecutando ejercicio{ejercicio} con \
