@@ -1,9 +1,10 @@
 CC=gcc
 CFLAGS=-Wall -Wextra
 FLEX=flex
+FFLAGS=-L
 
 build:
-	@flex -L src/ejercicio$(num).lex
+	@$(FLEX) $(FFLAGS) src/ejercicio$(num).lex
 	@mkdir -p bin
 	@mkdir -p salidas
 	@$(CC) $(CFLAGS) lex.yy.c -o bin/ejercicio$(num)
@@ -25,7 +26,7 @@ ejercicio_4:
 
 ejercicio_5:
 	@mkdir -p salidas
-	cp ./src/ejercicio4.lex ./salidas/ejercicio5.lex
+	cp ./src/ejercicio5.lex ./salidas/ejercicio5.lex
 	@make run num=5 args="palabra PALABRA ./salidas/ejercicio5.lex"
 	
 ejercicio_6:
@@ -38,4 +39,8 @@ todos:
 	make ejercicio_4
 	make ejercicio_5
 	make ejercicio_6
-	
+
+clean:
+	rm -rf ./salidas
+	rm -rf ./bin
+	rm ./lex.yy.c

@@ -13,7 +13,7 @@
 
 %%
 [48]|[1-9]+[24680] {
-    int numero = atoi(yytext);
+    unsigned int numero = atoi(yytext);
 
     if (numero%4 == 0) {
         numero+=5;
@@ -45,7 +45,8 @@ int main(int argc, char * argv[]) {
     ++argv;
 
     if (argc != 2) {
-        puts("Debe especificarse una entrada y una salida y ya.\n");
+        puts("Debe especificarse un archivo de entrada y otro de salida.\nEjemplo: ./ejercicio1 entrada.txt salida.t");
+        exit(1);
     }
 
     FILE * in = fopen(argv[0], "r");
