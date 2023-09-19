@@ -1,0 +1,50 @@
+Nulla in ipsum. Praesent eros nulla, congue vitae, euismod ut, commodo
+a, wisi. Pellentesque habitant morbi tristique senectus et netus et malesuada
+fames ac turpis egestas. Aenean nonummy magna non leo. Sed felis erat, ullamcorper
+in, dictum non, ultricies ut, lectus. Proin vel arcu a odio lobortis
+euismod. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere 
+cubilia Curae; Proin ut est. Aliquam odio. Pellentesque massa turpis,
+cursus eu, euismod nec, tempor congue, nulla. Duis viverra gravida mauris.
+Cras tincidunt. Curabitur eros ligula, varius ut, pulvinar in, cursus faucibus,
+augue.
+
++continua "archivo_texto_4_2.txt"
+
+Nulla mattis luctus nulla. Duis commodo velit at leo. Aliquam vulputate
+magna et leo. Nam vestibulum ullamcorper leo. Vestibulum condimentum
+rutrum mauris. Donec id mauris. Morbi molestie justo et pede. Vivamus eget
+turpis sed nisl cursus tempor. Curabitur mollis sapien condimentum nunc. In
+wisi nisl, malesuada at, dignissim sit amet, lobortis in, odio. Aenean consequat
+arcu a ante. Pellentesque porta elit sit amet orci. Etiam at turpis nec elit
+ultricies imperdiet. Nulla facilisi. In 129.65 hac habitasse platea dictumst. Suspendisse
+viverra aliquam risus. Nullam pede justo, molestie nonummy, scelerisque eu,
+facilisis vel, arcu.
+
+Curabitur tellus magna, porttitor a, commodo a, commodo in, tortor. Donec
+interdum. Praesent scelerisque. Maecenas posuere sodales odio. Vivamus
+metus lacus, varius quis, imperdiet quis, rhoncus a, turpis. Etiam ligula arcu,
+elementum a, venenatis quis, sollicitudin sed, metus. Donec nunc pede, tincidunt
+in, venenatis vitae, faucibus vel, nibh. Pellentesque wisi. Nullam malesuada. 
+Morbi ut tellus ut pede tincidunt porta. Lorem ipsum dolor sit amet,
+consectetuer adipiscing elit. Etiam congue neque id dolor.
+
+Donec et nisl at wisi luctus bibendum. Nam interdum tellus ac libero. Sed
+sem justo, laoreet vitae, fringilla at, adipiscing ut, nibh. Maecenas non sem
+quis tortor eleifend fermentum. Etiam id tortor ac mauris porta vulputate.
+Integer porta neque vitae massa. Maecenas tempus libero a libero posuere
+dictum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
+cubilia Curae; Aenean quis mauris sed elit commodo placerat. Class aptent
+taciti sociosqu ad litora torquent per 238.96 conubia nostra, per inceptos hymenaeos.
+Vivamus rhoncus tincidunt libero. Etiam elementum pretium justo. Vivamus
+est. Morbi a tellus eget pede tristique commodo. Nulla nisl. Vestibulum sed
+nisl eu sapien cursus rutrum.
+
+Nulla non mauris vitae wisi posuere convallis. Sed eu nulla nec eros scelerisque
+pharetra. Nullam varius. Etiam dignissim elementum metus. Vestibulum
+faucibus, metus sit amet mattis rhoncus, sapien dui laoreet odio, nec ultricies
+nibh augue a enim. Fusce in ligula. Quisque at magna et nulla commodo consequat. 
+Proin accumsan imperdiet sem. Nunc porta. Donec feugiat mi at justo.
+Phasellus facilisis ipsum quis ante. In ac elit eget ipsum pharetra faucibus.
+Maecenas viverra nulla in massa.
+
+
