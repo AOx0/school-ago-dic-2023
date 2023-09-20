@@ -975,8 +975,8 @@ Aun asi puede estar bien en componentes y sintaxis pero que no sea _semánticame
 La alternativa es usar fuerza bruta, que hace que todas las posibilidades verifiquen si es correcto o no. El algoritmo prueba caracter por caracter todas las reglas para ver si hacen _match_.
 
 Gramaticas recursivas por:
-- $S -> Sab$: Recursividad por la izquierda, puede convertirse a recursividad por la izquierda.
-- $S -> abS$: Recursividad por la derecha 
+- $S -> S a b$: Recursividad por la izquierda, puede convertirse a recursividad por la izquierda.
+- $S -> a b S$: Recursividad por la derecha 
 
 
 == Dudas
@@ -993,11 +993,11 @@ Gramaticas recursivas por:
 
 + Los pipes de las reglas, 
 
-C -> aC|a  solo se puede sacar el pipe en ese caso {a}a
+C -> a C|a  solo se puede sacar el pipe en ese caso {a}a
 {a}|emptyset, como {a} incluye emptyset, podemos dejar solo repeticiones de {a}
 
 Ejemplo, este otro tiene la solucion directa:
-B -> Bb|c c{b}, no es una gramatica regular porque la parte derecha debe comenzar con un terminal y despues un no terminal
+B -> B b|c c{b}, no es una gramatica regular porque la parte derecha debe comenzar con un terminal y despues un no terminal
 
 Le dio un error, asi que quitar el 4996 y el otro. Marca esas funciones como errores porque ella fijo eso
 
@@ -1006,3 +1006,124 @@ ctrl Z para final en el de Windows
 Para pasar archivos externos:
 - F10 para debug
 
+
+== Fuerza Bruta
+
+Es un algoritmo que para cosas pequeñas está bien. Requiere gramaticas independientes del contexto, además de que está el problema en que se le presenten gramáticas recursivas por la izquierda.
+
+Lo que hace la fuerza bruta es:
+1. Sustituye la primera regla
+
+
+$
+E &-> E + T|T\
+ &=> E + T
+$ 
+
+Y ahi si sigue dividiendo inifitamente. El caso de la grmática de la pagina "For example, the familiar set of rules for" es recursiva por la izquierda. Pag 214
+
+Podemos generar nuevas gramáticas no recursivas por la izquierda 
+
+#rect[
+    Pag 214. El primer ejercicio del segundo parcial es sobre convertir de recursivo por la izquiero al reverso.
+]
+
+
+Entonces tiene 
+
+$
+E -> E + T|T\
+T -> T times F|F
+$
+
+Donde $beta_1$ es $T$ y $alpha_1$ es $T$ y en donde $beta_1$ es $F$ y $alpha_1$ es $F$. Y pone una nueva regla...
+
+
+$E -> T | T E'$
+
+Y crea $E' -> +T | + T E'$
+
+
+Para la segunda, elimina --T -> T times F|F--:
+
+
+$
+T -> F | F T'\
+T' -> * F | * F T'
+$
+
+Y como resultado tenemos una gramática que no es dependiente del contexto y que genera lo mismo mientras que es recursivo por la derecha.
+
+#rect[
+    Tarea: 
+]
+
+
+Pag 215. Partiendo de la gramática que genera expresiones con suma, multiplicacion y paréntesis:
+
+$
+E -> T\
+E -> T E'\
+E' -> +T\
+E' -> +T E'\
+T -> F\
+T -> F T'\
+T' -> *F\
+T' -> *E T'\
+F -> (E)\
+F -> a\
+$
+
+El algoritmo de fuerza bruta construye un arreglo `NT` de tipo `String` con los no terminales, por ejemplo `[E, E', T, T'. F]`.
+
+Tambien tiene un arreglo de estructuras llamado `LHS` de la forma `(max, first)`, donde 
+    - `max` es el numero de producciones por cada no terminal de NT.
+    - `first` indica dónde está la sustitución, en el arreglo de cadenas de los valores de sustituciòn en RHS.
+
+Con `RHS`: `T, TE', +T, +TE', F, FT', *F, *ET, (E), a`
+
+```
+NT  MAX  FIRST
+E   2    1 (pos 1 en el arreglo de RHS)
+E'  2    3
+T   2    5
+T'  2    7
+F   2    9
+```
+
+Adicional a estos 3 arreglos, necesita una pila llamada `hist` que va a almacenar la regla que de cada no terminal se está usando en ese momento. Usando `nohist` tenemos el valor en la posición y tenemos `sent` donde se ponen todas las opciones que se han ido probando, aso como `symb` que es lo que se quiere probar.
+
+#rect[
+    El algoritmo del libro tiene un error en el caso 7
+]
+
+Para verificar si toca hacer una sustitución revisa primero si se trata de un no terminal iterando sobre `NT`, si se encuentra en la lista entonces se va a la primera regla del arreglo de RHS
+
+Hay otro arreglo de string que tiene los elementos de la derecha, las producciones.
+
+#rect[
+    En el libro hay un error porque E y T tienen dos reglas. 
+]
+
+El algoritmo asume que:
+- Los no terminales y los terminales son de solo un caracter
+- Después en la tarea toca hacer que pueda ser lo que sea y unirlo con Flex
+
+Para hacer el algoritmo de fuerza bruta tenemos una demostraciòn más formal en la 212. Vamos a representar cada estado del autòmata con ña tupla $(S, I, alpha, beta)$, donde:
+    - $S$: Son los estados por los que pasa el autómata. Toma valores en el conjunto de $q, b, q$
+        - q expande reglas para adelante
+        - b esta retrocediendo, en backtrack
+        - t esta en un estado terminal
+    - $I$ es un apuntador a la cadena de entrada por reconocer, es aqui que se asume que todos los caracteres son solo 1 caracter, porque en los lenguajes normales tenemos más de un caracter, como `for`.
+    - $alpha in (V_T union {A_i})*$, donde $A$
+    - $beta in (V union {\#})*$
+
+Tenemos un caracter que nos permita indicar donde se acaba el algoritmo, asi como en un archivo hay `EOF`, nosotros tenemos `#` 
+
+El estado inicial es $(q, 1, epsilon, S\#)$, donde $S$ es la cadena a analizar y al final viene el simbolo que lo termina, `#`
+
+#rect[
+    Tenemos que estudiar 211, 212, hacerlo en lo que queramos pero siguiendo el algoritmo, quiere el del libro, que traduzcamos el pseudocódigo.
+]
+
+Si la cadena de entrada no es generada por la gramática, entonces tiene que probar todos los casos.
