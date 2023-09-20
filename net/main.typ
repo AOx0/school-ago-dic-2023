@@ -547,6 +547,69 @@ Todo los switches tienen un buffer donde guardan parte del paquete a enviar. Pod
 
 Algunos switches vienen con configuracia
 
+= Capa de Red
 
+La capa de red es la capa responsable de TCP/IP para IPv4 e IPv6. La capa realiza 4 operaciones:
+- Direccionamiento de terminales
+- Encapsulamiento: Poner los encabezados, y dem
+- Ruteo
+- Inverso a encapsulado, el que lo recibe
 
- 
+== Encapsulamiento
+
+El router de capa 3, desencapsula hasta la capa 3 para quitar/cambiar mac de origen y destino y lo manda al soguiente dispositivo.
+
+Puede usar cuqluiera, IPv4 o IPv6.
+
+== Caracteristica del protocolo IP
+
+Se describe como:
+- Sin conexión
+- Servicio mínimo
+- Independiente de los medios físicos. Cualquier dispositivo capaz de entender la conexión TCP/IP, sin importar el medio se pueden conectar a internet.
+
+== TCP/IP
+
+El protocolo de TCP/IP ahora si incluye la capa de transporte. Es diferente solo hablar de IP a TCP/IP, pues la última involucra a capa 3 y 4. 
+i
+
+== Mejor esfuerzo
+
+Los paquetes que se reciben no necesariamente fueron por el mismo camino que los de origen. Esto se debe a que IP no garantiza que se entrega el paquete, aunque si hace su mejor esfuerzo.
+
+== Independiente de los medios
+
+No importa el tipo de medio mientras se entiendan pueden comunicarse
+
+Time to live: Time to live se mide en saltos de routers, el tiempo que un paquete demora en saltos de ir de un lugar de origen a otro de destino. Hay un contador que dice el número de paquetes restantes para ser descartado. Si el contador llega a 0 quiere decir que se termino el limite de saltos y se descarta el paquete.
+Se usa el mismo espacio para IPv6 y IPv4.
+
+== Enrutar
+
+Cualquier paquete que el router no conoce lo manda a la ruta por defecto, en nuestro caso el ISP. 
+
+1. Se puede enviar paquetes a si mismo:
+  - 127.0.0.1 IPv4
+  - ::1 IPv6
+2. Host locales: Los que están en nuestra misma sub-red
+3. Host remotos: Aquellos que son locales de otra red
+
+La puerta de enlace, el gateway es el encargado de decidir donde esta la maquina objetivo.
+Los paquetes en realidad se mandan con la direccion mac-address.
+
+Un router usa un protocolo de enrutamiento, por ejemplo RIP o E1GRP, cada router avisa a sus vecinos a quienes conoce, los routers lo repiten a sus vecinos y asi de forma dinamica y automatica.
+
+Con `show ip route` muestra las rutas que conoce el router y cómo es que lo aprendió.
+
+= ARP
+
+Es un protocolo que permite, dada una IP tener la dirección MAC.
+Nuestra computadora va anotando en su tabla de ARP, que es dinámica  y está en memoria RAM.
+
+Es relativamente facil descubrir quien hace algo malo. 
+
+Sus funcion es el de servir a los dispositivos para saber la IP de un dispositivo si está en la misma RED. O si se trata de una IP remota entonces se buscará en la tabla la IP del gateaway.
+
+== Detección de vecinos
+
+Nos permite detectar los distintos dispositivos que son nuestros. Cada que hacemos un ping, la ruta de routers se va aprendiendo el camino necesario. La computadora se entera de quien se conecta en la red y hace que anoten en sus respectivas tablas que son vecinos.

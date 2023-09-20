@@ -1,6 +1,6 @@
 struct HistElement<'a> {
     symb: &'a str,
-    nt: bool,
+    nt: u8,
 }
 
 fn main() {
