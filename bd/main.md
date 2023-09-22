@@ -535,3 +535,33 @@ FOR EACH ROW -- Para toda la tabla
     CALL InsLog(OLD.employeeNumber, OLD.lastname, NOW(), 'update')
 ;
 ```
+
+Entonces:
+- Validar para el tipo de dato especifico que va a leer
+- Usar Expresiones regulares
+- Protección contra XXS
+
+
+= Transacciones
+
+Paralelo: Al mismo tiempo
+Concurrente: Puede que se de el caso, donde las transacciones parciales pueden influir en el resultado final cuando se están procesando usando concurrencia
+
+Caracteristicas:
+- Atomicidad: Busca que la transaccion sea mas corta, que antes y despues la base de datos tenga un estado consistente.
+- Consistencia: 
+- Aislamiento: Se queda cada transaccion en su propio ambiente isolado
+- Durabilidad: Se hacen permanentes los cambios
+
+Etapas:
+- Inicia las transacciones
+- Si hay error entonces hace rollback
+
+La concurrencia se pone dificil cuando los recursos son limitados, y los clientes son muchos. Hacer más transacciones por minuto aumenta la productividad.
+
+Para poder usar concurrencia se tiene que controlar, buscando que los flujos puedan viajar sin colisiones. 
+
+Estrategias:
+- Pesimista: Pasamos uno por uno, porque asumimos que habrá problemas, entonces metemos a todos a una cola.
+- Optimista: Nadie choca nunca, si lo hace solo lo repetimos. La unica forma de que se pudiera dar es que el cpu fuera infinitamente más rápido que la red, asume que no habrá cola.
+- Mixto: Combina ambas, 
