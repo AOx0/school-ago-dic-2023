@@ -65,6 +65,7 @@ Repita el proceso del paso 1 y reúna información para las siguientes pruebas:
   [IPv4 de destino],
   [172.16.31.4], [00D0.D311.C788], [000C.CF0B.BC80], [172.16.31.4], [172.16.31.5],
   [Switch], [00D0.D311.C788], [000C.CF0B.BC80], [172.16.31.4], [172.16.31.5],
+  [172.16.31.5],[000C.CF0B.BC80], [00D0.D311.C788],  [172.16.31.4], [172.16.31.5],
 )
 
 Vuelva al modo Realtime.
