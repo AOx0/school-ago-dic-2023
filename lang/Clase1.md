@@ -1127,3 +1127,48 @@ El estado inicial es $(q, 1, epsilon, S\#)$, donde $S$ es la cadena a analizar y
 ]
 
 Si la cadena de entrada no es generada por la gramática, entonces tiene que probar todos los casos.
+
+
+== Flex
+
+1er regla: Si tu autómata está en un estado de avance, tiene una $alpha$ que ya reconocio el examen y hay un no terminal, lo que hace el automoata es tomar la primer regla y pone toda la parte beta
+
+Pagina 213
+
+La regla 3, si el automata esta en el estado de avance y reconoci un n+1 caracter, si en la parte alpha hay un monton de cosas y en beta hay un gatito, entonces a esto se le llama estado terminal, que quiere decir que la cadena terminal, lo que pasa a el mismo estado con cadena vacia en beta, es decir que ya reconocio todo.
+
+El problema del algoritmo es que hay backtrack, al final queremos que nos de la secuencia sin backtrack.
+
+Eso es el paso 4, el automata, si encuentra algo que no reconoce, automaticamente entra en estado de backtrack $b$, estando en estado de backtrack, si lo ultimo que hay en alpha es un terminal, pasa a beta e i disminuye en 1.
+
+6. Si estamos en backtrack, en alpha hay un no terminal con su regla j, u en beta tenemos una regla j de Beta, si tenemos mas opciones de reglas entonces ponemos otra de las reglas. Si no hay más reglas, y a es el simbolo inicial, entonces *la cadena no es reconocida*. Si no hay alternativa y no es el simbolo inicial, pasa a dejar el caracter en beta no terminal y sigue en backtrack.
+
+
+#rect[
+    En el cuaderno tengo ejemplos
+]
+
+== Sobre las gramaticas como funciones recursivas
+
+A alguien se le ocurrió que podia ser recursividad, una regla del tipo $S -> aS$, lo que desde el codigo se podría ver:
+
+```c
+// Y apunta a la cadena de entrada
+bool S(int i)
+    si entrada[i] == a
+        return S(i+1)
+    else
+        return false
+```
+
+Se ocurrio que todo pudiera ser escrito de forma recursiva, y traducian todas las reglas _literalmente_ todas las reglas de forma recursiva. El problema es que no todos los lenguajes soportaban este tipo de patrones y agotan rapido la memoria.
+
+== Algoritmo de reconocimiento de Knuth 
+
+Invento un algoritmo de reconocimiento sintáctico, donde escribe la gramàtica en formas de tablas, la tabla podría reconocer la gramática y no deberíamos de tener que usar backtracking.
+
+#rect[
+    Top down es porque comenzamos del simbolo inicial y vamos hacia abajo
+]
+
+
