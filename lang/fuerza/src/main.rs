@@ -10,12 +10,8 @@ fn main() {
     // let RHS = ["TE'", "+T", "+TE'", "F", "FT'", "*F", "*ET'", "(E)", "a"];
 
     let mut acceptor = Acceptor::new()
-        .with_rule("E", ["TE'"])
-        .with_rule("E'", ["+TE'", ""])
-        .with_rule("T", ["FT'"])
-        .with_rule("T'", ["*FT'", ""])
-        .with_rule("F", ["b", "(E)"])
-        .matching("b");
+        .with_rule("E", ["b", "aE"])
+        .matching("aaaaab");
 
     while acceptor.next() != State::T {
         println!("{:?}", acceptor);
@@ -48,41 +44,17 @@ struct Acceptor<'a> {
     state: State,
 }
 
-#[derive(Debug, Clone)]
-enum Element<'a> {
-    NonTerminal(NonTerminalID),
-    Terminal(Cow<'a, str>),
+#[derive(Debug, Default)]
+struct AcceptorBuilder {
+    lhs: Vec<(NumberOfRules, StartingPtr)>,
+    rhs: Vec<String>,
+    nt: Vec<String>,
+    nt_sorted: Vec<NonTerminalID>,
 }
 
-impl Acceptor<'_> {
-    pub fn new() -> Self {
-        Self::default()
-    }
-
-    pub fn with_rule<T: AsRef<str>>(mut self, name: &str, produces: impl AsRef<[T]>) -> Self {
-        self.add_rule(name, produces);
-        self
-    }
-
-    pub fn matching(mut self, t: &str) -> Self {
-        self.set_match(t);
-        self.sent = format!(
-            "{}#",
-            self.nt.first().expect("There are no production rules")
-        );
-        self
-    }
-
-    fn set_match(&mut self, t: &str) {
-        self.matching = format!("{t}#");
-        self.matched = 0;
-        self.state = State::Q;
-        self.symb.clear();
-        self.sent = String::new();
-    }
-
+impl AcceptorBuilder {
     fn add_rule<'a, T: AsRef<str>>(&mut self, name: &str, produces: impl AsRef<[T]>) {
-        fn add_rule(s: &mut Acceptor, name: &str, produces: &[impl AsRef<str>]) {
+        fn add_rule(s: &mut AcceptorBuilder, name: &str, produces: &[impl AsRef<str>]) {
             let existing = s.nt.iter().position(|a| a == name);
 
             if let Some(existing_position) = existing {
@@ -100,6 +72,56 @@ impl Acceptor<'_> {
         }
 
         add_rule(self, name, produces.as_ref());
+    }
+
+    pub fn with_rule<T: AsRef<str>>(mut self, name: &str, produces: impl AsRef<[T]>) -> Self {
+        self.add_rule(name, produces);
+        self
+    }
+
+    pub fn build<'a>(mut self) -> Acceptor<'a> {
+        let mut result = Acceptor::default();
+        std::mem::swap(&mut result.lhs, &mut self.lhs);
+        std::mem::swap(&mut result.rhs, &mut self.rhs);
+        std::mem::swap(&mut result.nt, &mut self.nt);
+        std::mem::swap(&mut result.nt_sorted, &mut self.nt_sorted);
+
+        result
+    }
+
+    pub fn matching<'a>(self, inp: &'a str) -> Acceptor<'a> {
+        let mut res = self.build();
+        res.set_match(inp);
+        res
+    }
+}
+
+#[derive(Debug, Clone)]
+enum Element<'a> {
+    NonTerminal(NonTerminalID),
+    Terminal(Cow<'a, str>),
+}
+
+impl Acceptor<'_> {
+    pub fn new() -> AcceptorBuilder {
+        AcceptorBuilder::default()
+    }
+
+    fn set_match(&mut self, t: &str) {
+        use std::fmt::Write;
+        self.matching.clear();
+        write!(self.matching, "{t}#").unwrap();
+
+        self.matched = 0;
+        self.state = State::Q;
+        self.symb.clear();
+        self.sent.clear();
+        write!(
+            &mut self.sent,
+            "{}#",
+            self.nt.first().expect("There are no production rules")
+        )
+        .unwrap();
     }
 
     fn get_info(&self, for_id: NonTerminalID) -> Option<(usize, usize)> {
@@ -151,10 +173,11 @@ impl Acceptor<'_> {
 
     pub fn next(&mut self) -> State {
         if matches!(self.state, State::Q)
-            && dbg!(self.matched == self.matching.len())
-            && matches!(self.symb.last().unwrap().0, Element::Terminal(ref lit) if lit == "#")
+            && self.matched == self.matching.len() - 1
+            && self.sent.chars().nth(0).is_some_and(|a| a == '#')
         {
             /* Caso 3 */
+            println!("INFO:: Caso 3 porque solo queda '#' en sent");
             self.state = State::T;
             self.sent.clear();
         } else if matches!(self.state, State::Q) {
@@ -184,7 +207,7 @@ impl Acceptor<'_> {
                             self.matched += 1;
                         } else {
                             println!(
-                                "INFO:: Caso 3 porque {next} no está presente en {}",
+                                "INFO:: Caso 4 porque {next} no está presente en {}",
                                 self.remaining()
                             );
                             /* Caso 4 */
@@ -196,7 +219,13 @@ impl Acceptor<'_> {
                 }
             }
         } else {
-            if let Element::Terminal(_) = &self.symb.last().unwrap().0 {
+            if self.matched == 0 && self.sent.starts_with(&self.nt[0]) {
+                println!(
+                    "INFO:: Caso 6b porque sent está en el símbolo inicial ({})", &self.nt[0],
+                );
+                /* Caso 6b */
+                self.state = State::T;
+            } else if let Element::Terminal(_) = &self.symb.last().unwrap().0 {
                 /* Caso 5 */
                 println!(
                     "INFO:: Caso 5 porque {:?} es un literal",
@@ -229,9 +258,6 @@ impl Acceptor<'_> {
                     self.sent.trim_start_matches(&self.rhs[start + n - 2])
                 );
                 println!("Removing {} resulted in {}", &self.rhs[start + n - 2], self.sent);
-            } else if self.matched == 0 && self.matching.starts_with(&self.nt[0]) {
-                /* Caso 6b */
-                self.state = State::T;
             } else if let (Element::NonTerminal(id), n) = self.symb.pop().unwrap() && self.get_info(id).unwrap().0 - n == 0 {
                 /* Caso 7 */
                 println!(
