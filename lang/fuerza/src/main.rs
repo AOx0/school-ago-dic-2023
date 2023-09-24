@@ -10,22 +10,19 @@ fn main() {
     // let RHS = ["TE'", "+T", "+TE'", "F", "FT'", "*F", "*ET'", "(E)", "a"];
 
     let mut acceptor = Acceptor::new()
-        .with_rule("E", ["TE'", "T"])
-        .with_rule("E'", ["+TE'", "+T"])
-        .with_rule("T", ["FT'", "F"])
-        .with_rule("T'", ["*F'", "FT'"])
-        .with_rule("F", ["(E)", "a"])
-        .matching("a");
+        .with_rule("E", ["TE'"])
+        .with_rule("E'", ["+TE'", ""])
+        .with_rule("T", ["FT'"])
+        .with_rule("T'", ["*FT'", ""])
+        .with_rule("F", ["b", "(E)"])
+        .matching("b");
 
-    println!("{:?}", acceptor);
-
-    for i in 0..50 {
-        acceptor.next();
+    while acceptor.next() != State::T {
         println!("{:?}", acceptor);
     }
 }
 
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 enum State {
     #[default]
     Q,
@@ -51,10 +48,10 @@ struct Acceptor<'a> {
     state: State,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 enum Element<'a> {
-    NTID(NonTerminalID),
-    Literal(Cow<'a, str>),
+    NonTerminal(NonTerminalID),
+    Terminal(Cow<'a, str>),
 }
 
 impl Acceptor<'_> {
@@ -105,37 +102,8 @@ impl Acceptor<'_> {
         add_rule(self, name, produces.as_ref());
     }
 
-    /// Returns the number of productions rules that have not been tested
-    ///
-    /// Returns `None` if the input is not a non-terminal
-    ///
-    /// # Panics
-    ///
-    /// Panics if the non-terminal is not present in the history stack
-    fn remaining_for(&self, rule: &str) -> Option<usize> {
-        Some(self.remaining_for_id(self.get_id(rule)?))
-    }
-
-    fn get_id(&self, rule: &str) -> Option<NonTerminalID> {
-        self.nt.iter().position(|a| a == rule)
-    }
-
     fn get_info(&self, for_id: NonTerminalID) -> Option<(usize, usize)> {
         self.lhs.get(for_id).copied()
-    }
-
-    fn remaining_for_element(&self, elem: &Element) -> Option<usize> {
-        match elem {
-            Element::NTID(id) => Some(self.remaining_for_id(*id)),
-            Element::Literal(_) => None,
-        }
-    }
-
-    fn available_for_element(&self, elem: &Element) -> usize {
-        match elem {
-            Element::NTID(id) => self.lhs[*id].0,
-            Element::Literal(_) => 0,
-        }
     }
 
     fn remaining_for_id(&self, for_id: NonTerminalID) -> usize {
@@ -143,10 +111,12 @@ impl Acceptor<'_> {
             .symb
             .iter()
             .rev()
-            .find_map(|(id, rem)| matches!(id, Element::NTID(id) if id == &for_id).then(|| rem))
+            .find_map(|(id, rem)| {
+                matches!(id, Element::NonTerminal(id) if *id == for_id).then(|| rem)
+            })
             .unwrap_or(&0);
 
-        self.lhs[for_id].0 - current
+        self.get_info(for_id).unwrap().0 - current
     }
 
     fn get_elem<'a>(&'a self, from: &'a str) -> Option<(Element, &'a str)> {
@@ -161,11 +131,11 @@ impl Acceptor<'_> {
             .map(|id| (id, self.nt[id].as_str()))
         {
             if from.starts_with(nt) {
-                return Some((Element::NTID(id), &from[nt.len()..]));
+                return Some((Element::NonTerminal(id), &from[nt.len()..]));
             }
         }
 
-        Some((Element::Literal(Cow::Borrowed(&from[0..1])), &from[1..]))
+        Some((Element::Terminal(Cow::Borrowed(&from[0..1])), &from[1..]))
     }
 
     fn remaining(&self) -> &str {
@@ -179,34 +149,45 @@ impl Acceptor<'_> {
         })
     }
 
-    pub fn next(&mut self) -> Option<State> {
+    pub fn next(&mut self) -> State {
         if matches!(self.state, State::Q)
-            && self.matched == self.matching.len()
-            && self.sent.chars().nth(0).is_some_and(|a| a == '#')
+            && dbg!(self.matched == self.matching.len())
+            && matches!(self.symb.last().unwrap().0, Element::Terminal(ref lit) if lit == "#")
         {
             /* Caso 3 */
             self.state = State::T;
             self.sent.clear();
         } else if matches!(self.state, State::Q) {
-            let (next, rem) = self.get_elem(&self.sent)?;
+            let (next, rem) = self.get_elem(&self.sent).unwrap();
 
             match next {
-                Element::NTID(id) => {
-                    if self.remaining_for_id(id) > 0 {
-                        /* Caso 1 */
-                        self.sent = format!("{}{rem}", self.rhs[self.lhs[id].1]);
-                        self.symb.push((Element::NTID(id), 1));
-                    }
+                Element::NonTerminal(id) => {
+                    println!(
+                        "INFO:: Caso 1 porque a {id} ({}) le quedan reglas por expandir ({})",
+                        self.nt[id],
+                        self.remaining_for_id(id)
+                    );
+                    self.sent = format!("{}{rem}", self.rhs[self.lhs[id].1]);
+                    self.symb.push((Element::NonTerminal(id), 1));
                 }
-                Element::Literal(next) => {
-                    if let Element::Literal(lit) = self.get_elem(self.remaining())?.0 {
-                        if lit == next {
+                Element::Terminal(next) => {
+                    if let Element::Terminal(lit) = self.get_elem(self.remaining()).unwrap().0 {
+                        if lit.as_ref() == next.as_ref() {
+                            println!(
+                                "INFO:: Caso 2 porque {lit} está presente en {}",
+                                self.remaining()
+                            );
                             /* Caso 2 */
-                            self.symb
-                                .push((Element::Literal(lit.to_string().into()), 1));
+                            let lit = lit.into_owned();
+                            self.sent = self.sent.trim_start_matches(lit.as_str()).to_string();
+                            self.symb.push((Element::Terminal(lit.into()), 1));
                             self.matched += 1;
                         } else {
-                            /* Caso 3 */
+                            println!(
+                                "INFO:: Caso 3 porque {next} no está presente en {}",
+                                self.remaining()
+                            );
+                            /* Caso 4 */
                             self.state = State::B;
                         }
                     } else {
@@ -215,24 +196,31 @@ impl Acceptor<'_> {
                 }
             }
         } else {
-            if self.available_for_element(&self.symb.last().unwrap().0) == 0 {
+            if let Element::Terminal(_) = &self.symb.last().unwrap().0 {
                 /* Caso 5 */
+                println!(
+                    "INFO:: Caso 5 porque {:?} es un literal",
+                    self.symb.last()
+                );
                 self.matched -= 1;
                 let (e, _) = self.symb.pop().unwrap();
 
                 let e = match e {
-                    Element::Literal(ref c) => c,
-                    Element::NTID(id) => self.nt[id].as_str(),
+                    Element::Terminal(ref c) => c,
+                    Element::NonTerminal(id) => self.nt[id].as_str(),
                 };
 
                 self.sent = format!("{e}{}", self.sent);
-            } else if let Element::NTID(id) = self.symb.last()?.0 && self.remaining_for_id(id) > 0 {
+            } else if let Element::NonTerminal(id) = self.symb.last().unwrap().0 && self.remaining_for_id(id) > 0 {
                 /* Caso 6a */
+                println!(
+                    "INFO:: Caso 6a porque {id} ({}) aún tiene más reglas de producción ({})",
+                    self.nt[id],
+                    self.remaining_for_id(id)
+                );
                 self.state = State::Q;
 
-                // Incrementar el contador
                 let n = self.increase_counter().unwrap();
-
                 let (_, start) = self.get_info(id).unwrap();
 
                 self.sent = format!(
@@ -241,20 +229,27 @@ impl Acceptor<'_> {
                     self.sent.trim_start_matches(&self.rhs[start + n - 2])
                 );
                 println!("Removing {} resulted in {}", &self.rhs[start + n - 2], self.sent);
-            } else if self.matched == 1 && self.matching.starts_with(&self.nt[0]) {
+            } else if self.matched == 0 && self.matching.starts_with(&self.nt[0]) {
                 /* Caso 6b */
                 self.state = State::T;
-            } else if let Element::NTID(id) = self.symb.pop().unwrap().0 {
+            } else if let (Element::NonTerminal(id), n) = self.symb.pop().unwrap() && self.get_info(id).unwrap().0 - n == 0 {
                 /* Caso 7 */
+                println!(
+                    "INFO:: Caso 7 (6c) porque {id} ({}) no tiene más reglas de producción ({})",
+                    self.nt[id],
+                    self.remaining_for_id(id)
+                );
                 let (max, start) = self.get_info(id).unwrap();
                 self.sent = format!(
                     "{}{}",
                     self.nt[id],
                     self.sent.trim_start_matches(&self.rhs[start + max - 1])
                 );
+            } else {
+                unreachable!()
             }
         }
 
-        Some(self.state)
+        self.state
     }
 }
