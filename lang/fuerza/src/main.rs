@@ -89,7 +89,7 @@ impl AcceptorBuilder {
         result
     }
 
-    pub fn matching<'a>(self, inp: &'a str) -> Acceptor<'a> {
+    pub fn matching(self, inp: &str) -> Acceptor<'_> {
         let mut res = self.build();
         res.set_match(inp);
         res
@@ -214,7 +214,7 @@ impl Acceptor<'_> {
                             self.state = State::B;
                         }
                     } else {
-                        unreachable!()
+                        unreachable!("Por definición, no debería existir no terminales en el texto de entrada")
                     }
                 }
             }
@@ -225,21 +225,15 @@ impl Acceptor<'_> {
                 );
                 /* Caso 6b */
                 self.state = State::T;
-            } else if let Element::Terminal(_) = &self.symb.last().unwrap().0 {
+            } else if let (Element::Terminal(e), _) = self.symb.last().unwrap()  {
                 /* Caso 5 */
                 println!(
-                    "INFO:: Caso 5 porque {:?} es un literal",
+                    "INFO:: Caso 5 porque {:?} es un terminal",
                     self.symb.last()
                 );
                 self.matched -= 1;
-                let (e, _) = self.symb.pop().unwrap();
-
-                let e = match e {
-                    Element::Terminal(ref c) => c,
-                    Element::NonTerminal(id) => self.nt[id].as_str(),
-                };
-
                 self.sent = format!("{e}{}", self.sent);
+                self.symb.pop().unwrap();
             } else if let Element::NonTerminal(id) = self.symb.last().unwrap().0 && self.remaining_for_id(id) > 0 {
                 /* Caso 6a */
                 println!(
@@ -257,7 +251,6 @@ impl Acceptor<'_> {
                     self.rhs[start + n - 1],
                     self.sent.trim_start_matches(&self.rhs[start + n - 2])
                 );
-                println!("Removing {} resulted in {}", &self.rhs[start + n - 2], self.sent);
             } else if let (Element::NonTerminal(id), n) = self.symb.pop().unwrap() && self.get_info(id).unwrap().0 - n == 0 {
                 /* Caso 7 */
                 println!(
