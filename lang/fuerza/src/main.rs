@@ -1,6 +1,7 @@
 #![feature(let_chains)]
-
-use std::borrow::Cow;
+#![deny(clippy::all)]
+#![warn(clippy::pedantic)]
+#![deny(rust_2018_idioms, unsafe_code)]
 
 fn main() {
     // let t = "T+T";
@@ -9,12 +10,12 @@ fn main() {
     // let LHS: [(usize, usize); 5] = [(2, 1), (2, 3), (2, 5), (2, 7), (2, 9)];
     // let RHS = ["TE'", "+T", "+TE'", "F", "FT'", "*F", "*ET'", "(E)", "a"];
 
-    let mut acceptor = Acceptor::new()
+    let mut acceptor = AcceptorBuilder::new()
         .with_rule("E", ["b", "aE"])
         .matching("aaaaab");
 
     while acceptor.next() != State::T {
-        println!("{:?}", acceptor);
+        println!("{acceptor:?}");
     }
 }
 
@@ -32,7 +33,7 @@ type NonTerminalID = usize;
 type NonTerminalVariant = usize;
 
 #[derive(Debug, Default)]
-struct Acceptor<'a> {
+struct Acceptor {
     lhs: Vec<(NumberOfRules, StartingPtr)>,
     rhs: Vec<String>,
     nt: Vec<String>,
@@ -40,7 +41,7 @@ struct Acceptor<'a> {
     sent: String,
     matching: String,
     matched: usize,
-    symb: Vec<(Element<'a>, NonTerminalVariant)>,
+    symb: Vec<(Element, NonTerminalVariant)>,
     state: State,
 }
 
@@ -53,7 +54,11 @@ struct AcceptorBuilder {
 }
 
 impl AcceptorBuilder {
-    fn add_rule<'a, T: AsRef<str>>(&mut self, name: &str, produces: impl AsRef<[T]>) {
+    pub fn new() -> AcceptorBuilder {
+        Self::default()
+    }
+
+    fn add_rule<T: AsRef<str>>(&mut self, name: &str, produces: impl AsRef<[T]>) {
         fn add_rule(s: &mut AcceptorBuilder, name: &str, produces: &[impl AsRef<str>]) {
             let existing = s.nt.iter().position(|a| a == name);
 
@@ -79,7 +84,7 @@ impl AcceptorBuilder {
         self
     }
 
-    pub fn build<'a>(mut self) -> Acceptor<'a> {
+    pub fn build(mut self) -> Acceptor {
         let mut result = Acceptor::default();
         std::mem::swap(&mut result.lhs, &mut self.lhs);
         std::mem::swap(&mut result.rhs, &mut self.rhs);
@@ -89,24 +94,20 @@ impl AcceptorBuilder {
         result
     }
 
-    pub fn matching(self, inp: &str) -> Acceptor<'_> {
+    pub fn matching(self, inp: &str) -> Acceptor {
         let mut res = self.build();
         res.set_match(inp);
         res
     }
 }
 
-#[derive(Debug, Clone)]
-enum Element<'a> {
+#[derive(Debug, Clone, Copy)]
+enum Element {
     NonTerminal(NonTerminalID),
-    Terminal(Cow<'a, str>),
+    Terminal(char),
 }
 
-impl Acceptor<'_> {
-    pub fn new() -> AcceptorBuilder {
-        AcceptorBuilder::default()
-    }
-
+impl Acceptor {
     fn set_match(&mut self, t: &str) {
         use std::fmt::Write;
         self.matching.clear();
@@ -141,7 +142,7 @@ impl Acceptor<'_> {
         self.get_info(for_id).unwrap().0 - current
     }
 
-    fn get_elem<'a>(&'a self, from: &'a str) -> Option<(Element, &'a str)> {
+    fn get_elem<'a>(&self, from: &'a str) -> Option<(Element, &'a str)> {
         if from.is_empty() {
             return None;
         }
@@ -152,12 +153,12 @@ impl Acceptor<'_> {
             .copied()
             .map(|id| (id, self.nt[id].as_str()))
         {
-            if from.starts_with(nt) {
-                return Some((Element::NonTerminal(id), &from[nt.len()..]));
+            if let Some(s) = from.strip_prefix(nt) {
+                return Some((Element::NonTerminal(id), s));
             }
         }
 
-        Some((Element::Terminal(Cow::Borrowed(&from[0..1])), &from[1..]))
+        Some((Element::Terminal(from.chars().nth(0).unwrap()), &from[1..]))
     }
 
     fn remaining(&self) -> &str {
@@ -194,78 +195,87 @@ impl Acceptor<'_> {
                     self.symb.push((Element::NonTerminal(id), 1));
                 }
                 Element::Terminal(next) => {
-                    if let Element::Terminal(lit) = self.get_elem(self.remaining()).unwrap().0 {
-                        if lit.as_ref() == next.as_ref() {
-                            println!(
-                                "INFO:: Caso 2 porque {lit} está presente en {}",
-                                self.remaining()
-                            );
-                            /* Caso 2 */
-                            let lit = lit.into_owned();
-                            self.sent = self.sent.trim_start_matches(lit.as_str()).to_string();
-                            self.symb.push((Element::Terminal(lit.into()), 1));
-                            self.matched += 1;
-                        } else {
-                            println!(
-                                "INFO:: Caso 4 porque {next} no está presente en {}",
-                                self.remaining()
-                            );
-                            /* Caso 4 */
-                            self.state = State::B;
-                        }
+                    let matches = if let Element::Terminal(lit) =
+                        self.get_elem(self.remaining()).unwrap().0
+                    {
+                        lit == next
                     } else {
                         unreachable!("Por definición, no debería existir no terminales en el texto de entrada")
+                    };
+
+                    if matches {
+                        println!(
+                            "INFO:: Caso 2 porque {next} está presente en {}",
+                            self.remaining()
+                        );
+                        /* Caso 2 */
+                        self.sent = self.sent.trim_start_matches(next).to_string();
+                        self.symb.push((
+                            Element::Terminal(self.remaining().chars().nth(0).unwrap()),
+                            1,
+                        ));
+                        self.matched += 1;
+                    } else {
+                        println!(
+                            "INFO:: Caso 4 porque {next} no está presente en {}",
+                            self.remaining()
+                        );
+                        /* Caso 4 */
+                        self.state = State::B;
                     }
                 }
             }
+        } else if self.matched == 0 && self.sent.starts_with(&self.nt[0]) {
+            println!(
+                "INFO:: Caso 6b porque sent está en el símbolo inicial ({})",
+                &self.nt[0],
+            );
+            /* Caso 6b */
+            self.state = State::T;
         } else {
-            if self.matched == 0 && self.sent.starts_with(&self.nt[0]) {
-                println!(
-                    "INFO:: Caso 6b porque sent está en el símbolo inicial ({})", &self.nt[0],
-                );
-                /* Caso 6b */
-                self.state = State::T;
-            } else if let (Element::Terminal(e), _) = self.symb.last().unwrap()  {
-                /* Caso 5 */
-                println!(
-                    "INFO:: Caso 5 porque {:?} es un terminal",
-                    self.symb.last()
-                );
-                self.matched -= 1;
-                self.sent = format!("{e}{}", self.sent);
-                self.symb.pop().unwrap();
-            } else if let Element::NonTerminal(id) = self.symb.last().unwrap().0 && self.remaining_for_id(id) > 0 {
-                /* Caso 6a */
-                println!(
-                    "INFO:: Caso 6a porque {id} ({}) aún tiene más reglas de producción ({})",
-                    self.nt[id],
-                    self.remaining_for_id(id)
-                );
-                self.state = State::Q;
+            match self.symb.last().copied().unwrap() {
+                (Element::Terminal(e), _) => {
+                    /* Caso 5 */
+                    println!("INFO:: Caso 5 porque {:?} es un terminal", self.symb.last());
+                    self.matched -= 1;
+                    self.sent = format!("{e}{}", self.sent);
+                    self.symb.pop().unwrap();
+                }
+                (Element::NonTerminal(id), _) if self.remaining_for_id(id) > 0 => {
+                    /* Caso 6a */
+                    println!(
+                        "INFO:: Caso 6a porque {id} ({}) aún tiene más reglas de producción ({})",
+                        self.nt[id],
+                        self.remaining_for_id(id)
+                    );
+                    self.state = State::Q;
 
-                let n = self.increase_counter().unwrap();
-                let (_, start) = self.get_info(id).unwrap();
+                    let n = self.increase_counter().unwrap();
+                    let (_, start) = self.get_info(id).unwrap();
 
-                self.sent = format!(
-                    "{}{}",
-                    self.rhs[start + n - 1],
-                    self.sent.trim_start_matches(&self.rhs[start + n - 2])
-                );
-            } else if let (Element::NonTerminal(id), n) = self.symb.pop().unwrap() && self.get_info(id).unwrap().0 - n == 0 {
-                /* Caso 7 */
-                println!(
-                    "INFO:: Caso 7 (6c) porque {id} ({}) no tiene más reglas de producción ({})",
-                    self.nt[id],
-                    self.remaining_for_id(id)
-                );
-                let (max, start) = self.get_info(id).unwrap();
-                self.sent = format!(
-                    "{}{}",
-                    self.nt[id],
-                    self.sent.trim_start_matches(&self.rhs[start + max - 1])
-                );
-            } else {
-                unreachable!()
+                    self.sent = format!(
+                        "{}{}",
+                        self.rhs[start + n - 1],
+                        self.sent.trim_start_matches(&self.rhs[start + n - 2])
+                    );
+                }
+                (Element::NonTerminal(id), _) if self.remaining_for_id(id) == 0 => {
+                    /* Caso 7 */
+                    println!(
+                            "INFO:: Caso 7 (6c) porque {id} ({}) no tiene más reglas de producción ({})",
+                            self.nt[id],
+                            self.remaining_for_id(id)
+                        );
+                    let (max, start) = self.get_info(id).unwrap();
+                    self.sent = format!(
+                        "{}{}",
+                        self.nt[id],
+                        self.sent.trim_start_matches(&self.rhs[start + max - 1])
+                    );
+                }
+                _ => {
+                    unreachable!()
+                }
             }
         }
 
