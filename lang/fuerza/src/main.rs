@@ -11,8 +11,8 @@ fn main() {
     // let RHS = ["TE'", "+T", "+TE'", "F", "FT'", "*F", "*ET'", "(E)", "a"];
 
     let mut acceptor = AcceptorBuilder::new()
-        .with_rule("E", ["b", "aE"])
-        .matching("aaaaab");
+        .with_rule("E", ["foo", "bar"])
+        .matching("foo");
 
     while acceptor.next() != State::T {
         println!("{acceptor:?}");
@@ -184,7 +184,7 @@ impl Acceptor {
         } else if matches!(self.state, State::Q) {
             let (next, rem) = self.get_elem(&self.sent).unwrap();
 
-            match next {
+            match dbg!(next) {
                 Element::NonTerminal(id) => {
                     println!(
                         "INFO:: Caso 1 porque a {id} ({}) le quedan reglas por expandir ({})",
@@ -198,7 +198,7 @@ impl Acceptor {
                     let matches = if let Element::Terminal(lit) =
                         self.get_elem(self.remaining()).unwrap().0
                     {
-                        lit == next
+                        dbg!(lit) == next
                     } else {
                         unreachable!("Por definición, no debería existir no terminales en el texto de entrada")
                     };
@@ -209,11 +209,8 @@ impl Acceptor {
                             self.remaining()
                         );
                         /* Caso 2 */
-                        self.sent = self.sent.trim_start_matches(next).to_string();
-                        self.symb.push((
-                            Element::Terminal(self.remaining().chars().nth(0).unwrap()),
-                            1,
-                        ));
+                        self.symb.push((Element::Terminal(next), 0));
+                        self.sent = self.sent.strip_prefix(next).unwrap().to_string();
                         self.matched += 1;
                     } else {
                         println!(
@@ -256,7 +253,7 @@ impl Acceptor {
                     self.sent = format!(
                         "{}{}",
                         self.rhs[start + n - 1],
-                        self.sent.trim_start_matches(&self.rhs[start + n - 2])
+                        self.sent.strip_prefix(&self.rhs[start + n - 2]).unwrap()
                     );
                 }
                 (Element::NonTerminal(id), _) if self.remaining_for_id(id) == 0 => {
@@ -270,7 +267,7 @@ impl Acceptor {
                     self.sent = format!(
                         "{}{}",
                         self.nt[id],
-                        self.sent.trim_start_matches(&self.rhs[start + max - 1])
+                        self.sent.strip_prefix(&self.rhs[start + max - 1]).unwrap()
                     );
                 }
                 _ => {
