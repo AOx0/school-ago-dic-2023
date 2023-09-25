@@ -11,8 +11,11 @@ fn main() {
     // let RHS = ["TE'", "+T", "+TE'", "F", "FT'", "*F", "*ET'", "(E)", "a"];
 
     let mut acceptor = AcceptorBuilder::new()
-        .with_rule("E", ["foo", "bar"])
-        .matching("foo");
+        .with_rule("E", ["let VAREQVAL;"])
+        .with_rule("EQ", ["=", " =", " =", " = "])
+        .with_rule("VAR", ["foo", "bar"])
+        .with_rule("VAL", ["0", "1", "2", "3", "4"])
+        .matching("let foo = 0;");
 
     while acceptor.next() != State::T {
         println!("{acceptor:?}");
@@ -184,7 +187,7 @@ impl Acceptor {
         } else if matches!(self.state, State::Q) {
             let (next, rem) = self.get_elem(&self.sent).unwrap();
 
-            match dbg!(next) {
+            match next {
                 Element::NonTerminal(id) => {
                     println!(
                         "INFO:: Caso 1 porque a {id} ({}) le quedan reglas por expandir ({})",
@@ -198,7 +201,7 @@ impl Acceptor {
                     let matches = if let Element::Terminal(lit) =
                         self.get_elem(self.remaining()).unwrap().0
                     {
-                        dbg!(lit) == next
+                        lit == next
                     } else {
                         unreachable!("Por definición, no debería existir no terminales en el texto de entrada")
                     };
@@ -256,19 +259,20 @@ impl Acceptor {
                         self.sent.strip_prefix(&self.rhs[start + n - 2]).unwrap()
                     );
                 }
-                (Element::NonTerminal(id), _) if self.remaining_for_id(id) == 0 => {
+                (Element::NonTerminal(id), n) if self.remaining_for_id(id) == 0 => {
                     /* Caso 7 */
                     println!(
                             "INFO:: Caso 7 (6c) porque {id} ({}) no tiene más reglas de producción ({})",
                             self.nt[id],
                             self.remaining_for_id(id)
                         );
-                    let (max, start) = self.get_info(id).unwrap();
+                    let (_, start) = self.get_info(id).unwrap();
                     self.sent = format!(
                         "{}{}",
                         self.nt[id],
-                        self.sent.strip_prefix(&self.rhs[start + max - 1]).unwrap()
+                        self.sent.strip_prefix(&self.rhs[start + n - 1]).unwrap()
                     );
+                    self.symb.pop();
                 }
                 _ => {
                     unreachable!()
