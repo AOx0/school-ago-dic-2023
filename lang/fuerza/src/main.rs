@@ -3,11 +3,11 @@
 #![deny(rust_2018_idioms, unsafe_code)]
 
 fn main() {
-    let mut acceptor: Acceptor<4> = AcceptorBuilder::new()
-        .with_rule("E", ["let VAREQVAL;"])
-        .with_rule("EQ", ["=", " =", " =", " = "])
-        .with_rule("VAR", ["foo", "bar"])
-        .with_rule("VAL", ["0", "1", "2", "3", "4"])
+    let mut acceptor: Acceptor<'_, 4> = AcceptorBuilder::new()
+        .with_rule("E", &["let VAREQVAL;"])
+        .with_rule("EQ", &["=", " =", " =", " = "])
+        .with_rule("VAR", &["foo", "bar"])
+        .with_rule("VAL", &["0", "1", "2", "3", "4"])
         .matching("let foo = 0;");
 
     while acceptor.next() != State::T {
@@ -26,83 +26,71 @@ enum State {
 type NonTerminalID = usize;
 
 #[derive(Debug)]
-struct Acceptor<const R: usize> {
+struct Acceptor<'inp, const R: usize> {
     nt_sorted: [NonTerminalID; R],
-    non_terminal: [String; R],
+    non_terminal: [&'inp str; R],
     number_rules: [usize; R],
     starting_ptr: [usize; R],
-    rhs: Vec<String>,
+    rhs: Vec<&'inp str>,
     symb: Vec<(Element, usize)>,
-    matching: String,
-    matched: usize,
     sent: String,
     state: State,
+    input: String,
+    matched: usize,
 }
 
 #[derive(Debug)]
-struct AcceptorBuilder<const R: usize> {
+struct AcceptorBuilder<'inp, const R: usize> {
     nt_sorted: [NonTerminalID; R],
-    non_terminal: [String; R],
+    non_terminal: [&'inp str; R],
     number_rules: [usize; R],
     starting_ptr: [usize; R],
-    rhs: Vec<String>,
+    rhs: Vec<&'inp str>,
     pushed: usize,
 }
 
-impl<const R: usize> AcceptorBuilder<R> {
+impl<'inp, const R: usize> AcceptorBuilder<'inp, R> {
     pub fn new() -> Self {
-        const VAL: String = String::new();
         Self {
             number_rules: [0; R],
             starting_ptr: [0; R],
             rhs: Vec::new(),
-            non_terminal: [VAL; R],
+            non_terminal: [""; R],
             nt_sorted: [0; R],
             pushed: 0,
         }
     }
 
-    fn add_rule<T: AsRef<str>>(&mut self, name: &str, produces: impl AsRef<[T]>) {
-        fn add_rule<const R: usize>(
-            s: &mut AcceptorBuilder<R>,
-            name: &str,
-            produces: &[impl AsRef<str>],
-        ) {
-            let existing = s.non_terminal.iter().position(|a| a == name);
+    fn add_rule(&mut self, name: &'inp str, produces: &[&'inp str]) {
+        let existing = self.non_terminal.iter().position(|&a| a == name);
 
-            if let Some(existing_position) = existing {
-                panic!("Productions rules for the non-terminal {name} already exist (at idx {existing_position})");
-            } else if s.pushed >= R {
-                panic!("Can't push production {:?} to Accpetor, there are more productions than spaces in the stack (expected productions: {}). \
+        if let Some(existing_position) = existing {
+            panic!("Productions rules for the non-terminal {name} already exist (at idx {existing_position})");
+        } else if self.pushed >= R {
+            panic!("Can't push production {:?} to Accpetor, there are more productions than spaces in the stack (expected productions: {}). \
                     Try and bump up the number of productions: Accpetor<{}>", name, R, R + 1);
-            } else {
-                s.number_rules[s.pushed] = produces.len();
-                s.starting_ptr[s.pushed] = s.rhs.len();
-                s.rhs
-                    .extend(produces.iter().map(|a| a.as_ref().to_string()));
-                s.non_terminal[s.pushed] = name.to_string();
-
-                s.nt_sorted[s.pushed] = s.non_terminal.len() - 1;
-                s.nt_sorted.sort_unstable_by(|&a, &b| {
-                    s.non_terminal[b].len().cmp(&s.non_terminal[a].len())
-                });
-
-                s.pushed += 1;
-            }
+        } else {
+            self.number_rules[self.pushed] = produces.len();
+            self.starting_ptr[self.pushed] = self.rhs.len();
+            self.rhs.extend(produces.iter());
+            self.non_terminal[self.pushed] = name;
+            self.nt_sorted[self.pushed] = self.pushed;
+            self.pushed += 1;
         }
-
-        add_rule(self, name, produces.as_ref());
     }
 
-    pub fn with_rule<T: AsRef<str>>(mut self, name: &str, produces: impl AsRef<[T]>) -> Self {
+    pub fn with_rule(mut self, name: &'inp str, produces: &[&'inp str]) -> Self {
         self.add_rule(name, produces);
         self
     }
 
-    pub fn build(self) -> Acceptor<R> {
+    pub fn build(mut self) -> Acceptor<'inp, R> {
         if self.pushed < R {
             panic!("Missing productions. Expected production number is {R} but only {} productions were provided", {self.pushed})
         }
+
+        self.nt_sorted
+            .sort_unstable_by(|&a, &b| self.non_terminal[b].len().cmp(&self.non_terminal[a].len()));
         Acceptor {
             number_rules: self.number_rules,
             starting_ptr: self.starting_ptr,
@@ -110,14 +98,14 @@ impl<const R: usize> AcceptorBuilder<R> {
             non_terminal: self.non_terminal,
             nt_sorted: self.nt_sorted,
             sent: Default::default(),
-            matching: Default::default(),
+            input: Default::default(),
             matched: Default::default(),
             symb: Default::default(),
             state: Default::default(),
         }
     }
 
-    pub fn matching(self, inp: &str) -> Acceptor<R> {
+    pub fn matching(self, inp: &str) -> Acceptor<'inp, R> {
         let mut res = self.build();
         res.set_match(inp);
         res.symb = Vec::with_capacity(inp.len() * 2);
@@ -131,11 +119,11 @@ enum Element {
     Terminal(char),
 }
 
-impl<const R: usize> Acceptor<R> {
+impl<'inp, const R: usize> Acceptor<'inp, R> {
     fn set_match(&mut self, t: &str) {
         use std::fmt::Write;
-        self.matching.clear();
-        write!(self.matching, "{t}#").unwrap();
+        self.input.clear();
+        write!(self.input, "{t}#").unwrap();
 
         self.matched = 0;
         self.state = State::Q;
@@ -173,7 +161,7 @@ impl<const R: usize> Acceptor<R> {
             .nt_sorted
             .iter()
             .copied()
-            .map(|id| (id, self.non_terminal[id].as_str()))
+            .map(|id| (id, self.non_terminal[id]))
         {
             if let Some(s) = from.strip_prefix(nt) {
                 return Some((Element::NonTerminal(id), s));
@@ -184,7 +172,7 @@ impl<const R: usize> Acceptor<R> {
     }
 
     fn remaining(&self) -> &str {
-        &self.matching[self.matched..]
+        &self.input[self.matched..]
     }
 
     fn increase_counter(&mut self) -> Option<usize> {
@@ -196,7 +184,7 @@ impl<const R: usize> Acceptor<R> {
 
     pub fn next(&mut self) -> State {
         if matches!(self.state, State::Q)
-            && self.matched == self.matching.len() - 1
+            && self.matched == self.input.len() - 1
             && self.sent.chars().nth(0).is_some_and(|a| a == '#')
         {
             /* Caso 3 */
