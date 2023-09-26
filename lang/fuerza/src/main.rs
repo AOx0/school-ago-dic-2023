@@ -85,9 +85,7 @@ impl<'inp, const R: usize> AcceptorBuilder<'inp, R> {
     }
 
     pub fn build(mut self) -> Acceptor<'inp, R> {
-        if self.pushed < R {
-            panic!("Missing productions. Expected production number is {R} but only {} productions were provided", {self.pushed})
-        }
+        assert!(self.pushed == R, "Missing productions. Expected production number is {R} but only {} productions were provided", {self.pushed});
 
         self.nt_sorted
             .sort_unstable_by(|&a, &b| self.non_terminal[b].len().cmp(&self.non_terminal[a].len()));
@@ -97,18 +95,18 @@ impl<'inp, const R: usize> AcceptorBuilder<'inp, R> {
             rhs: self.rhs,
             non_terminal: self.non_terminal,
             nt_sorted: self.nt_sorted,
-            sent: Default::default(),
-            input: Default::default(),
-            matched: Default::default(),
-            symb: Default::default(),
-            state: Default::default(),
+            sent: String::default(),
+            input: String::default(),
+            matched: 0,
+            symb: Vec::with_capacity(self.pushed * 2),
+            state: State::Q,
         }
     }
 
     pub fn matching(self, inp: &str) -> Acceptor<'inp, R> {
         let mut res = self.build();
         res.set_match(inp);
-        res.symb = Vec::with_capacity(inp.len() * 2);
+        res.symb.reserve(inp.len());
         res
     }
 }
@@ -232,7 +230,7 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
                     }
                 }
             }
-        } else if self.matched == 0 && self.sent.starts_with(&self.non_terminal[0]) {
+        } else if self.matched == 0 && self.sent.starts_with(self.non_terminal[0]) {
             println!(
                 "INFO:: Caso 6b porque sent está en el símbolo inicial ({})",
                 &self.non_terminal[0],
@@ -263,10 +261,10 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
                     self.sent = format!(
                         "{}{}",
                         self.rhs[start + n - 1],
-                        self.sent.strip_prefix(&self.rhs[start + n - 2]).unwrap()
+                        self.sent.strip_prefix(self.rhs[start + n - 2]).unwrap()
                     );
                 }
-                (Element::NonTerminal(id), n) if self.remaining_for_id(id) == 0 => {
+                (Element::NonTerminal(id), n) => {
                     /* Caso 7 */
                     println!(
                             "INFO:: Caso 7 (6c) porque {id} ({}) no tiene más reglas de producción ({})",
@@ -277,13 +275,10 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
                         "{}{}",
                         self.non_terminal[id],
                         self.sent
-                            .strip_prefix(&self.rhs[self.starting_ptr[id] + n - 1])
+                            .strip_prefix(self.rhs[self.starting_ptr[id] + n - 1])
                             .unwrap()
                     );
                     self.symb.pop();
-                }
-                _ => {
-                    unreachable!()
                 }
             }
         }
