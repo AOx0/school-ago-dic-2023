@@ -548,7 +548,7 @@ Paralelo: Al mismo tiempo
 Concurrente: Puede que se de el caso, donde las transacciones parciales pueden influir en el resultado final cuando se están procesando usando concurrencia
 
 Caracteristicas:
-- Atomicidad: Busca que la transaccion sea mas corta, que antes y despues la base de datos tenga un estado consistente.
+- Atomicidad: Busca que la transaccion sea mas corta, que antes y despues la base de datos tenga un estado consistente
 - Consistencia: 
 - Aislamiento: Se queda cada transaccion en su propio ambiente isolado
 - Durabilidad: Se hacen permanentes los cambios
@@ -565,3 +565,75 @@ Estrategias:
 - Pesimista: Pasamos uno por uno, porque asumimos que habrá problemas, entonces metemos a todos a una cola.
 - Optimista: Nadie choca nunca, si lo hace solo lo repetimos. La unica forma de que se pudiera dar es que el cpu fuera infinitamente más rápido que la red, asume que no habrá cola.
 - Mixto: Combina ambas, 
+
+
+== Problemas
+
+- Con dato temporal: Una transaccion $T_1$ realiza updates que después de otros pasos de micro-transacciones resulta en error y hace rollback. La transacción $T_2$ ontinua _sabiendo_ que su valor leido de $T_1$ es correcto, aún cuando ya se ha des-hecho.
+- Dirty read: $T_2$ realiza datos con un registro $x$, $T_1$ actualiza el valor de $x$, pero $T_2$ nunca se entera de este hecho. Por lo que no está tomando en cuenta que hubo operaciones que modificaron los valores, lo que genera en operaciones erroneas porque se están haciendo con valores sucios, invalidos, porque ya no reflejan el estado actual de los datos.
+  - Si vamos a realizar estadísticas con valores reales, no deberíamos de hacer operaciones de este tipo cuando hay transacciones en el momento, hay que dejar que se terminen todas las transacciones para poder hacer la estadística.
+  - O podemos hacer una copia de la base productiva, porque la copia sirve como fuente de verdad hasta un tiempo específico.
+  - Si hacemos estadistica sobre el servidor en producción también afectamos el desempeño del servidor en producción, lo que afecta a los usuarios
+- No repeatable read: La transacción $T_1$ modifica $x$, $T_2$ lee el valor antes de modificarse, después de un rato vuelve a leer $x$, lo que resulta en dos valores leidos diferentes
+- La concurrencia provoca errores
+
+
+== Solución
+
+Para estas soluciones no tomamos un esquema optimista, ni tampoco pesimista, de forma que podamos encontrar mecanismos que disminuyan los errores.
+
+- Semáforos: Controlan el flujo en los cruces que son importantes.
+- Sellos de tiempo: Impiden acciones sobre los datos. El servidor, cada que actualiza un dato en la tabla (modificar/borrar) pone en un campo invisible un timestamp, al realizar otras operaciones verificamos que el último timestamp que nosotros conocemos es el mismo que el sello en a fuente de verdad. Si resulta que no tenemos lo ultimo, entonces descartamos lo nuestro y tomamos los datos de la base de datos
+- Multiversión: Exactamente el mismo concepto pero ahora con un contador que permite identificar de entre los cambios el más verdadero/actual.
+
+== Bloqueos
+
+- Bloqueo compartido (_RWLock_): Todos pueden leer pero nadie (o solo uno) puede escribir.
+- Bloqueo exclusivo (_Mutex_): Solo uno puede leer y escribir a la vez.
+- Interbloqueo:  Un recurso que se quedó bloqueado pero es compartido. Esto suele pasar cuando un proceso con acceso a un recurso lo deja bloqueado (p. ej. porque murió el proceso).
+  - Los sistemas manejadores de bases de datos pueden matar procesos que están bloqueando el acceso a recursos.
+  - Solo mata procesos que están a su cargo.
+
+== Recuperación
+
+Cuando el servidor de la base de datos no puede realizar sus operaciones de forma correcta (p. ej. la degradación de un disco duro permite la lectura pero no escritura). Con recuperación se busca que el SMBD pueda solucionar los errores que encuentra (p. ej. marcando el sector a nivel de sistema operativo como no-escribible)
+
+Hay algunas herramientas que ayudan a *_prevenir_* la perdida de datos:
++ *A nivel de software*:
+  - Respaldos
+  - Anti-virus: quiere dañar
+  - Anti-malware: quiere usar el recurso para obtener beneficios, es más dificil de detectar (p. ej. ser usado como bot u obtener información)
+  - Detector y prevención de intrusos (p. ej. zuricata) leyendo logs y comportamientos anormales
++ *A nivel de prodecimiento*:
+  - Probar las pruebas de recuperación para verificar que en caso de un incidente si sean de confiar
++ *A nivel de intraestructura*: Prevenir involucra todo lo físico
+  - Localización, dependiendo de donde estamos y que riesgos hay 
+  - Suministro de energia ininterrumpido
+  - Prevención de incendios
+  - Conexión siempre
+
+== Semaforo
+
+Un proceso puede tener hilos de ejecución que se realizan de forma concurrente. 
+
+Antes de los hilos se clonaba el proceso entero, lo que quiere decir que también sus recursos. Con los hilos lo que se permite es que se puedan usar recursos compartidos de forma concurrente.
+
+Los procesos tienen un cursor (un _thread_) que indica en qué punto de ejecución se encuentra el programa. Lo que pasa con los hilos es que se crea un stack para el hilo nuevo y se usa el mismo código y heap.
+
+Si tiene su propio stack tiene su propia pila de llamadas, y pueden ejecutar su propio código. Eso si, todos usan la misma memoria Heap y Código.
+
+Cada uno de los threads se ven como un proceso diferente a nivel del sistema operativo, aunque se trate de distintos seguidores dentro de la aplicación.
+
+Las secciones críticas son aquellas donde pueden existir colisiones, para proteger estas zonas criticas usamos algo conocido como Mutex (o RWLock).
+
+El semaforo frena el flujo de todos de forma que solo _entre_ uno a la vez.
+
+#rect[
+  Ejercicio: Implemente un semáforo para que dos o más paginas distintas no puedan leer o acceder a una página si otro está usando el recurso.
+  Buscamos resolver el problema. Bloqueo compartido.
+]
+
+#rect[
+  Socket: Union de IP y puerto
+]
+
