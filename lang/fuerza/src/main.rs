@@ -1,6 +1,6 @@
 #![deny(clippy::all)]
 #![warn(clippy::pedantic)]
-#![deny(rust_2018_idioms, unsafe_code)]
+#![deny(rust_2018_idioms)]
 
 fn main() {
     let mut acceptor: Acceptor<'_, 5> = AcceptorBuilder::new()
@@ -67,7 +67,6 @@ impl<'inp, const R: usize> std::fmt::Display for Acceptor<'inp, R> {
     }
 }
 
-#[derive(Debug)]
 struct AcceptorBuilder<'inp, const R: usize> {
     nt_sorted: [NonTerminalID; R],
     non_terminal: [&'inp str; R],
@@ -197,15 +196,28 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
         Some((Element::Terminal(from.chars().nth(0).unwrap()), &from[1..]))
     }
 
+    /// Returns a reference to the remaining input string to analyze.
     fn remaining(&self) -> &str {
         &self.input[self.matched..]
     }
 
-    fn increase_counter(&mut self) -> Option<usize> {
-        self.symb.last_mut().map(|(_, n)| {
-            *n += 1;
-            *n
-        })
+    /// Increases and returns the counter of the latest symb of the [`Acceptor<R>`].
+    ///
+    /// # Safety
+    ///
+    /// The caller must garantee that there exists a value at the top of the
+    /// symb stack and that it is an [`Element::NonTerminal`].
+    ///
+    /// This method is never intended to be used with a value [`Element::Terminal`]
+    /// at the top of the symb stack
+    unsafe fn increase_last_symb_counter(&mut self) -> usize {
+        self.symb
+            .last_mut()
+            .map(|(_, n)| {
+                *n += 1;
+                *n
+            })
+            .unwrap_unchecked()
     }
 
     pub fn next(&mut self) -> State {
@@ -252,13 +264,13 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
                         /* Caso 5 */
                         self.matched -= 1;
                         self.sent = format!("{e}{}", self.sent);
-                        self.symb.pop().unwrap();
+                        self.symb.pop();
                     }
                     (Element::NonTerminal(id), _) if self.remaining_for_id(id) > 0 => {
                         /* Caso 6a */
                         self.state = State::Q;
 
-                        let n = self.increase_counter().unwrap();
+                        let n = unsafe { self.increase_last_symb_counter() };
                         let start = self.starting_ptr[id];
 
                         self.sent = format!(
