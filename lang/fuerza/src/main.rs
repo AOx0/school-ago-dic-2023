@@ -12,11 +12,11 @@ fn main() {
         .matching("b#");
 
     println!("{acceptor}");
-    const N: usize = 4;
+    const N: usize = 11;
     while acceptor.next() != State::T {
-        println!("{: >N$}|- {acceptor}", "");
+        println!("{: >N$}  |- {acceptor}", format!("(Caso {})", acceptor.caso));
     }
-    println!("{: >N$}|- {acceptor}", "");
+        println!("{: >N$}  |- {acceptor}", format!("(Caso {})", acceptor.caso));
 }
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -40,6 +40,7 @@ struct Acceptor<'inp, const R: usize> {
     sent: Vec<Element>,
     state: State,
     input: &'inp str,
+    caso: &'static str,
     matched: usize,
 }
 
@@ -152,6 +153,7 @@ impl<'inp, const R: usize> AcceptorBuilder<'inp, R> {
             matched: 0,
             symb: Vec::with_capacity(self.pushed * 2),
             state: State::Q,
+            caso: "",
         }
     }
 
@@ -267,63 +269,59 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
                 if self.matched == self.input.len() - 1
                     && self.sent == &[Element::Terminal('#')] =>
             {
-                /* Caso 3 */
+                self.caso = "3";
                 self.state = State::T;
                 self.sent.clear();
             }
-            State::Q => {
-                match self.get_elem(&self.sent) {
-                    Element::NonTerminal(id) => {
-                        /* Caso 1 */
-                        self.pop_with_elements(self.non_terminal[id]);
-                        self.extend_with_elements(self.rhs[self.starting_ptr[id]]);
-                        self.symb.push((Element::NonTerminal(id), 0));
-                    }
-                    Element::Terminal(next) if self.remaining().chars().nth(0).unwrap() == next => {
-                        /* Caso 2 */
-                        self.symb.push((Element::Terminal(next), 0));
-                        self.sent.pop();
-                        self.matched += 1;
-                    }
-                    Element::Terminal(_) => {
-                        /* Caso 4 */
-                        self.state = State::B;
-                    }
+            State::Q => match self.get_elem(&self.sent) {
+                Element::NonTerminal(id) => {
+                    self.caso = "1";
+                    self.pop_with_elements(self.non_terminal[id]);
+                    self.extend_with_elements(self.rhs[self.starting_ptr[id]]);
+                    self.symb.push((Element::NonTerminal(id), 0));
                 }
-            }
+                Element::Terminal(next) if self.remaining().chars().nth(0).unwrap() == next => {
+                    self.caso = "2";
+                    self.symb.push((Element::Terminal(next), 0));
+                    self.sent.pop();
+                    self.matched += 1;
+                }
+                Element::Terminal(_) => {
+                    self.caso = "4";
+                    self.state = State::B;
+                }
+            },
             State::B
                 if self.matched == 0
                     && self.sent == &[Element::Terminal('#'), Element::NonTerminal(0)] =>
             {
-                /* Caso 6b */
+                self.caso = "6b";
                 self.state = State::T;
             }
-            State::B => {
-                match self.symb.last().copied().unwrap() {
-                    (Element::Terminal(e), _) => {
-                        /* Caso 5 */
-                        self.matched -= 1;
-                        self.sent.push(Element::Terminal(e));
-                        self.symb.pop();
-                    }
-                    (Element::NonTerminal(id), _) if self.remaining_for_id(id) > 0 => {
-                        /* Caso 6a */
-                        self.state = State::Q;
-
-                        let n = unsafe { self.increase_last_symb_counter() };
-                        let start = self.starting_ptr[id];
-
-                        self.pop_with_elements(self.rhs[start + n - 1]);
-                        self.extend_with_elements(self.rhs[start + n]);
-                    }
-                    (Element::NonTerminal(id), n) => {
-                        /* Caso 6c (7) */
-                        self.pop_with_elements(self.rhs[self.starting_ptr[id] + n]);
-                        self.extend_with_elements(self.non_terminal[id]);
-                        self.symb.pop();
-                    }
+            State::B => match self.symb.last().copied().unwrap() {
+                (Element::Terminal(e), _) => {
+                    self.caso = "5";
+                    self.matched -= 1;
+                    self.sent.push(Element::Terminal(e));
+                    self.symb.pop();
                 }
-            }
+                (Element::NonTerminal(id), _) if self.remaining_for_id(id) > 0 => {
+                    self.caso = "6a";
+                    self.state = State::Q;
+
+                    let n = unsafe { self.increase_last_symb_counter() };
+                    let start = self.starting_ptr[id];
+
+                    self.pop_with_elements(self.rhs[start + n - 1]);
+                    self.extend_with_elements(self.rhs[start + n]);
+                }
+                (Element::NonTerminal(id), n) => {
+                    self.caso = "6c";
+                    self.pop_with_elements(self.rhs[self.starting_ptr[id] + n]);
+                    self.extend_with_elements(self.non_terminal[id]);
+                    self.symb.pop();
+                }
+            },
             State::T => {}
         }
 
