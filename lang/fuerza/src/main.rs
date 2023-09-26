@@ -199,35 +199,27 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
                         self.non_terminal[id],
                         self.remaining_for_id(id)
                     );
+                    /* Caso 1 */
                     self.sent = format!("{}{rem}", self.rhs[self.starting_ptr[id]]);
                     self.symb.push((Element::NonTerminal(id), 1));
                 }
+                Element::Terminal(next) if self.remaining().chars().nth(0).unwrap() == next => {
+                    println!(
+                        "INFO:: Caso 2 porque {next} está presente en {}",
+                        self.remaining()
+                    );
+                    /* Caso 2 */
+                    self.symb.push((Element::Terminal(next), 0));
+                    self.sent = self.sent.strip_prefix(next).unwrap().to_string();
+                    self.matched += 1;
+                }
                 Element::Terminal(next) => {
-                    let matches = if let Element::Terminal(lit) =
-                        self.get_elem(self.remaining()).unwrap().0
-                    {
-                        lit == next
-                    } else {
-                        unreachable!("Por definición, no debería existir no terminales en el texto de entrada")
-                    };
-
-                    if matches {
-                        println!(
-                            "INFO:: Caso 2 porque {next} está presente en {}",
-                            self.remaining()
-                        );
-                        /* Caso 2 */
-                        self.symb.push((Element::Terminal(next), 0));
-                        self.sent = self.sent.strip_prefix(next).unwrap().to_string();
-                        self.matched += 1;
-                    } else {
-                        println!(
-                            "INFO:: Caso 4 porque {next} no está presente en {}",
-                            self.remaining()
-                        );
-                        /* Caso 4 */
-                        self.state = State::B;
-                    }
+                    println!(
+                        "INFO:: Caso 4 porque {next} no está presente en {}",
+                        self.remaining()
+                    );
+                    /* Caso 4 */
+                    self.state = State::B;
                 }
             }
         } else if self.matched == 0 && self.sent.starts_with(self.non_terminal[0]) {
