@@ -3,7 +3,7 @@
 #![deny(rust_2018_idioms, unsafe_code)]
 
 fn main() {
-    let mut acceptor = AcceptorBuilder::new()
+    let mut acceptor: Acceptor<4> = AcceptorBuilder::new()
         .with_rule("E", ["let VAREQVAL;"])
         .with_rule("EQ", ["=", " =", " =", " = "])
         .with_rule("VAR", ["foo", "bar"])
@@ -28,12 +28,12 @@ type StartingPtr = usize;
 type NonTerminalID = usize;
 type NonTerminalVariant = usize;
 
-#[derive(Debug, Default)]
-struct Acceptor {
-    lhs: Vec<(NumberOfRules, StartingPtr)>,
+#[derive(Debug)]
+struct Acceptor<const R: usize> {
+    lhs: [(NumberOfRules, StartingPtr); R],
     rhs: Vec<String>,
-    nt: Vec<String>,
-    nt_sorted: Vec<NonTerminalID>,
+    nt: [String; R],
+    nt_sorted: [NonTerminalID; R],
     sent: String,
     matching: String,
     matched: usize,
@@ -41,34 +41,51 @@ struct Acceptor {
     state: State,
 }
 
-#[derive(Debug, Default)]
-struct AcceptorBuilder {
-    lhs: Vec<(NumberOfRules, StartingPtr)>,
+#[derive(Debug)]
+struct AcceptorBuilder<const R: usize> {
+    lhs: [(NumberOfRules, StartingPtr); R],
     rhs: Vec<String>,
-    nt: Vec<String>,
-    nt_sorted: Vec<NonTerminalID>,
+    nt: [String; R],
+    nt_sorted: [NonTerminalID; R],
+    pushed: usize,
 }
 
-impl AcceptorBuilder {
-    pub fn new() -> AcceptorBuilder {
-        Self::default()
+impl<const R: usize> AcceptorBuilder<R> {
+    pub fn new() -> Self {
+        const VAL: String = String::new();
+        Self {
+            lhs: [(0, 0); R],
+            rhs: Vec::new(),
+            nt: [VAL; R],
+            nt_sorted: [0; R],
+            pushed: 0,
+        }
     }
 
     fn add_rule<T: AsRef<str>>(&mut self, name: &str, produces: impl AsRef<[T]>) {
-        fn add_rule(s: &mut AcceptorBuilder, name: &str, produces: &[impl AsRef<str>]) {
+        fn add_rule<const R: usize>(
+            s: &mut AcceptorBuilder<R>,
+            name: &str,
+            produces: &[impl AsRef<str>],
+        ) {
             let existing = s.nt.iter().position(|a| a == name);
 
             if let Some(existing_position) = existing {
                 panic!("Productions rules for the non-terminal {name} already exist (at idx {existing_position})");
+            } else if s.pushed >= R {
+                panic!("Can't push production {:?} to Accpetor, there are more productions than spaces in the stack (expected productions: {}). \
+                    Try and bump up the number of productions: Accpetor<{}>", name, R, R + 1);
             } else {
-                s.lhs.push((produces.len(), s.rhs.len()));
+                s.lhs[s.pushed] = (produces.len(), s.rhs.len());
                 s.rhs
                     .extend(produces.iter().map(|a| a.as_ref().to_string()));
-                s.nt.push(name.to_string());
+                s.nt[s.pushed] = name.to_string();
 
-                s.nt_sorted.push(s.nt.len() - 1);
+                s.nt_sorted[s.pushed] = s.nt.len() - 1;
                 s.nt_sorted
                     .sort_unstable_by(|&a, &b| s.nt[b].len().cmp(&s.nt[a].len()));
+
+                s.pushed += 1;
             }
         }
 
@@ -80,17 +97,24 @@ impl AcceptorBuilder {
         self
     }
 
-    pub fn build(mut self) -> Acceptor {
-        let mut result = Acceptor::default();
-        std::mem::swap(&mut result.lhs, &mut self.lhs);
-        std::mem::swap(&mut result.rhs, &mut self.rhs);
-        std::mem::swap(&mut result.nt, &mut self.nt);
-        std::mem::swap(&mut result.nt_sorted, &mut self.nt_sorted);
-
-        result
+    pub fn build(self) -> Acceptor<R> {
+        if self.pushed < R {
+            panic!("Missing productions. Expected production number is {R} but only {} productions were provided", {self.pushed})
+        }
+        Acceptor {
+            lhs: self.lhs,
+            rhs: self.rhs,
+            nt: self.nt,
+            nt_sorted: self.nt_sorted,
+            sent: Default::default(),
+            matching: Default::default(),
+            matched: Default::default(),
+            symb: Default::default(),
+            state: Default::default(),
+        }
     }
 
-    pub fn matching(self, inp: &str) -> Acceptor {
+    pub fn matching(self, inp: &str) -> Acceptor<R> {
         let mut res = self.build();
         res.set_match(inp);
         res.symb = Vec::with_capacity(inp.len() * 2);
@@ -104,7 +128,7 @@ enum Element {
     Terminal(char),
 }
 
-impl Acceptor {
+impl<const R: usize> Acceptor<R> {
     fn set_match(&mut self, t: &str) {
         use std::fmt::Write;
         self.matching.clear();
