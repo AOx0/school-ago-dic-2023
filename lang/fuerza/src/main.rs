@@ -49,6 +49,7 @@ impl<'inp, const R: usize> std::fmt::Display for Acceptor<'inp, R> {
             write!(f, "\u{03B5}")?;
         }
         for (ref symb, n) in &self.symb {
+            let n = n + 1;
             match symb {
                 Element::NonTerminal(id) => {
                     write!(f, "{{{}{n}}}", self.non_terminal[*id])?;
@@ -246,7 +247,7 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
                     (Element::NonTerminal(id), rem) => {
                         /* Caso 1 */
                         self.sent = format!("{}{rem}", self.rhs[self.starting_ptr[id]]);
-                        self.symb.push((Element::NonTerminal(id), 1));
+                        self.symb.push((Element::NonTerminal(id), 0));
                     }
                     (Element::Terminal(next), _)
                         if self.remaining().chars().nth(0).unwrap() == next =>
@@ -289,8 +290,8 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
 
                         self.sent = format!(
                             "{}{}",
-                            self.rhs[start + n - 1],
-                            self.sent.strip_prefix(self.rhs[start + n - 2]).unwrap()
+                            self.rhs[start + n],
+                            self.sent.strip_prefix(self.rhs[start + n - 1]).unwrap()
                         );
                     }
                     (Element::NonTerminal(id), n) => {
@@ -299,7 +300,7 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
                             "{}{}",
                             self.non_terminal[id],
                             self.sent
-                                .strip_prefix(self.rhs[self.starting_ptr[id] + n - 1])
+                                .strip_prefix(self.rhs[self.starting_ptr[id] + n])
                                 .unwrap()
                         );
                         self.symb.pop();
