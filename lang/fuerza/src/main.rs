@@ -1,15 +1,8 @@
-#![feature(let_chains)]
 #![deny(clippy::all)]
 #![warn(clippy::pedantic)]
 #![deny(rust_2018_idioms, unsafe_code)]
 
 fn main() {
-    // let t = "T+T";
-    // let NT = ["E", "E'", "T", "T'", "F"];
-
-    // let LHS: [(usize, usize); 5] = [(2, 1), (2, 3), (2, 5), (2, 7), (2, 9)];
-    // let RHS = ["TE'", "+T", "+TE'", "F", "FT'", "*F", "*ET'", "(E)", "a"];
-
     let mut acceptor = AcceptorBuilder::new()
         .with_rule("E", ["let VAREQVAL;"])
         .with_rule("EQ", ["=", " =", " =", " = "])
@@ -100,6 +93,7 @@ impl AcceptorBuilder {
     pub fn matching(self, inp: &str) -> Acceptor {
         let mut res = self.build();
         res.set_match(inp);
+        res.symb = Vec::with_capacity(inp.len() * 2);
         res
     }
 }
