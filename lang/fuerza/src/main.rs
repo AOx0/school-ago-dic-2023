@@ -93,10 +93,10 @@ impl<'inp, const R: usize> AcceptorBuilder<'inp, R> {
 
         if let Some(existing_position) = existing {
             panic!("Productions rules for the non-terminal {name} already exist (at idx {existing_position})");
-        } else if self.pushed >= R {
-            panic!("Can't push production {:?} to Accpetor, there are more productions than spaces in the stack (expected productions: {}). \
-                    Try and bump up the number of productions: Accpetor<{}>", name, R, R + 1);
         } else {
+            assert!(self.pushed < R, "Can't push production {:?} to Accpetor, there are more productions than spaces in the stack (expected productions: {}). \
+                    Try and bump up the number of productions: Accpetor<{}>", name, R, R + 1);
+
             self.number_rules[self.pushed] = produces.len();
             self.starting_ptr[self.pushed] = self.rhs.len();
             self.rhs.extend(produces.iter());
@@ -165,6 +165,8 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
     }
 
     fn remaining_for_id(&self, for_id: NonTerminalID) -> usize {
+        assert!(for_id < R);
+
         let current = self
             .symb
             .iter()
