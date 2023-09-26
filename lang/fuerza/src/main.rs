@@ -9,13 +9,14 @@ fn main() {
         .with_rule("T", &["FT'"])
         .with_rule("T'", &["*FT'", ""])
         .with_rule("F", &["b", "(E)"])
-        .matching("b");
+        .matching("b#");
 
-    println!("{acceptor} |-");
+    println!("{acceptor}");
+    const N: usize = 4;
     while acceptor.next() != State::T {
-        println!("              |- {acceptor}");
+        println!("{: >N$}|- {acceptor}", "");
     }
-    println!("              |- {acceptor}");
+    println!("{: >N$}|- {acceptor}", "");
 }
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -36,9 +37,9 @@ struct Acceptor<'inp, const R: usize> {
     starting_ptr: [usize; R],
     rhs: Vec<&'inp str>,
     symb: Vec<(Element, usize)>,
-    sent: String,
+    sent: Vec<Element>,
     state: State,
-    input: String,
+    input: &'inp str,
     matched: usize,
 }
 
@@ -63,7 +64,18 @@ impl<'inp, const R: usize> std::fmt::Display for Acceptor<'inp, R> {
         if self.sent.is_empty() {
             write!(f, ", \u{03B5})")
         } else {
-            write!(f, ", {})", self.sent)
+            write!(f, ", ")?;
+            for element in self.sent.iter().rev() {
+                match element {
+                    Element::NonTerminal(id) => {
+                        write!(f, "{}", self.non_terminal[*id])?;
+                    }
+                    Element::Terminal(c) => {
+                        write!(f, "{c}")?;
+                    }
+                }
+            }
+            write!(f, ")")
         }
     }
 }
@@ -135,15 +147,15 @@ impl<'inp, const R: usize> AcceptorBuilder<'inp, R> {
             rhs: self.rhs,
             non_terminal: self.non_terminal,
             nt_sorted: self.nt_sorted,
-            sent: String::default(),
-            input: String::default(),
+            sent: Vec::with_capacity(self.pushed * 2),
+            input: "",
             matched: 0,
             symb: Vec::with_capacity(self.pushed * 2),
             state: State::Q,
         }
     }
 
-    pub fn matching(self, inp: &str) -> Acceptor<'inp, R> {
+    pub fn matching(self, inp: &'inp str) -> Acceptor<'inp, R> {
         let mut res = self.build();
         res.set_match(inp);
         res.symb.reserve(inp.len());
@@ -151,30 +163,23 @@ impl<'inp, const R: usize> AcceptorBuilder<'inp, R> {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 enum Element {
     NonTerminal(NonTerminalID),
     Terminal(char),
 }
 
 impl<'inp, const R: usize> Acceptor<'inp, R> {
-    fn set_match(&mut self, t: &str) {
-        use std::fmt::Write;
-        self.input.clear();
-        write!(self.input, "{t}#").unwrap();
+    fn set_match(&mut self, t: &'inp str) {
+        self.input = t;
 
         self.matched = 0;
         self.state = State::Q;
         self.symb.clear();
         self.sent.clear();
-        write!(
-            &mut self.sent,
-            "{}#",
-            self.non_terminal
-                .first()
-                .expect("There are no production rules")
-        )
-        .unwrap();
+
+        self.sent.push(Element::Terminal('#'));
+        self.sent.push(Element::NonTerminal(0));
     }
 
     fn remaining_for_id(&self, for_id: NonTerminalID) -> usize {
@@ -192,23 +197,44 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
         self.number_rules[for_id] - current
     }
 
-    fn get_elem<'a>(&self, from: &'a str) -> Option<(Element, &'a str)> {
-        if from.is_empty() {
-            return None;
-        }
-
+    fn get_next_elem_rev<'a>(&self, from: &'a str) -> (Element, &'a str) {
         for (id, nt) in self
             .nt_sorted
             .iter()
             .copied()
             .map(|id| (id, self.non_terminal[id]))
         {
-            if let Some(s) = from.strip_prefix(nt) {
-                return Some((Element::NonTerminal(id), s));
+            if let Some(s) = from.strip_suffix(nt) {
+                return (Element::NonTerminal(id), s);
             }
         }
 
-        Some((Element::Terminal(from.chars().nth(0).unwrap()), &from[1..]))
+        (
+            Element::Terminal(from.chars().last().unwrap()),
+            &from[..from.len() - 1],
+        )
+    }
+
+    fn extend_with_elements(&mut self, from: &str) {
+        let mut from = from;
+        while !from.is_empty() {
+            let (next, f) = self.get_next_elem_rev(from);
+            self.sent.push(next);
+            from = f;
+        }
+    }
+
+    fn pop_with_elements(&mut self, from: &str) {
+        let mut from = from;
+        while !from.is_empty() {
+            let (_, f) = self.get_next_elem_rev(from);
+            self.sent.pop();
+            from = f;
+        }
+    }
+
+    fn get_elem<'a>(&self, from: &'a [Element]) -> Element {
+        from.last().copied().unwrap()
     }
 
     /// Returns a reference to the remaining input string to analyze.
@@ -237,27 +263,29 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
 
     pub fn next(&mut self) -> State {
         match self.state {
-            State::Q if self.matched == self.input.len() - 1 && self.sent == "#" => {
+            State::Q
+                if self.matched == self.input.len() - 1
+                    && self.sent == &[Element::Terminal('#')] =>
+            {
                 /* Caso 3 */
                 self.state = State::T;
                 self.sent.clear();
             }
             State::Q => {
-                match self.get_elem(&self.sent).unwrap() {
-                    (Element::NonTerminal(id), rem) => {
+                match self.get_elem(&self.sent) {
+                    Element::NonTerminal(id) => {
                         /* Caso 1 */
-                        self.sent = format!("{}{rem}", self.rhs[self.starting_ptr[id]]);
+                        self.pop_with_elements(self.non_terminal[id]);
+                        self.extend_with_elements(self.rhs[self.starting_ptr[id]]);
                         self.symb.push((Element::NonTerminal(id), 0));
                     }
-                    (Element::Terminal(next), _)
-                        if self.remaining().chars().nth(0).unwrap() == next =>
-                    {
+                    Element::Terminal(next) if self.remaining().chars().nth(0).unwrap() == next => {
                         /* Caso 2 */
                         self.symb.push((Element::Terminal(next), 0));
-                        self.sent = self.sent.strip_prefix(next).unwrap().to_string();
+                        self.sent.pop();
                         self.matched += 1;
                     }
-                    (Element::Terminal(_), _) => {
+                    Element::Terminal(_) => {
                         /* Caso 4 */
                         self.state = State::B;
                     }
@@ -265,10 +293,7 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
             }
             State::B
                 if self.matched == 0
-                    && self
-                        .sent
-                        .strip_prefix(self.non_terminal[0])
-                        .is_some_and(|a| a == "#") =>
+                    && self.sent == &[Element::Terminal('#'), Element::NonTerminal(0)] =>
             {
                 /* Caso 6b */
                 self.state = State::T;
@@ -278,7 +303,7 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
                     (Element::Terminal(e), _) => {
                         /* Caso 5 */
                         self.matched -= 1;
-                        self.sent = format!("{e}{}", self.sent);
+                        self.sent.push(Element::Terminal(e));
                         self.symb.pop();
                     }
                     (Element::NonTerminal(id), _) if self.remaining_for_id(id) > 0 => {
@@ -288,21 +313,13 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
                         let n = unsafe { self.increase_last_symb_counter() };
                         let start = self.starting_ptr[id];
 
-                        self.sent = format!(
-                            "{}{}",
-                            self.rhs[start + n],
-                            self.sent.strip_prefix(self.rhs[start + n - 1]).unwrap()
-                        );
+                        self.pop_with_elements(self.rhs[start + n - 1]);
+                        self.extend_with_elements(self.rhs[start + n]);
                     }
                     (Element::NonTerminal(id), n) => {
                         /* Caso 6c (7) */
-                        self.sent = format!(
-                            "{}{}",
-                            self.non_terminal[id],
-                            self.sent
-                                .strip_prefix(self.rhs[self.starting_ptr[id] + n])
-                                .unwrap()
-                        );
+                        self.pop_with_elements(self.rhs[self.starting_ptr[id] + n]);
+                        self.extend_with_elements(self.non_terminal[id]);
                         self.symb.pop();
                     }
                 }
