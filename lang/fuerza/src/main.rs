@@ -23,30 +23,29 @@ enum State {
     T,
 }
 
-type NumberOfRules = usize;
-type StartingPtr = usize;
 type NonTerminalID = usize;
-type NonTerminalVariant = usize;
 
 #[derive(Debug)]
 struct Acceptor<const R: usize> {
-    lhs: [(NumberOfRules, StartingPtr); R],
-    rhs: Vec<String>,
-    nt: [String; R],
     nt_sorted: [NonTerminalID; R],
-    sent: String,
+    non_terminal: [String; R],
+    number_rules: [usize; R],
+    starting_ptr: [usize; R],
+    rhs: Vec<String>,
+    symb: Vec<(Element, usize)>,
     matching: String,
     matched: usize,
-    symb: Vec<(Element, NonTerminalVariant)>,
+    sent: String,
     state: State,
 }
 
 #[derive(Debug)]
 struct AcceptorBuilder<const R: usize> {
-    lhs: [(NumberOfRules, StartingPtr); R],
-    rhs: Vec<String>,
-    nt: [String; R],
     nt_sorted: [NonTerminalID; R],
+    non_terminal: [String; R],
+    number_rules: [usize; R],
+    starting_ptr: [usize; R],
+    rhs: Vec<String>,
     pushed: usize,
 }
 
@@ -54,9 +53,10 @@ impl<const R: usize> AcceptorBuilder<R> {
     pub fn new() -> Self {
         const VAL: String = String::new();
         Self {
-            lhs: [(0, 0); R],
+            number_rules: [0; R],
+            starting_ptr: [0; R],
             rhs: Vec::new(),
-            nt: [VAL; R],
+            non_terminal: [VAL; R],
             nt_sorted: [0; R],
             pushed: 0,
         }
@@ -68,7 +68,7 @@ impl<const R: usize> AcceptorBuilder<R> {
             name: &str,
             produces: &[impl AsRef<str>],
         ) {
-            let existing = s.nt.iter().position(|a| a == name);
+            let existing = s.non_terminal.iter().position(|a| a == name);
 
             if let Some(existing_position) = existing {
                 panic!("Productions rules for the non-terminal {name} already exist (at idx {existing_position})");
@@ -76,14 +76,16 @@ impl<const R: usize> AcceptorBuilder<R> {
                 panic!("Can't push production {:?} to Accpetor, there are more productions than spaces in the stack (expected productions: {}). \
                     Try and bump up the number of productions: Accpetor<{}>", name, R, R + 1);
             } else {
-                s.lhs[s.pushed] = (produces.len(), s.rhs.len());
+                s.number_rules[s.pushed] = produces.len();
+                s.starting_ptr[s.pushed] = s.rhs.len();
                 s.rhs
                     .extend(produces.iter().map(|a| a.as_ref().to_string()));
-                s.nt[s.pushed] = name.to_string();
+                s.non_terminal[s.pushed] = name.to_string();
 
-                s.nt_sorted[s.pushed] = s.nt.len() - 1;
-                s.nt_sorted
-                    .sort_unstable_by(|&a, &b| s.nt[b].len().cmp(&s.nt[a].len()));
+                s.nt_sorted[s.pushed] = s.non_terminal.len() - 1;
+                s.nt_sorted.sort_unstable_by(|&a, &b| {
+                    s.non_terminal[b].len().cmp(&s.non_terminal[a].len())
+                });
 
                 s.pushed += 1;
             }
@@ -102,9 +104,10 @@ impl<const R: usize> AcceptorBuilder<R> {
             panic!("Missing productions. Expected production number is {R} but only {} productions were provided", {self.pushed})
         }
         Acceptor {
-            lhs: self.lhs,
+            number_rules: self.number_rules,
+            starting_ptr: self.starting_ptr,
             rhs: self.rhs,
-            nt: self.nt,
+            non_terminal: self.non_terminal,
             nt_sorted: self.nt_sorted,
             sent: Default::default(),
             matching: Default::default(),
@@ -141,13 +144,11 @@ impl<const R: usize> Acceptor<R> {
         write!(
             &mut self.sent,
             "{}#",
-            self.nt.first().expect("There are no production rules")
+            self.non_terminal
+                .first()
+                .expect("There are no production rules")
         )
         .unwrap();
-    }
-
-    fn get_info(&self, for_id: NonTerminalID) -> Option<(usize, usize)> {
-        self.lhs.get(for_id).copied()
     }
 
     fn remaining_for_id(&self, for_id: NonTerminalID) -> usize {
@@ -160,7 +161,7 @@ impl<const R: usize> Acceptor<R> {
             })
             .unwrap_or(&0);
 
-        self.get_info(for_id).unwrap().0 - current
+        self.number_rules[for_id] - current
     }
 
     fn get_elem<'a>(&self, from: &'a str) -> Option<(Element, &'a str)> {
@@ -172,7 +173,7 @@ impl<const R: usize> Acceptor<R> {
             .nt_sorted
             .iter()
             .copied()
-            .map(|id| (id, self.nt[id].as_str()))
+            .map(|id| (id, self.non_terminal[id].as_str()))
         {
             if let Some(s) = from.strip_prefix(nt) {
                 return Some((Element::NonTerminal(id), s));
@@ -209,10 +210,10 @@ impl<const R: usize> Acceptor<R> {
                 Element::NonTerminal(id) => {
                     println!(
                         "INFO:: Caso 1 porque a {id} ({}) le quedan reglas por expandir ({})",
-                        self.nt[id],
+                        self.non_terminal[id],
                         self.remaining_for_id(id)
                     );
-                    self.sent = format!("{}{rem}", self.rhs[self.lhs[id].1]);
+                    self.sent = format!("{}{rem}", self.rhs[self.starting_ptr[id]]);
                     self.symb.push((Element::NonTerminal(id), 1));
                 }
                 Element::Terminal(next) => {
@@ -243,10 +244,10 @@ impl<const R: usize> Acceptor<R> {
                     }
                 }
             }
-        } else if self.matched == 0 && self.sent.starts_with(&self.nt[0]) {
+        } else if self.matched == 0 && self.sent.starts_with(&self.non_terminal[0]) {
             println!(
                 "INFO:: Caso 6b porque sent está en el símbolo inicial ({})",
-                &self.nt[0],
+                &self.non_terminal[0],
             );
             /* Caso 6b */
             self.state = State::T;
@@ -263,13 +264,13 @@ impl<const R: usize> Acceptor<R> {
                     /* Caso 6a */
                     println!(
                         "INFO:: Caso 6a porque {id} ({}) aún tiene más reglas de producción ({})",
-                        self.nt[id],
+                        self.non_terminal[id],
                         self.remaining_for_id(id)
                     );
                     self.state = State::Q;
 
                     let n = self.increase_counter().unwrap();
-                    let (_, start) = self.get_info(id).unwrap();
+                    let start = self.starting_ptr[id];
 
                     self.sent = format!(
                         "{}{}",
@@ -281,14 +282,15 @@ impl<const R: usize> Acceptor<R> {
                     /* Caso 7 */
                     println!(
                             "INFO:: Caso 7 (6c) porque {id} ({}) no tiene más reglas de producción ({})",
-                            self.nt[id],
+                            self.non_terminal[id],
                             self.remaining_for_id(id)
                         );
-                    let (_, start) = self.get_info(id).unwrap();
                     self.sent = format!(
                         "{}{}",
-                        self.nt[id],
-                        self.sent.strip_prefix(&self.rhs[start + n - 1]).unwrap()
+                        self.non_terminal[id],
+                        self.sent
+                            .strip_prefix(&self.rhs[self.starting_ptr[id] + n - 1])
+                            .unwrap()
                     );
                     self.symb.pop();
                 }
