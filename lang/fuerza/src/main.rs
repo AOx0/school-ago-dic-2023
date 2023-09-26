@@ -94,8 +94,15 @@ impl<'inp, const R: usize> AcceptorBuilder<'inp, R> {
         if let Some(existing_position) = existing {
             panic!("Productions rules for the non-terminal {name} already exist (at idx {existing_position})");
         } else {
-            assert!(self.pushed < R, "Can't push production {:?} to Accpetor, there are more productions than spaces in the stack (expected productions: {}). \
-                    Try and bump up the number of productions: Accpetor<{}>", name, R, R + 1);
+            assert!(
+                self.pushed < R,
+                "Can't push production {:?} to Accpetor, \
+                there are more productions than spaces in the stack (expected productions: {}). \
+                    Try and bump up the number of productions: Accpetor<{}>",
+                name,
+                R,
+                R + 1
+            );
 
             self.number_rules[self.pushed] = produces.len();
             self.starting_ptr[self.pushed] = self.rhs.len();
@@ -112,7 +119,12 @@ impl<'inp, const R: usize> AcceptorBuilder<'inp, R> {
     }
 
     pub fn build(mut self) -> Acceptor<'inp, R> {
-        assert!(self.pushed == R, "Missing productions. Expected production number is {R} but only {} productions were provided", {self.pushed});
+        assert!(
+            self.pushed == R,
+            "Missing productions. \
+            Expected production number is {R} but only {} productions were provided",
+            { self.pushed }
+        );
 
         self.nt_sorted
             .sort_unstable_by(|&a, &b| self.non_terminal[b].len().cmp(&self.non_terminal[a].len()));
