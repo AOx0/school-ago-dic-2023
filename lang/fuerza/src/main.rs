@@ -3,16 +3,19 @@
 #![deny(rust_2018_idioms, unsafe_code)]
 
 fn main() {
-    let mut acceptor: Acceptor<'_, 4> = AcceptorBuilder::new()
-        .with_rule("E", &["let VAREQVAL;"])
-        .with_rule("EQ", &["=", " =", " =", " = "])
-        .with_rule("VAR", &["foo", "bar"])
-        .with_rule("VAL", &["0", "1", "2", "3", "4"])
-        .matching("let foo = 0;");
+    let mut acceptor: Acceptor<'_, 5> = AcceptorBuilder::new()
+        .with_rule("E", &["TE'"])
+        .with_rule("E'", &["+TE'", ""])
+        .with_rule("T", &["FT'"])
+        .with_rule("T'", &["*FT'", ""])
+        .with_rule("F", &["b", "(E)"])
+        .matching("b");
 
+    println!("{acceptor} |-");
     while acceptor.next() != State::T {
-        println!("{acceptor:?}");
+        println!("              |- {acceptor}");
     }
+    println!("              |- {acceptor}");
 }
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -37,6 +40,31 @@ struct Acceptor<'inp, const R: usize> {
     state: State,
     input: String,
     matched: usize,
+}
+
+impl<'inp, const R: usize> std::fmt::Display for Acceptor<'inp, R> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "({:?}, {}, ", self.state, self.matched + 1)?;
+        if self.symb.is_empty() {
+            write!(f, "\u{03B5}")?;
+        }
+        for (ref symb, n) in &self.symb {
+            match symb {
+                Element::NonTerminal(id) => {
+                    write!(f, "{{{}{n}}}", self.non_terminal[*id])?;
+                }
+                Element::Terminal(c) => {
+                    write!(f, "{c}")?;
+                }
+            }
+        }
+
+        if self.sent.is_empty() {
+            write!(f, ", \u{03B5})")
+        } else {
+            write!(f, ", {})", self.sent)
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -181,98 +209,78 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
     }
 
     pub fn next(&mut self) -> State {
-        if matches!(self.state, State::Q)
-            && self.matched == self.input.len() - 1
-            && self.sent.chars().nth(0).is_some_and(|a| a == '#')
-        {
-            /* Caso 3 */
-            println!("INFO:: Caso 3 porque solo queda '#' en sent");
-            self.state = State::T;
-            self.sent.clear();
-        } else if matches!(self.state, State::Q) {
-            let (next, rem) = self.get_elem(&self.sent).unwrap();
-
-            match next {
-                Element::NonTerminal(id) => {
-                    println!(
-                        "INFO:: Caso 1 porque a {id} ({}) le quedan reglas por expandir ({})",
-                        self.non_terminal[id],
-                        self.remaining_for_id(id)
-                    );
-                    /* Caso 1 */
-                    self.sent = format!("{}{rem}", self.rhs[self.starting_ptr[id]]);
-                    self.symb.push((Element::NonTerminal(id), 1));
-                }
-                Element::Terminal(next) if self.remaining().chars().nth(0).unwrap() == next => {
-                    println!(
-                        "INFO:: Caso 2 porque {next} está presente en {}",
-                        self.remaining()
-                    );
-                    /* Caso 2 */
-                    self.symb.push((Element::Terminal(next), 0));
-                    self.sent = self.sent.strip_prefix(next).unwrap().to_string();
-                    self.matched += 1;
-                }
-                Element::Terminal(next) => {
-                    println!(
-                        "INFO:: Caso 4 porque {next} no está presente en {}",
-                        self.remaining()
-                    );
-                    /* Caso 4 */
-                    self.state = State::B;
+        match self.state {
+            State::Q if self.matched == self.input.len() - 1 && self.sent == "#" => {
+                /* Caso 3 */
+                self.state = State::T;
+                self.sent.clear();
+            }
+            State::Q => {
+                match self.get_elem(&self.sent).unwrap() {
+                    (Element::NonTerminal(id), rem) => {
+                        /* Caso 1 */
+                        self.sent = format!("{}{rem}", self.rhs[self.starting_ptr[id]]);
+                        self.symb.push((Element::NonTerminal(id), 1));
+                    }
+                    (Element::Terminal(next), _)
+                        if self.remaining().chars().nth(0).unwrap() == next =>
+                    {
+                        /* Caso 2 */
+                        self.symb.push((Element::Terminal(next), 0));
+                        self.sent = self.sent.strip_prefix(next).unwrap().to_string();
+                        self.matched += 1;
+                    }
+                    (Element::Terminal(_), _) => {
+                        /* Caso 4 */
+                        self.state = State::B;
+                    }
                 }
             }
-        } else if self.matched == 0 && self.sent.starts_with(self.non_terminal[0]) {
-            println!(
-                "INFO:: Caso 6b porque sent está en el símbolo inicial ({})",
-                &self.non_terminal[0],
-            );
-            /* Caso 6b */
-            self.state = State::T;
-        } else {
-            match self.symb.last().copied().unwrap() {
-                (Element::Terminal(e), _) => {
-                    /* Caso 5 */
-                    println!("INFO:: Caso 5 porque {:?} es un terminal", self.symb.last());
-                    self.matched -= 1;
-                    self.sent = format!("{e}{}", self.sent);
-                    self.symb.pop().unwrap();
-                }
-                (Element::NonTerminal(id), _) if self.remaining_for_id(id) > 0 => {
-                    /* Caso 6a */
-                    println!(
-                        "INFO:: Caso 6a porque {id} ({}) aún tiene más reglas de producción ({})",
-                        self.non_terminal[id],
-                        self.remaining_for_id(id)
-                    );
-                    self.state = State::Q;
+            State::B
+                if self.matched == 0
+                    && self
+                        .sent
+                        .strip_prefix(self.non_terminal[0])
+                        .is_some_and(|a| a == "#") =>
+            {
+                /* Caso 6b */
+                self.state = State::T;
+            }
+            State::B => {
+                match self.symb.last().copied().unwrap() {
+                    (Element::Terminal(e), _) => {
+                        /* Caso 5 */
+                        self.matched -= 1;
+                        self.sent = format!("{e}{}", self.sent);
+                        self.symb.pop().unwrap();
+                    }
+                    (Element::NonTerminal(id), _) if self.remaining_for_id(id) > 0 => {
+                        /* Caso 6a */
+                        self.state = State::Q;
 
-                    let n = self.increase_counter().unwrap();
-                    let start = self.starting_ptr[id];
+                        let n = self.increase_counter().unwrap();
+                        let start = self.starting_ptr[id];
 
-                    self.sent = format!(
-                        "{}{}",
-                        self.rhs[start + n - 1],
-                        self.sent.strip_prefix(self.rhs[start + n - 2]).unwrap()
-                    );
-                }
-                (Element::NonTerminal(id), n) => {
-                    /* Caso 7 */
-                    println!(
-                            "INFO:: Caso 7 (6c) porque {id} ({}) no tiene más reglas de producción ({})",
-                            self.non_terminal[id],
-                            self.remaining_for_id(id)
+                        self.sent = format!(
+                            "{}{}",
+                            self.rhs[start + n - 1],
+                            self.sent.strip_prefix(self.rhs[start + n - 2]).unwrap()
                         );
-                    self.sent = format!(
-                        "{}{}",
-                        self.non_terminal[id],
-                        self.sent
-                            .strip_prefix(self.rhs[self.starting_ptr[id] + n - 1])
-                            .unwrap()
-                    );
-                    self.symb.pop();
+                    }
+                    (Element::NonTerminal(id), n) => {
+                        /* Caso 6c (7) */
+                        self.sent = format!(
+                            "{}{}",
+                            self.non_terminal[id],
+                            self.sent
+                                .strip_prefix(self.rhs[self.starting_ptr[id] + n - 1])
+                                .unwrap()
+                        );
+                        self.symb.pop();
+                    }
                 }
             }
+            State::T => {}
         }
 
         self.state
