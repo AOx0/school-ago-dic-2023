@@ -235,10 +235,6 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
         }
     }
 
-    fn get_elem<'a>(&self, from: &'a [Element]) -> Element {
-        from.last().copied().unwrap()
-    }
-
     /// Returns a reference to the remaining input string to analyze.
     fn remaining(&self) -> &str {
         &self.input[self.matched..]
@@ -267,13 +263,13 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
         match self.state {
             State::Q
                 if self.matched == self.input.len() - 1
-                    && self.sent == &[Element::Terminal('#')] =>
+                    && self.sent == [Element::Terminal('#')] =>
             {
                 self.caso = "3";
                 self.state = State::T;
                 self.sent.clear();
             }
-            State::Q => match self.get_elem(&self.sent) {
+            State::Q => match self.sent.last().copied().unwrap() {
                 Element::NonTerminal(id) => {
                     self.caso = "1";
                     self.pop_with_elements(self.non_terminal[id]);
@@ -293,7 +289,7 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
             },
             State::B
                 if self.matched == 0
-                    && self.sent == &[Element::Terminal('#'), Element::NonTerminal(0)] =>
+                    && self.sent == [Element::Terminal('#'), Element::NonTerminal(0)] =>
             {
                 self.caso = "6b";
                 self.state = State::T;
