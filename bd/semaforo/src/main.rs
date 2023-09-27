@@ -1,49 +1,29 @@
-use axum::{
-    extract::State,
-    http::{header, StatusCode},
-    response::IntoResponse,
-    routing::get,
-    Router, Server,
-};
+use axum::{extract::State, http::header, response::IntoResponse, routing::get, Router, Server};
 use axum_extra::extract::{
     cookie::{Cookie, Key},
     PrivateCookieJar,
 };
 use std::sync::{Arc, Mutex};
 
+const TEXT: [(header::HeaderName, &str); 1] = [(header::CONTENT_TYPE, "text/plain")];
+
 async fn root(State(state): State<AppState>, jar: PrivateCookieJar) -> impl IntoResponse {
     let mut lock = state.lock.lock().unwrap();
 
     if lock.is_none() {
         let uuid = uuid::Uuid::new_v4().to_string();
-        let updated_jar = jar.add(Cookie::new("secret", uuid.clone()));
+        let jar = jar.add(Cookie::new("secret", uuid.clone()));
         *lock = Some(uuid.clone());
-        (
-            [(header::CONTENT_TYPE, "text/plain")],
-            updated_jar,
-            std::fs::read_to_string("./Cargo.toml").unwrap(),
-        )
+        (TEXT, jar, std::fs::read_to_string("./Cargo.toml").unwrap()).into_response()
     } else if let Some(secret) = jar.get("secret") {
         if matches!(&*lock, Some(s) if secret.value() == s) {
-            (
-                [(header::CONTENT_TYPE, "text/plain")],
-                jar,
-                std::fs::read_to_string("./Cargo.toml").unwrap(),
-            )
+            (TEXT, jar, std::fs::read_to_string("./Cargo.toml").unwrap()).into_response()
         } else {
-            let updated_jar = jar.remove(Cookie::named("secret"));
-            (
-                [(header::CONTENT_TYPE, "text/plain")],
-                updated_jar,
-                "Bloqueado".to_string(),
-            )
+            let jar = jar.remove(Cookie::named("secret"));
+            (TEXT, jar, "Bloqueado").into_response()
         }
     } else {
-        (
-            [(header::CONTENT_TYPE, "text/plain")],
-            jar,
-            "Bloqueado".to_string(),
-        )
+        (TEXT, jar, "Bloqueado").into_response()
     }
 }
 
@@ -51,20 +31,12 @@ async fn release(State(state): State<AppState>, jar: PrivateCookieJar) -> impl I
     if let Some(secret) = jar.get("secret") {
         let mut lock = state.lock.lock().unwrap();
         if matches!(&*lock, Some(s) if secret.value() == s) {
-            let updated_jar = jar.remove(Cookie::named("secret"));
+            let jar = jar.remove(Cookie::named("secret"));
             *lock = None;
-            return (
-                [(header::CONTENT_TYPE, "text/plain")],
-                updated_jar,
-                "Liberado".to_string(),
-            );
+            return (TEXT, jar, "Liberado");
         }
     }
-    (
-        [(header::CONTENT_TYPE, "text/plain")],
-        jar,
-        "Sin permiso".to_string(),
-    )
+    (TEXT, jar, "Sin permiso")
 }
 
 #[derive(Clone)]
