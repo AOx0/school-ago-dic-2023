@@ -3,20 +3,27 @@
 #![deny(rust_2018_idioms)]
 
 fn main() {
-    let mut acceptor: Acceptor<'_, 5> = AcceptorBuilder::new()
+    let mut acceptor: Acceptor<'_, 6> = AcceptorBuilder::new()
+        .with_rule("S", &["E"])
         .with_rule("E", &["TE'"])
         .with_rule("E'", &["+TE'", ""])
         .with_rule("T", &["FT'"])
         .with_rule("T'", &["*FT'", ""])
         .with_rule("F", &["b", "(E)"])
-        .matching("b#");
+        .matching("(b*b)*(b+b)#");
 
     println!("{acceptor}");
     const N: usize = 11;
     while acceptor.next() != State::T {
-        println!("{: >N$}  |- {acceptor}", format!("(Caso {})", acceptor.caso));
+        println!(
+            "{: >N$}  |- {acceptor}",
+            format!("(Caso {})", acceptor.caso)
+        );
     }
-        println!("{: >N$}  |- {acceptor}", format!("(Caso {})", acceptor.caso));
+    println!(
+        "{: >N$}  |- {acceptor}",
+        format!("(Caso {})", acceptor.caso)
+    );
 }
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]

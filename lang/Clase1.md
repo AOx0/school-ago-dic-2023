@@ -1150,7 +1150,7 @@ Eso es el paso 4, el automata, si encuentra algo que no reconoce, automaticament
 
 == Sobre las gramaticas como funciones recursivas
 
-A alguien se le ocurrió que podia ser recursividad, una regla del tipo $S -> aS$, lo que desde el codigo se podría ver:
+A alguien se le ocurrió que podia ser recursividad, una regla del tipo $S -> a S$, lo que desde el codigo se podría ver:
 
 ```c
 // Y apunta a la cadena de entrada
@@ -1171,4 +1171,134 @@ Invento un algoritmo de reconocimiento sintáctico, donde escribe la gramàtica 
     Top down es porque comenzamos del simbolo inicial y vamos hacia abajo
 ]
 
+Lo único que pide es que sean gramaticas de la forma:
 
+$
+X -> Y_1 | Y_2 | ... | Y_m | Z_1 Z_2 ... Z_n " donde ambos " Y_i "y" Z_i "inician con no terminales o terminales"
+$
+
+#rect[
+    Pag 231
+]
+
+Este tipo de relgas las pasamos de  la forma:
+
+$
+X -> Y_1' 
+$
+
+Tenemos que agregar una $E'' -> T E'$ y $T'' -> *F T'$, esto se debe, si vemos la gramatica en la página 
+La primer regla de $E$ cumple con el requisito, inicia conun no terminal
+La tercera regla comienza con un terminal, es por eso que lo convertimos a $E''$
+
+Quedando de la forma:
+
+$
+E' -> E''|epsilon\
+E'' -> T E'
+$
+
+Lo mismo sucede con la tercera regla, la de $T$
+
+La última regla no tiene problemas porque una comiuenza con terminal $Y_1$ y la $(E)$ es de la forma $Z_1...Z_n$
+
+La regla de la gramática queda:
+
+$
+S &-> E\#\
+E &-> T E'\
+E' &-> E''\
+E' &-> epsilon\
+E'' &-> +T E'\
+T &-> F T'\
+T' &-> T''\
+T' &-> epsilon\
+T'' &-> *F T'\
+F &-> b\
+F &-> (E)
+$
+
+En fuerza bruta, para verificar si es verdadero tenemos que ver, en el caso de $S$, ver que genere una $E$ y después $\#$.
+
+El código operativo para sintetizar a una E (escrito `[E]`), si el codigo operativo responde true o false irá a distintas partes. 
+
+En el primer ejemplo, si `[E]` devuelve false entonces es `ERROR`. En cambio si es true se va a el siguiente (se escribe vacío).
+
+Cunado dice false, se quiere decir que el codigo operativo devuelve false a quien lo invoco. Lo mismo cuando dice true. Si está vacío quiere decir que se tiene que realizar la siguiente regla.
+
+Si se trata de una regla que genera $epsilon$, si tenemos reglas del tipo $X -> epsilon$ hay que crear una fila de la tabla que tenga un no terminal que no exista en la gramática, que siempre devuelve true en error y no error.
+
+```
+X    [N]    true    true
+N    a      false   false
+```
+
+Como no se tiene que leer nada de la cadena de entrada, si tenemos una regla vacia nos inventamos el no terminal que no existe en la gramática y poner el false false. Donde tenemos que poner un terminal de la gramática.
+
+Ejemplo $(b * b)\#$
+
+La ventaja de esto es que puede ser usado
+
+La $h$ es el contador de _matcheados_. Es top-down porque comienza en el inicio. Se les ocurrio que si tenian cierta información de la cadena de entrada, lo tenían que usar. 
+
+De aqui surge el concepto de las gramáticas LL(1). 
+    - L: Que en una expresión el símbolo que va primero a extender es el que está más a la izquierda
+    - L: De la cadena de entrada nos vamos a fijar en el simbolo que no hemos reconocido, ejemplo si reconocimos ya 2 seria 23(3)we, donde 3 es el que debe seguir.
+    - 1: Que se ve solo uno a la izquierda.
+
+Definición de una gramática LL(1), hay 3 simple, generales y con reglas vacías. No quiere la definición.
+- Tiene que ser independiente del contexto
+- Es decir, que no tiene que ser tampoco regular
+- No puede tener reglas vacías
+- Para un no terminal cualquiera, las reglas tienen la forma
+    $A -> a_1 alpha_1 | a_2 alpha_2 | ... | a_n alpha_n$
+    Donde $a in V_T$ y $alpha in V^*$, puede ser cualquier secuencia, excepto reglas vacías, porque al frente siempre habrá por enfrente un terminal.
+
+    Cada una de las reglas debe tener un terminal al inicio distinto
+
+#rect[
+    Primer ejercicio del examen
+]
+
+Primero probamos que la gramatica es regular.
+
+- La longitud de $alpha$ debe ser menor a $beta$
+- La parte beta tiene que ser de la forma terminal o terminal_noterminal
+- Para ver si es independiente del contexto es que en $alpha$ no hay terminales
+- La regla $S$ cumple con que el primero siempre sea diferente y terminal, se cumple tanto en $A$ como en $S$.
+
+En la página, en cuanto a tabla dice el profesor, en $M :$ las primeras son las filas, es decir en las filas tenemos todos los elementos del vocabulario y el gatito. Y en las colunmnas tenemos Los terminales y el gato. Y en las celdas tenemos 
+
+Si estamos en la fila $A$ (indicador de fila, puede ser terminal o no terminal) y columna $a$ (indicador de columna). Si en fila y columna tenemos n cosa podemos mapear que se escribirá de la pagina 239.
+
+Ejemplo
+
+$
+a alpha
+1 S -> a S\
+2 S -> b A\
+3 A -> d\
+4 A -> c c A\
+$
+
+quedará:
+
+```
+   a        b        c         d       #
+S  (aS, 1)  (bA, 2)
+A                    (ccA, 4)  (d, 3)
+a  pop
+b           pop
+c                    pop
+d                              pop
+#                                       accept
+```
+
+Todo lo demás es un error, lo que está en blanco. En la Tabla 6-1 es un ejemplo donde estamos.
+
+En la segunda tenemos $a S\#$ encontramos una $a$, que es pop, por lo que quitamos la a de ambos lados. Solo concatenamos en la salida el numero de la regla de las tuplas.
+
+La salida indica las derivaciones que tenemos que hacer para replicarlo, similar a lo que sacaba el de fuerza bruta.
+
+Si cuando estamos haciendo el recorrido y caemos en un espacio vacio es error
+ 
