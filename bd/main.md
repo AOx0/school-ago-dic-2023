@@ -637,3 +637,52 @@ El semaforo frena el flujo de todos de forma que solo _entre_ uno a la vez.
   Socket: Union de IP y puerto
 ]
 
+== Fragmentación
+
+Normalmente se tienen dos tipos de fragmentaciones, se puede hacer para eliminar datos que no interesan (p. ej. para hacer que una vista no tenga información sensible). Es decir lo hacemos cuando conviene, por cuestiones geográficas, o de seguridad.
+
+- Horizontal: Estamos llevando todas las columnas, es decir, quitamos por filas.
+
+  Si queremos hacer la operación inversa, deben ser las mismas columnas con el mismo tipo.
+
+- Vertical: Movemos por columnas, nos llevamos las columnas seleccionadas de todas las filas.
+
+  Siempre tiene que tener un id para poder identificar cada fila, en caso de que no tomemos el id existente, entonces es nuestra responsabilidad generar un id 
+
+  La operación inversa es un join
+
+- Mixta: Ambas xd
+
+== Replicación
+
+Hacemos respaldos para tener disponibilidad, fiabilidad. Hacemos un respaldo porque sabemos que los datos son valiosos y queremos asegurar que no los podamos perder.
+
+Cuando los datos son muy valiosos y cambian a cada segundo, entonces toca hacerlo cada segundo. Queremos tener una copia en vivo de los datos.
+
+Tener replicación nos permite tener disponibilidad, fiabilidad (alguno de los servidores encontrará errores), rendimiento, reducción de carga.
+
+Si el servidor está al 70-80 de carga, tenemos que ver ayudarlo para que, en caso de carga extrema, se pueda mantener vivo el servicio.
+
+Load balancer: Direcciona las solicitudes a los servidores de forma que se pueda optimizar la carga para ambos. Hay load balancers que pueden hacer que si solo es escritura, se mande la solicitud al servidor copia, y que lo que sea de escritura se mande al servidor primario.
+
+El primario se encarga de avisar a los secundarios solo sobre los cambios en la información. Es decir, lo que hay en los logs (que son operaciones que modifican la información/estructura)
+
+== Reparación
+
+Los SMBD tienen fallas, a nivel de hardware o software. La reparación se refiere a detalles pequeños que pueda resolver, que estén en su control. 
+
+== Compactación 
+
+Ahora si el equivalente a la fragmentación de memoria. El comando ```sql PACK``` de una tabla se encarga de re-organizar los registros de forma que queden de forma continua todos los registros vivos.
+
+Para hacerlo no deben existir operaciones a la vez sobre la tabla, el espacio en disco debe ser mínimo el mismo tamaño de la tabla que se está compactando.
+
+Cuando el administrador realiza la operación de ```sql PACK``` (asumiendo que lo hace manualmente) debe primero realizar una de-fragmentación del disco, para que los archivos queden juntos y el proceso de compactación sea más rapido.
+
+Hacer la compactación se debe realizar pero no de forma tan seguida que afecte uno de los principios de la base de datos (disponibilidad)
+
+#rect[
+  Las bases de datos, como toda la estructura, se puede optimizar basado en el análisis de las operaciones que se realizan sobre una base de datos.
+]
+
+

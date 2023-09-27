@@ -59,6 +59,7 @@ async fn main() {
     };
     let router = Router::new()
         .route("/", get(root))
+        .route("/lock", get(root))
         .route("/release", get(release))
         .with_state(state);
 
