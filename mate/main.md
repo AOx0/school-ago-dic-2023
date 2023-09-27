@@ -647,3 +647,15 @@ $
 a = b + K m
 $
 
+== Clase
+
+$
+Z_m, hat(a) = { b in ZZ | a equiv b mod m }
+$
+
+Ejemplo, un número cualquiera dividido entre 2 si da 0 es par, si no es impar, por ejemplo,
+
+
+Hat se coloca porque puede ser tanto positivo como negativo. Que posibles residuos pude hacer del número
+
+
