@@ -7,4 +7,6 @@ edition = "2021"
 
 [dependencies]
 axum = "0.6.20"
+axum-extra = { version = "0.8.0", features = ["cookie", "cookie-private"] }
 tokio = { version = "1.32.0", features = ["full"] }
+uuid = { version = "1.4.1", features = ["fast-rng", "v4"] }
