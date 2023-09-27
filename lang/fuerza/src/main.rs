@@ -13,17 +13,10 @@ fn main() {
         .matching("b#");
 
     println!("{acceptor}");
-    const N: usize = 11;
     while acceptor.next() != State::T {
-        println!(
-            "{: >N$}  |- {acceptor}",
-            format!("(Caso {})", acceptor.caso)
-        );
+        println!("(Caso {: <2})  |- {acceptor}", acceptor.caso);
     }
-    println!(
-        "{: >N$}  |- {acceptor}",
-        format!("(Caso {})", acceptor.caso)
-    );
+    println!("(Caso {: <2})  |- {acceptor}", acceptor.caso);
 }
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -102,7 +95,7 @@ impl<'inp, const R: usize> AcceptorBuilder<'inp, R> {
         Self {
             number_rules: [0; R],
             starting_ptr: [0; R],
-            rhs: Vec::new(),
+            rhs: Vec::with_capacity(R * 3),
             non_terminal: [""; R],
             nt_sorted: [0; R],
             pushed: 0,
