@@ -280,7 +280,7 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
                     self.extend_with_elements(self.rhs[self.starting_ptr[id]]);
                     self.symb.push((Element::NonTerminal(id), 0));
                 }
-                Element::Terminal(next) if self.remaining().chars().nth(0).unwrap() == next => {
+                Element::Terminal(next) if self.remaining().starts_with(next) => {
                     self.caso = "2";
                     self.symb.push((Element::Terminal(next), 0));
                     self.sent.pop();
