@@ -613,3 +613,19 @@ Sus funcion es el de servir a los dispositivos para saber la IP de un dispositiv
 == Detección de vecinos
 
 Nos permite detectar los distintos dispositivos que son nuestros. Cada que hacemos un ping, la ruta de routers se va aprendiendo el camino necesario. La computadora se entera de quien se conecta en la red y hace que anoten en sus respectivas tablas que son vecinos.
+
+== Gateaway
+
+Cada subred tiene un gateaway. El gateaway es la dirección IP de los dispositivos de capa 3. Por cada sub red de ip necesitamos un gateaway.
+
+En la vida real se puede tener redes con multiples redes.
+
+== Switches
+
+Tienen un comportamiento de capa 2. El switch tiene
+- configure terminal
+- ip default gateaway 192.168.1.255
+
+La ip omportantes es la que tiene el router. Los hubs son de capa 1.
+
+

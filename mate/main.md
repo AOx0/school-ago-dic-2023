@@ -658,4 +658,118 @@ Ejemplo, un número cualquiera dividido entre 2 si da 0 es par, si no es impar, 
 
 Hat se coloca porque puede ser tanto positivo como negativo. Que posibles residuos pude hacer del número
 
+== Operaciones entre modulos
+
+$
+a mod m + b mod m = (a + b) mod m
+a mod m * b mod m = (a * b) mod m
+$
+
+$
+hat(5) + hat(6)& \
+&= (5 + 6) mod 6 \
+&= 11 mod 6 \
+&= 5
+$
+
+
+$
+hat(7) times hat(4) & \
+&= (7 times 4) mod 6 \
+&= 23 mod 6 \
+&= 4
+$
+
+
+Los espacios vectoriales se rigen en anillos conmutativo, aunque cambiemos la posición de los elementos debe cumplirse la operación.
+
+$
+hat(a) + hat(b) in ZZ "(cerradura)"\
+hat(a) + hat(b) = hat(b) + hat(c) "(conmutativa)"\
+hat(a) + (hat(b) + hat(c)) = (hat(a) + hat(b)) + hat(c) "(asociativa)"\
+hat(a) * (hat(b) + hat(c)) = hat(a) hat(b) + hat(a) hat(c) "(distributiva)"\
+hat(a) + 0 = 0 + hat(a) = hat(a) "(elemento neutro)"\
+hat(a) * 1 = 1 * hat(a) = hat(a) "(elemento neutro multiplicativo)"\
+$
+
+Ejercicios:
+
+
+$
+hat(5) ( hat(2) + hat(3) ) + hat(6) ( hat(7) + hat(4) ) z/hat(5) &\
+&= hat(5) * hat(2) + hat(5) * hat(3) + hat(6) ( hat(7) + hat(4) )\
+&= hat(10) + hat(15) + hat(6) ( hat(7) + hat(4) )\
+&= hat(10) + hat(15) + hat(6) * hat(7) + hat(6) * hat(4)\
+&= hat(10) + hat(15) + hat(42) + hat(24)\
+&= hat(91)\
+&= hat(91) mod hat(5) = hat(1)\
+$
+
+
+$
+hat(4) + ( hat(11) + hat(3) ) + hat(4) ( hat(8) + hat(3) ) z/hat(4) &\
+&= hat(18) + hat(32) + hat(12)\
+&= hat(30) + hat(32)\
+&= hat(62) mod hat(4) = hat(2)\
+$
+
+Es testado, lo que quiere que va a devolver 0 y 1 
+Testado quiere decir que viene de la proyección {0, 1, 2, 3, m - 1}. 
+Entonces el primero devuelve 0. El segundo devuelve 0, 1.
+
+z/n es z de cocientes.
+
+Que sea testada quiere decir que va a devolverlos con 0, 1, ..., m-1.
+
+El 0 y 1 que sale quiere decir que son los posibles residuos que pueden salir del modulo.
+
+Inverso modulo m (unidad) y divisores de cero:
+
+Hay numeros primos y co-primos. 
+
+Sea $a in Z/m$, $a$ es una unidad si tiene inverso, es decir, existe un $b in Z/m$ tal que $a b$ va a ser congruente $a b equiv b a equiv 1 (mod m)$.
+
+O sea $a^(-1) = b => a^(-1) times a = 1$.
+
+Congruente: $a equiv b mod m$ es congruente si $(a-b)/m in ZZ$
+
+Ejemplo:
+
+$
+2 times a equiv 1 mod 5 "que numero cumple con el inverso y que sea congruente?"\
+2 times 3 equiv 1 mod 5\
+6 equiv 1 mod 5\
+6 equiv 1 mod 5\
+"También se cumple que"\
+(6-1)/5 in ZZ\
+3^(-1) equiv 2 mod 5
+$
+
+Aqui los coprimos serían 3 y 5.
+
+Por otra parte $hat(a) != 0$, es divisor de 0 en $Z/m$, si existe $b in Z/m$ donde $b != 0$, tal que $hat(a) hat(b) = 0$
+
+Ejemplo:
+
+- Esto nos indica que son divisores si:
+
+    $
+    hat(2) times hat(3) = hat(0) mod (6)\
+    hat(6) = hat(0) mod (6)
+    $
+
+- Este nos indica que ambos son inversos y que el único dividos es 1.
+
+    $
+    hat(2) - hat(3) = 1 mod 5
+    $
+
+De esto podemos decir que 
+
+$
+Z_m \{_("a)" hat(a) "es una unidad si y solo si mcd"(a, m) = 1)_("b)" hat(a) "es divisor de 0 si y solo si se encuentra" 1 < "mcd"(a, m) < m)
+$
+
+
+
 
