@@ -10,7 +10,7 @@ fn main() {
         .with_rule("T", &["FT'"])
         .with_rule("T'", &["*FT'", ""])
         .with_rule("F", &["b", "(E)"])
-        .matching("(b*b)*(b+b)#");
+        .matching("b#");
 
     println!("{acceptor}");
     const N: usize = 11;
@@ -203,7 +203,7 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
             })
             .unwrap_or(&0);
 
-        self.number_rules[for_id] - current
+        self.number_rules[for_id] - current - 1
     }
 
     fn get_next_elem_rev<'a>(&self, from: &'a str) -> (Element, &'a str) {
