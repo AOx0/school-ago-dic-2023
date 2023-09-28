@@ -13,10 +13,13 @@ fn main() {
         .matching("b#");
 
     println!("{acceptor}");
-    while acceptor.next() != State::T {
+    loop {
+        let state = acceptor.next();
         println!("(Caso {: <2})  |- {acceptor}", acceptor.caso);
+        if state == State::T {
+            break;
+        }
     }
-    println!("(Caso {: <2})  |- {acceptor}", acceptor.caso);
 }
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
