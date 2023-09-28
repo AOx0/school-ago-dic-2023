@@ -2,15 +2,22 @@
 #![warn(clippy::pedantic)]
 #![deny(rust_2018_idioms)]
 
+#[global_allocator]
+static ALLOCATOR: dhat::Alloc = dhat::Alloc;
+
 fn main() {
-    let mut acceptor: Acceptor<'_, 6> = AcceptorBuilder::new()
+    let _profiler = dhat::Profiler::new_heap();
+
+    let mut acceptor: Grammar<'_, 6, 9> = Grammar::new()
         .with_rule("S", &["E"])
         .with_rule("E", &["TE'"])
         .with_rule("E'", &["+TE'", ""])
         .with_rule("T", &["FT'"])
         .with_rule("T'", &["*FT'", ""])
-        .with_rule("F", &["b", "(E)"])
-        .matching("b#");
+        .with_rule("F", &["b", "(E)"]);
+
+    let mut acceptor =
+        acceptor.matching("b+((b*b)+(b+b))*b+b*(b+((b*b)+(b+b))*b+b)+(b+((b*b)+(b+b))*b+b)#");
 
     println!("{acceptor}");
     loop {
@@ -33,12 +40,12 @@ enum State {
 type NonTerminalID = usize;
 
 #[derive(Debug)]
-struct Acceptor<'inp, const R: usize> {
-    nt_sorted: [NonTerminalID; R],
-    non_terminal: [&'inp str; R],
-    number_rules: [usize; R],
-    starting_ptr: [usize; R],
-    rhs: Vec<&'inp str>,
+struct Acceptor<'inp, const R: usize, const E: usize> {
+    nt_sorted: &'inp [NonTerminalID; R],
+    non_terminal: &'inp [&'inp str; R],
+    number_rules: &'inp [usize; R],
+    starting_ptr: &'inp [usize; R],
+    rhs: &'inp [&'inp str; E],
     symb: Vec<(Element, usize)>,
     sent: Vec<Element>,
     state: State,
@@ -47,7 +54,7 @@ struct Acceptor<'inp, const R: usize> {
     matched: usize,
 }
 
-impl<'inp, const R: usize> std::fmt::Display for Acceptor<'inp, R> {
+impl<'inp, const R: usize, const E: usize> std::fmt::Display for Acceptor<'inp, R, E> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "({:?}, {}, ", self.state, self.matched + 1)?;
         if self.symb.is_empty() {
@@ -84,24 +91,26 @@ impl<'inp, const R: usize> std::fmt::Display for Acceptor<'inp, R> {
     }
 }
 
-struct AcceptorBuilder<'inp, const R: usize> {
+struct Grammar<'inp, const R: usize, const E: usize> {
     nt_sorted: [NonTerminalID; R],
     non_terminal: [&'inp str; R],
     number_rules: [usize; R],
     starting_ptr: [usize; R],
-    rhs: Vec<&'inp str>,
+    rhs: [&'inp str; E],
     pushed: usize,
+    pushed_e: usize,
 }
 
-impl<'inp, const R: usize> AcceptorBuilder<'inp, R> {
+impl<'inp, const R: usize, const E: usize> Grammar<'inp, R, E> {
     pub fn new() -> Self {
         Self {
             number_rules: [0; R],
             starting_ptr: [0; R],
-            rhs: Vec::with_capacity(R * 3),
+            rhs: [""; E],
             non_terminal: [""; R],
             nt_sorted: [0; R],
             pushed: 0,
+            pushed_e: 0,
         }
     }
 
@@ -120,10 +129,23 @@ impl<'inp, const R: usize> AcceptorBuilder<'inp, R> {
                 R,
                 R + 1
             );
+            assert!(
+                produces.len() + self.pushed_e <= E,
+                "Can't push product {:?} to Accpetor, \
+                there are more productions than spaces in the stack (expected productions: {}). \
+                    Try and bump up the number of productions: Accpetor<{}>",
+                name,
+                E,
+                E + produces.len()
+            );
 
             self.number_rules[self.pushed] = produces.len();
-            self.starting_ptr[self.pushed] = self.rhs.len();
-            self.rhs.extend(produces.iter());
+            self.starting_ptr[self.pushed] = self.pushed_e;
+
+            for product in produces {
+                self.rhs[self.pushed_e] = product;
+                self.pushed_e += 1;
+            }
             self.non_terminal[self.pushed] = name;
             self.nt_sorted[self.pushed] = self.pushed;
             self.pushed += 1;
@@ -135,7 +157,7 @@ impl<'inp, const R: usize> AcceptorBuilder<'inp, R> {
         self
     }
 
-    pub fn build(mut self) -> Acceptor<'inp, R> {
+    pub fn build(&'inp mut self) -> Acceptor<'inp, R, E> {
         assert!(
             self.pushed == R,
             "Missing productions. \
@@ -146,21 +168,21 @@ impl<'inp, const R: usize> AcceptorBuilder<'inp, R> {
         self.nt_sorted
             .sort_unstable_by(|&a, &b| self.non_terminal[b].len().cmp(&self.non_terminal[a].len()));
         Acceptor {
-            number_rules: self.number_rules,
-            starting_ptr: self.starting_ptr,
-            rhs: self.rhs,
-            non_terminal: self.non_terminal,
-            nt_sorted: self.nt_sorted,
-            sent: Vec::with_capacity(self.pushed * 2),
+            number_rules: &self.number_rules,
+            starting_ptr: &self.starting_ptr,
+            rhs: &self.rhs,
+            non_terminal: &self.non_terminal,
+            nt_sorted: &self.nt_sorted,
+            sent: Vec::with_capacity(self.pushed_e),
             input: "",
             matched: 0,
-            symb: Vec::with_capacity(self.pushed * 2),
+            symb: Vec::with_capacity(self.pushed_e),
             state: State::Q,
             caso: "",
         }
     }
 
-    pub fn matching(self, inp: &'inp str) -> Acceptor<'inp, R> {
+    pub fn matching(&'inp mut self, inp: &'inp str) -> Acceptor<'inp, R, E> {
         let mut res = self.build();
         res.set_match(inp);
         res.symb.reserve(inp.len());
@@ -174,7 +196,7 @@ enum Element {
     Terminal(char),
 }
 
-impl<'inp, const R: usize> Acceptor<'inp, R> {
+impl<'inp, const R: usize, const E: usize> Acceptor<'inp, R, E> {
     fn set_match(&mut self, t: &'inp str) {
         self.input = t;
 
@@ -188,8 +210,6 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
     }
 
     fn remaining_for_id(&self, for_id: NonTerminalID) -> usize {
-        assert!(for_id < R);
-
         let current = self
             .symb
             .iter()
@@ -199,6 +219,7 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
             })
             .unwrap_or(&0);
 
+        assert!(for_id < self.number_rules.len());
         self.number_rules[for_id] - current - 1
     }
 
@@ -274,9 +295,14 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
             }
             State::Q => match self.sent.last().copied().unwrap() {
                 Element::NonTerminal(id) => {
+                    assert!(id < self.non_terminal.len());
+                    assert!(id < self.starting_ptr.len());
+                    let start = self.starting_ptr[id];
+                    assert!(start < self.rhs.len());
+
                     self.caso = "1";
                     self.pop_with_elements(self.non_terminal[id]);
-                    self.extend_with_elements(self.rhs[self.starting_ptr[id]]);
+                    self.extend_with_elements(self.rhs[start]);
                     self.symb.push((Element::NonTerminal(id), 0));
                 }
                 Element::Terminal(next) if self.remaining().starts_with(next) => {
@@ -309,14 +335,27 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
                     self.state = State::Q;
 
                     let n = unsafe { self.increase_last_symb_counter() };
-                    let start = self.starting_ptr[id];
+                    assert!(id < self.starting_ptr.len());
 
-                    self.pop_with_elements(self.rhs[start + n - 1]);
-                    self.extend_with_elements(self.rhs[start + n]);
+                    let start = self.starting_ptr[id];
+                    let offset = start + n;
+                    let prev_offset = offset - 1;
+                    assert!(offset < self.rhs.len());
+                    assert!(prev_offset < self.rhs.len());
+
+                    self.pop_with_elements(self.rhs[prev_offset]);
+                    self.extend_with_elements(self.rhs[offset]);
                 }
                 (Element::NonTerminal(id), n) => {
+                    assert!(id < self.non_terminal.len());
+                    assert!(id < self.starting_ptr.len());
+
+                    let start = self.starting_ptr[id];
+                    let offset = start + n;
+                    assert!(offset < self.rhs.len());
+
                     self.caso = "6c";
-                    self.pop_with_elements(self.rhs[self.starting_ptr[id] + n]);
+                    self.pop_with_elements(self.rhs[offset]);
                     self.extend_with_elements(self.non_terminal[id]);
                     self.symb.pop();
                 }
