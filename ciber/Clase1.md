@@ -408,3 +408,59 @@ No poner en documentos públicos marcas ni versiones
 
 #rect[OWASP realiza una encuesta cada 4 años donde pregunta por la vulnerabilidades más comunes https://owasp.org/www-project-top-ten/]
 
+= 
+
+27001: Requisitos
+27002: Controles
+
+
+Ejemplo de Uber, en 15 de septiempre tienen un incidente y lo hacen saber por medio de Twitter, informan que avisarán. 
+
+Ahora vemos el caso de Uber, donde se inicia con las credenciales de un empleado de Uber, pudieron entrar a la intra-net, vulneran por medio de scripts en powershell, vulnerar un servicio de credenciales y terminan con todas las credenciales.
+
+Sin medidas de seguridad lo suficientemente robustas podemos terminar con incidentes, es importante tener sistemas de identificación y autenticación.
+
+- Identificación: Capacidad de poder identificar de forma exclusiva a un usuario en un sistema, por ejemplo cuando queremos realizar una conexión. "Hola Pedro"
+- Autenticación: Cuando se verifica que se ingresaron las credenciales correctas, 
+- SSO: Single Signed On, capacidad de autenticación que permite a los usuarios ingresar a múltilpes servicios usando las mismas credenciales, se usa porque
+  - Simplifica el acceso
+  - Mejorar la seguridad
+  - Controlar el acceso: Porque se realiza todo con el mismo sistema
+  - Reducir llamadas a soporte: Porque solo hay 1 contraseña
+  - Tiene ventajas desde el punto de vista de un administrador
+- PAM: Monitoreo de acceso privilegiado, un _appliance_, por lo general en la nube, que permite administrar cuentas y accesos privilegiados, podemos configurar los permisos de forma que todos puedan ver solo lo que deben ver. Es necesario en la nube.
+  - Permite restringir en base a localización (IP)
+  - Descubrir cuentas privilegiadas
+  - Asignar cuentas aleatorias a las cuentas que tenemos
+  - Controlar el acceso a las cuentas privilegiadas, junto con cuentas de emergencia y compartidas (al estilo MySQL)
+  - Aislar, monitorear, registrar/grabar, auditar comandos y sesiones
+
+#rect[En el caso de uber aún así pudo conectarse por medio del PAM, que le dio acceso a las credenciales de los servicios]
+
+== Control de acceso
+
+En el caso de algo fisico es poder acceder a un lugar, en cambio en cibserseguridad se abarca acceso a información, credenciales, servicios, etc.
+
+Por ejemplo por teclado, credenciales, en red, reconocimiento facial, etc.
+
+
+== Politica de control de acceso
+
+Tenemos que tener politicas de control de acceso. El 27002 indica que la politica especifica de control de acceso tiene que establecer, documentar y actualizarse en base a cómo se tiene que proteger la onformación. De forma que todos tengan acceso solo a lo que necesitan acceso.
+
+Tenemos que tener sistemas bien desarollados que permitan la creación y eliminación de usuarios de forma efectiva, y tener mecanismos de autenticación como:
+  - MPA: Multiple Factor Autentication que involucra celular, correo, aplicación, etc.
+  - SSO: Una sola credencial en todos lados
+  - Pueden ser dos o una sola
+    - IAM: Manejo de identidades. 
+    - PAM: Monitoreo de aplicaciones.
+
+Gartner es una consultoria que hace estudios de diversas herramientas, presentan su cuadrante mágico de las herramientas que evaluaron en distintos temas.
+
+=== IAM
+
+Las personas adecuadas pueden acceder a los recursos correctos en el tiempo correcto. 
+
+== Tendencias Gartner
+
+- Cómo hacer para no causar molestias a los usuarios legitimos
