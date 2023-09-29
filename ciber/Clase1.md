@@ -464,3 +464,27 @@ Las personas adecuadas pueden acceder a los recursos correctos en el tiempo corr
 == Tendencias Gartner
 
 - Cómo hacer para no causar molestias a los usuarios legitimos
+
+== Etapas
+
+- Reconocimiento
+- Escaneo
+  - Con escaneo pasivo se refieren a realizar el escaneo de la forma más silenciosa
+- Acceso
+- Mantener acceso
+- Eliniar huellas
+
+== Arquitectura de seguridad
+
+NIST es una organizacion de estado.
+
+Una arquitectura de seguridad incorpora herramientas de seguridad perimetral
+
+== Criptografia
+
+Involucra la confidencialidad, integridad (porque queremos que llegue integro) y la autenticidad
+
+Viene de kryptos y grafos: Ocultar la escritura
+
+El hash es una función que transforma de forma no reversible. Podemos usar hashes para verificar si un archivo ha sido modificado, pues dos contenidos diferentes alimentados a una función hash generará dos hashes diferentes. 
+
