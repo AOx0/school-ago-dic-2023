@@ -770,6 +770,94 @@ $
 Z_m \{_("a)" hat(a) "es una unidad si y solo si mcd"(a, m) = 1)_("b)" hat(a) "es divisor de 0 si y solo si se encuentra" 1 < "mcd"(a, m) < m)
 $
 
+== Maximo comun divisor
+
+Si $a, b$ son enteros, no ambos nulos, entonces $d$ es divisor común de $a and b$ si, y solo si, $d | a and d | b$
+
+- $D a$ es el conjunto de divisores de a
+- $D b$ es el conjunto de divisores de b
+
+Ejemplo: 
+
+$D 3 = { +- 3, +- 1 }$
+$D 6 = { +- 1, +- 2, +- 3. +- 6 }$
+
+El maximo común es, pues del conjunto $D 3 union D 6$, el número más grande entero positivo del conjunto. Por eso $D 3 union D 6 = { 3 }$
 
 
+Sea $a, b in ZZ$ con al menos uno de los dos diferentes de cero. El mcd de $a and b$, es el entero positivo que satisface:
+- a) $d | a and d | b$
+
+
+== Algoritmo de Euclides
+
+La aplicaciòn sucesiva del algoritmo de división => movidmo entero positivo que cumpla con ambos números.
+
+Sea $a, b, q, r in ZZ$ tales que $a = b q + r$ donde $b >= 0 and 0 <= r < b$ 
+
+$mcd(a, b) = mcd(b, r)$
+
+Ejemplo:
+
+```
+mcd(8, 2)
+
+S_mayor = S_menor
+
+:: 4 es un número que encontramos tal que de un residuo 
+:: 8 = n * 2 + r
+:: queda:
+8 = 4 (2) + 0
+      r_n   r_(n+1)
+
+mcd(8, 2) = 2
+```
+
+```
+mcd(78, 32)
+:: 78 = N (32) + R
+78 = 2 (32) + 14
+::a = 0 r0 q1 + r1
+
+:: Y va de nuevo
+:: 32 = N (14) + R
+32 = 2 * 14 + 4
+:: r0 = r1 q2 + r2
+
+:: 14 = N (4) + R
+14 = 3 (4) + 2
+:: r1 = r2 q1 + r3
+
+:: Tenemos que seguir hasta que r_(n + 1) = 0
+
+:: 4 = N (2) + R 
+4 = 2 (2) + 0
+
+:: Como r_(n+1) vale 0, entonces el maximo comun divisor es 2 pues r_n = 2
+:: mcd(78, 32) = 2
+```
+
+```
+mcd(56, 42)
+
+56 = 1 * 42 + 14
+
+42 = 3 * 14 + 0
+
+14
+```
+
+```
+mcd(106, 46)
+
+106 = 2 * 46 + 14
+
+46 = 3 * 14 + 4
+
+14 = 3 * 4 + 2
+
+4 = 2 * 2 + 0
+
+2
+```
 

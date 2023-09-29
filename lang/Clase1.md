@@ -1163,9 +1163,12 @@ bool S(int i)
 
 Se ocurrio que todo pudiera ser escrito de forma recursiva, y traducian todas las reglas _literalmente_ todas las reglas de forma recursiva. El problema es que no todos los lenguajes soportaban este tipo de patrones y agotan rapido la memoria.
 
-== Algoritmo de reconocimiento de Knuth 
+== Algoritmo de reconocimiento de Knuth  
+#rect[
+    Pag 231
+]
 
-Invento un algoritmo de reconocimiento sintáctico, donde escribe la gramàtica en formas de tablas, la tabla podría reconocer la gramática y no deberíamos de tener que usar backtracking.
+Inventó un algoritmo de reconocimiento sintáctico, donde escribe la gramática en formas de tablas, la tabla podría reconocer la gramática y no deberíamos de tener que usar backtracking.
 
 #rect[
     Top down es porque comenzamos del simbolo inicial y vamos hacia abajo
@@ -1174,17 +1177,14 @@ Invento un algoritmo de reconocimiento sintáctico, donde escribe la gramàtica 
 Lo único que pide es que sean gramaticas de la forma:
 
 $
-X -> Y_1 | Y_2 | ... | Y_m | Z_1 Z_2 ... Z_n " donde ambos " Y_i "y" Z_i "inician con no terminales o terminales"
+X -> Y_1 | Y_2 | ... | Y_m | Z_1 Z_2 ... Z_n " donde ambos " Y_i " y " Z_i "inician con no terminales o terminales"
 $
 
-#rect[
-    Pag 231
-]
 
 Este tipo de relgas las pasamos de  la forma:
 
 $
-X -> Y_1' 
+X -> Y'_1 
 $
 
 Tenemos que agregar una $E'' -> T E'$ y $T'' -> *F T'$, esto se debe, si vemos la gramatica en la página 
@@ -1271,14 +1271,14 @@ En la página, en cuanto a tabla dice el profesor, en $M :$ las primeras son las
 
 Si estamos en la fila $A$ (indicador de fila, puede ser terminal o no terminal) y columna $a$ (indicador de columna). Si en fila y columna tenemos n cosa podemos mapear que se escribirá de la pagina 239.
 
-Ejemplo
+Ejemplo:
 
 $
-a alpha
-1 S -> a S\
-2 S -> b A\
-3 A -> d\
-4 A -> c c A\
+a & alpha\
+1) S &-> a S\
+2) S &-> b A\
+3) A &-> d\
+4) A &-> c c A\
 $
 
 quedará:
