@@ -13,7 +13,7 @@
 = Resultados
 
 #align(center)[
- // #image("exito.png", width: 70%)
+ #image("exito.png", width: 70%)
 ]
 
 = Preguntas
@@ -120,12 +120,12 @@
 
 - ¿Cuántas rutas OSPF (usa el códigoO) ves en cada router?
 
-  *A*: 
+  *A*: 2 en cada uno
 
 - Si el router conoce todas las rutas en la red, entonces el número de rutas conectadas y rutas aprendidas dinámicamente (OSPF) debería ser igual al número total de LAN y WAN. ¿Cuántas redes LAN y WAN hay en la topología?
 
-  *A*: 
+  *A*: 3 + 2 = 5
 
 - ¿Este número coincide con el número de rutas C y O que se muestran en la tabla de enrutamiento?
 
-  *A*
+  *A*: Si
