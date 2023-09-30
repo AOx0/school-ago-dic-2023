@@ -25,14 +25,6 @@ fn divide(n: i64, d: i64) -> (i64, i64) {
     }
 }
 
-macro_rules! view {
-    ($v:expr => $($arg:tt)*) => {{
-        print!($($arg)*);
-        println!(": {}", $v);
-        $v
-    }};
-}
-
 fn mcd(a: i64, b: i64) -> i64 {
     assert!(b != 0);
 
@@ -40,12 +32,13 @@ fn mcd(a: i64, b: i64) -> i64 {
 
     while d != 0 {
         let (t, r) = divide(c, d);
-        println!("{c: >2} = ({t}) {d: >2} + {r}");
+        println!("{c: >3} = ({t}) {d: >2} + {r}");
         c = d;
         d = r;
     }
 
-    view!(c => "mcd({a}, {b})")
+    println!("mcd({a: >3}, {b: >3}): {c}\n");
+    c
 }
 
 fn main() {
