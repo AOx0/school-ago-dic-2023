@@ -116,7 +116,7 @@ enum State {
 #[derive(Debug, Default)]
 struct Acceptor<'inp> {
     grammar: &'inp Grammar<'inp>,
-    symb: Vec<(Element, usize)>,
+    hist: Vec<(Element, usize)>,
     sent: Vec<Element>,
     state: State,
     input: &'inp str,
@@ -127,10 +127,10 @@ struct Acceptor<'inp> {
 impl<'inp> std::fmt::Display for Acceptor<'inp> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "({:?}, {}, ", self.state, self.matched + 1)?;
-        if self.symb.is_empty() {
+        if self.hist.is_empty() {
             write!(f, "\u{03B5}")?;
         }
-        for (ref symb, n) in &self.symb {
+        for (ref symb, n) in &self.hist {
             let n = n + 1;
             match symb {
                 Element::NonTerminal(id) => {
@@ -183,7 +183,7 @@ impl<'inp> Acceptor<'inp> {
         assert!(for_id < self.grammar.non_terminal.len());
 
         let current = self
-            .symb
+            .hist
             .iter()
             .rev()
             .find_map(|(id, rem)| {
@@ -235,8 +235,8 @@ impl<'inp> Acceptor<'inp> {
         &self.input[self.matched..]
     }
 
-    unsafe fn increase_last_symb_counter(&mut self) -> usize {
-        self.symb
+    unsafe fn increase_last_hist_counter(&mut self) -> usize {
+        self.hist
             .last_mut()
             .map(|(_, n)| {
                 *n += 1;
@@ -262,11 +262,11 @@ impl<'inp> Acceptor<'inp> {
                     self.caso = "1";
                     self.pop_with_elements(self.grammar.non_terminal[id]);
                     self.extend_with_elements(self.grammar.rhs[self.grammar.starting_ptr[id]]);
-                    self.symb.push((Element::NonTerminal(id), 0));
+                    self.hist.push((Element::NonTerminal(id), 0));
                 }
                 Element::Terminal(next) if self.remaining().starts_with(next) => {
                     self.caso = "2";
-                    self.symb.push((Element::Terminal(next), 0));
+                    self.hist.push((Element::Terminal(next), 0));
                     self.sent.pop();
                     self.matched += 1;
                 }
@@ -282,18 +282,18 @@ impl<'inp> Acceptor<'inp> {
                 self.caso = "6b";
                 self.state = State::T;
             }
-            State::B => match self.symb.last().copied().unwrap() {
+            State::B => match self.hist.last().copied().unwrap() {
                 (Element::Terminal(e), _) => {
                     self.caso = "5";
                     self.matched -= 1;
                     self.sent.push(Element::Terminal(e));
-                    self.symb.pop();
+                    self.hist.pop();
                 }
                 (Element::NonTerminal(id), _) if self.remaining_for_id(id) > 0 => {
                     self.caso = "6a";
                     self.state = State::Q;
 
-                    let n = unsafe { self.increase_last_symb_counter() };
+                    let n = unsafe { self.increase_last_hist_counter() };
                     let start = self.grammar.starting_ptr[id];
 
                     self.pop_with_elements(self.grammar.rhs[start + n - 1]);
@@ -303,7 +303,7 @@ impl<'inp> Acceptor<'inp> {
                     self.caso = "6c";
                     self.pop_with_elements(self.grammar.rhs[self.grammar.starting_ptr[id] + n]);
                     self.extend_with_elements(self.grammar.non_terminal[id]);
-                    self.symb.pop();
+                    self.hist.pop();
                 }
             },
             State::T => {}
