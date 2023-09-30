@@ -2,15 +2,14 @@
 #![warn(clippy::pedantic)]
 #![deny(rust_2018_idioms)]
 
-fn main() {
-    let mut acceptor: Acceptor<'_, 6> = AcceptorBuilder::new()
-        .with_rule("S", &["E"])
-        .with_rule("E", &["TE'"])
-        .with_rule("E'", &["+TE'", ""])
-        .with_rule("T", &["FT'"])
-        .with_rule("T'", &["*FT'", ""])
-        .with_rule("F", &["b", "(E)"])
-        .matching("b#");
+use std::{fs::OpenOptions, io::Read, process::ExitCode};
+
+fn main() -> ExitCode {
+    let g = Grammar::from_file("gramatica.txt").unwrap();
+
+    println!("{g:?}");
+
+    let mut acceptor = Acceptor::new(&g, "b#");
 
     println!("{acceptor}");
     loop {
@@ -19,6 +18,88 @@ fn main() {
         if state == State::T {
             break;
         }
+    }
+
+    ExitCode::SUCCESS
+}
+
+type NonTerminalID = usize;
+
+#[derive(Debug, Default)]
+struct Grammar {
+    nt_sorted: Vec<NonTerminalID>,
+    non_terminal: Vec<String>,
+    number_rules: Vec<usize>,
+    starting_ptr: Vec<usize>,
+    rhs: Vec<String>,
+}
+
+static DEFAULT_GRAMMAR: Grammar = Grammar {
+    nt_sorted: Vec::new(),
+    non_terminal: Vec::new(),
+    number_rules: Vec::new(),
+    starting_ptr: Vec::new(),
+    rhs: Vec::new(),
+};
+
+impl<'a> Default for &'a Grammar {
+    fn default() -> Self {
+        &DEFAULT_GRAMMAR
+    }
+}
+
+impl Grammar {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn from_file(path: &str) -> std::io::Result<Self> {
+        let mut file = OpenOptions::new().read(true).open(path)?;
+        let mut contenido = String::new();
+        let mut grammar = Grammar::new();
+
+        file.read_to_string(&mut contenido)?;
+
+        let mut buf = Vec::new();
+
+        for line in contenido.lines() {
+            let mut word_iter = line.split(' ');
+
+            if let Some(rule_name) = word_iter.next() {
+                for p in word_iter {
+                    buf.push(p);
+                }
+
+                grammar.add_rule(rule_name, buf.as_ref());
+                buf.clear();
+            }
+        }
+
+        Ok(grammar)
+    }
+
+    fn add_rule(&mut self, name: &str, produces: &[&str]) {
+        let existing = self.non_terminal.iter().position(|a| a == name);
+
+        if let Some(existing_position) = existing {
+            panic!("Productions rules for the non-terminal {name} already exist (at idx {existing_position})");
+        } else {
+            self.number_rules.push(produces.len());
+            self.starting_ptr.push(self.rhs.len());
+            self.rhs.extend(produces.iter().map(|a| a.to_string()));
+            self.non_terminal.push(name.to_string());
+
+            self.nt_sorted.push(self.non_terminal.len() - 1);
+            self.nt_sorted.sort_unstable_by(|&a, &b| {
+                self.non_terminal[b].len().cmp(&self.non_terminal[a].len())
+            });
+        }
+    }
+
+    #[allow(dead_code)]
+    pub fn with_rule(mut self, name: &str, produces: &[&str]) -> Self {
+        self.add_rule(name, produces);
+        self
     }
 }
 
@@ -30,15 +111,9 @@ enum State {
     T,
 }
 
-type NonTerminalID = usize;
-
-#[derive(Debug)]
-struct Acceptor<'inp, const R: usize> {
-    nt_sorted: [NonTerminalID; R],
-    non_terminal: [&'inp str; R],
-    number_rules: [usize; R],
-    starting_ptr: [usize; R],
-    rhs: Vec<&'inp str>,
+#[derive(Debug, Default)]
+struct Acceptor<'inp> {
+    grammar: &'inp Grammar,
     symb: Vec<(Element, usize)>,
     sent: Vec<Element>,
     state: State,
@@ -47,7 +122,7 @@ struct Acceptor<'inp, const R: usize> {
     matched: usize,
 }
 
-impl<'inp, const R: usize> std::fmt::Display for Acceptor<'inp, R> {
+impl<'inp> std::fmt::Display for Acceptor<'inp> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "({:?}, {}, ", self.state, self.matched + 1)?;
         if self.symb.is_empty() {
@@ -57,7 +132,7 @@ impl<'inp, const R: usize> std::fmt::Display for Acceptor<'inp, R> {
             let n = n + 1;
             match symb {
                 Element::NonTerminal(id) => {
-                    write!(f, "{{{}{n}}}", self.non_terminal[*id])?;
+                    write!(f, "{{{}{n}}}", self.grammar.non_terminal[*id])?;
                 }
                 Element::Terminal(c) => {
                     write!(f, "{c}")?;
@@ -72,7 +147,7 @@ impl<'inp, const R: usize> std::fmt::Display for Acceptor<'inp, R> {
             for element in self.sent.iter().rev() {
                 match element {
                     Element::NonTerminal(id) => {
-                        write!(f, "{}", self.non_terminal[*id])?;
+                        write!(f, "{}", self.grammar.non_terminal[*id])?;
                     }
                     Element::Terminal(c) => {
                         write!(f, "{c}")?;
@@ -84,111 +159,26 @@ impl<'inp, const R: usize> std::fmt::Display for Acceptor<'inp, R> {
     }
 }
 
-struct AcceptorBuilder<'inp, const R: usize> {
-    nt_sorted: [NonTerminalID; R],
-    non_terminal: [&'inp str; R],
-    number_rules: [usize; R],
-    starting_ptr: [usize; R],
-    rhs: Vec<&'inp str>,
-    pushed: usize,
-}
-
-impl<'inp, const R: usize> AcceptorBuilder<'inp, R> {
-    pub fn new() -> Self {
-        Self {
-            number_rules: [0; R],
-            starting_ptr: [0; R],
-            rhs: Vec::with_capacity(R * 3),
-            non_terminal: [""; R],
-            nt_sorted: [0; R],
-            pushed: 0,
-        }
-    }
-
-    fn add_rule(&mut self, name: &'inp str, produces: &[&'inp str]) {
-        let existing = self.non_terminal.iter().position(|&a| a == name);
-
-        if let Some(existing_position) = existing {
-            panic!("Productions rules for the non-terminal {name} already exist (at idx {existing_position})");
-        } else {
-            assert!(
-                self.pushed < R,
-                "Can't push production {:?} to Accpetor, \
-                there are more productions than spaces in the stack (expected productions: {}). \
-                    Try and bump up the number of productions: Accpetor<{}>",
-                name,
-                R,
-                R + 1
-            );
-
-            self.number_rules[self.pushed] = produces.len();
-            self.starting_ptr[self.pushed] = self.rhs.len();
-            self.rhs.extend(produces.iter());
-            self.non_terminal[self.pushed] = name;
-            self.nt_sorted[self.pushed] = self.pushed;
-            self.pushed += 1;
-        }
-    }
-
-    pub fn with_rule(mut self, name: &'inp str, produces: &[&'inp str]) -> Self {
-        self.add_rule(name, produces);
-        self
-    }
-
-    pub fn build(mut self) -> Acceptor<'inp, R> {
-        assert!(
-            self.pushed == R,
-            "Missing productions. \
-            Expected production number is {R} but only {} productions were provided",
-            { self.pushed }
-        );
-
-        self.nt_sorted
-            .sort_unstable_by(|&a, &b| self.non_terminal[b].len().cmp(&self.non_terminal[a].len()));
-        Acceptor {
-            number_rules: self.number_rules,
-            starting_ptr: self.starting_ptr,
-            rhs: self.rhs,
-            non_terminal: self.non_terminal,
-            nt_sorted: self.nt_sorted,
-            sent: Vec::with_capacity(self.pushed * 2),
-            input: "",
-            matched: 0,
-            symb: Vec::with_capacity(self.pushed * 2),
-            state: State::Q,
-            caso: "",
-        }
-    }
-
-    pub fn matching(self, inp: &'inp str) -> Acceptor<'inp, R> {
-        let mut res = self.build();
-        res.set_match(inp);
-        res.symb.reserve(inp.len());
-        res
-    }
-}
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 enum Element {
     NonTerminal(NonTerminalID),
     Terminal(char),
 }
 
-impl<'inp, const R: usize> Acceptor<'inp, R> {
-    fn set_match(&mut self, t: &'inp str) {
-        self.input = t;
-
-        self.matched = 0;
-        self.state = State::Q;
-        self.symb.clear();
-        self.sent.clear();
-
-        self.sent.push(Element::Terminal('#'));
-        self.sent.push(Element::NonTerminal(0));
+impl<'inp> Acceptor<'inp> {
+    /// Creates a new [`Acceptor`].
+    #[must_use]
+    fn new(g: &'inp Grammar, t: &'inp str) -> Self {
+        Acceptor {
+            grammar: g,
+            input: t,
+            sent: vec![Element::Terminal('#'), Element::NonTerminal(0)],
+            ..Default::default()
+        }
     }
 
     fn remaining_for_id(&self, for_id: NonTerminalID) -> usize {
-        assert!(for_id < R);
+        assert!(for_id < self.grammar.non_terminal.len());
 
         let current = self
             .symb
@@ -199,15 +189,16 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
             })
             .unwrap_or(&0);
 
-        self.number_rules[for_id] - current - 1
+        self.grammar.number_rules[for_id] - current - 1
     }
 
     fn get_next_elem_rev<'a>(&self, from: &'a str) -> (Element, &'a str) {
         for (id, nt) in self
+            .grammar
             .nt_sorted
             .iter()
             .copied()
-            .map(|id| (id, self.non_terminal[id]))
+            .map(|id| (id, self.grammar.non_terminal[id].as_str()))
         {
             if let Some(s) = from.strip_suffix(nt) {
                 return (Element::NonTerminal(id), s);
@@ -238,20 +229,10 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
         }
     }
 
-    /// Returns a reference to the remaining input string to analyze.
     fn remaining(&self) -> &str {
         &self.input[self.matched..]
     }
 
-    /// Increases and returns the counter of the latest symb of the [`Acceptor<R>`].
-    ///
-    /// # Safety
-    ///
-    /// The caller must garantee that there exists a value at the top of the
-    /// symb stack and that it is an [`Element::NonTerminal`].
-    ///
-    /// This method is never intended to be used with a value [`Element::Terminal`]
-    /// at the top of the symb stack
     unsafe fn increase_last_symb_counter(&mut self) -> usize {
         self.symb
             .last_mut()
@@ -263,6 +244,8 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
     }
 
     pub fn next(&mut self) -> State {
+        assert!(!self.input.is_empty());
+
         match self.state {
             State::Q
                 if self.matched == self.input.len() - 1
@@ -275,8 +258,10 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
             State::Q => match self.sent.last().copied().unwrap() {
                 Element::NonTerminal(id) => {
                     self.caso = "1";
-                    self.pop_with_elements(self.non_terminal[id]);
-                    self.extend_with_elements(self.rhs[self.starting_ptr[id]]);
+                    self.pop_with_elements(self.grammar.non_terminal[id].as_str());
+                    self.extend_with_elements(
+                        self.grammar.rhs[self.grammar.starting_ptr[id]].as_str(),
+                    );
                     self.symb.push((Element::NonTerminal(id), 0));
                 }
                 Element::Terminal(next) if self.remaining().starts_with(next) => {
@@ -309,15 +294,17 @@ impl<'inp, const R: usize> Acceptor<'inp, R> {
                     self.state = State::Q;
 
                     let n = unsafe { self.increase_last_symb_counter() };
-                    let start = self.starting_ptr[id];
+                    let start = self.grammar.starting_ptr[id];
 
-                    self.pop_with_elements(self.rhs[start + n - 1]);
-                    self.extend_with_elements(self.rhs[start + n]);
+                    self.pop_with_elements(self.grammar.rhs[start + n - 1].as_str());
+                    self.extend_with_elements(self.grammar.rhs[start + n].as_str());
                 }
                 (Element::NonTerminal(id), n) => {
                     self.caso = "6c";
-                    self.pop_with_elements(self.rhs[self.starting_ptr[id] + n]);
-                    self.extend_with_elements(self.non_terminal[id]);
+                    self.pop_with_elements(
+                        self.grammar.rhs[self.grammar.starting_ptr[id] + n].as_str(),
+                    );
+                    self.extend_with_elements(self.grammar.non_terminal[id].as_str());
                     self.symb.pop();
                 }
             },
