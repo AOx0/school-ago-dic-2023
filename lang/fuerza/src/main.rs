@@ -2,13 +2,13 @@
 #![warn(clippy::pedantic)]
 #![deny(rust_2018_idioms)]
 
-#[global_allocator]
-static ALLOC: dhat::Alloc = dhat::Alloc;
+// #[global_allocator]
+// static ALLOC: dhat::Alloc = dhat::Alloc;
 
 use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    let _profile = dhat::Profiler::new_heap();
+    // let _profile = dhat::Profiler::new_heap();
 
     let file = std::fs::read_to_string("gramatica.txt").unwrap();
 
