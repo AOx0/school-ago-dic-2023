@@ -2,10 +2,17 @@
 #![warn(clippy::pedantic)]
 #![deny(rust_2018_idioms)]
 
-use std::{fs::OpenOptions, io::Read, process::ExitCode};
+#[global_allocator]
+static ALLOC: dhat::Alloc = dhat::Alloc;
+
+use std::process::ExitCode;
 
 fn main() -> ExitCode {
-    let g = Grammar::from_file("gramatica.txt").unwrap();
+    let _profile = dhat::Profiler::new_heap();
+
+    let file = std::fs::read_to_string("gramatica.txt").unwrap();
+
+    let g = Grammar::from_str(file.as_str());
 
     println!("{g:?}");
 
@@ -26,15 +33,15 @@ fn main() -> ExitCode {
 type NonTerminalID = usize;
 
 #[derive(Debug, Default)]
-struct Grammar {
+struct Grammar<'inp> {
     nt_sorted: Vec<NonTerminalID>,
-    non_terminal: Vec<String>,
+    non_terminal: Vec<&'inp str>,
     number_rules: Vec<usize>,
     starting_ptr: Vec<usize>,
-    rhs: Vec<String>,
+    rhs: Vec<&'inp str>,
 }
 
-static DEFAULT_GRAMMAR: Grammar = Grammar {
+static DEFAULT_GRAMMAR: Grammar<'static> = Grammar {
     nt_sorted: Vec::new(),
     non_terminal: Vec::new(),
     number_rules: Vec::new(),
@@ -42,24 +49,19 @@ static DEFAULT_GRAMMAR: Grammar = Grammar {
     rhs: Vec::new(),
 };
 
-impl<'a> Default for &'a Grammar {
+impl<'a> Default for &'a Grammar<'static> {
     fn default() -> Self {
         &DEFAULT_GRAMMAR
     }
 }
 
-impl Grammar {
+impl<'inp> Grammar<'inp> {
     pub fn new() -> Self {
         Self::default()
     }
 
-    pub fn from_file(path: &str) -> std::io::Result<Self> {
-        let mut file = OpenOptions::new().read(true).open(path)?;
-        let mut contenido = String::new();
+    pub fn from_str(contenido: &'inp str) -> Self {
         let mut grammar = Grammar::new();
-
-        file.read_to_string(&mut contenido)?;
-
         let mut buf = Vec::new();
 
         for line in contenido.lines() {
@@ -75,19 +77,19 @@ impl Grammar {
             }
         }
 
-        Ok(grammar)
+        grammar
     }
 
-    fn add_rule(&mut self, name: &str, produces: &[&str]) {
-        let existing = self.non_terminal.iter().position(|a| a == name);
+    fn add_rule(&mut self, name: &'inp str, produces: &[&'inp str]) {
+        let existing = self.non_terminal.iter().position(|&a| a == name);
 
         if let Some(existing_position) = existing {
             panic!("Productions rules for the non-terminal {name} already exist (at idx {existing_position})");
         } else {
             self.number_rules.push(produces.len());
             self.starting_ptr.push(self.rhs.len());
-            self.rhs.extend(produces.iter().map(|a| a.to_string()));
-            self.non_terminal.push(name.to_string());
+            self.rhs.extend(produces.iter());
+            self.non_terminal.push(name);
 
             self.nt_sorted.push(self.non_terminal.len() - 1);
             self.nt_sorted.sort_unstable_by(|&a, &b| {
@@ -97,7 +99,7 @@ impl Grammar {
     }
 
     #[allow(dead_code)]
-    pub fn with_rule(mut self, name: &str, produces: &[&str]) -> Self {
+    pub fn with_rule(mut self, name: &'inp str, produces: &[&'inp str]) -> Self {
         self.add_rule(name, produces);
         self
     }
@@ -113,7 +115,7 @@ enum State {
 
 #[derive(Debug, Default)]
 struct Acceptor<'inp> {
-    grammar: &'inp Grammar,
+    grammar: &'inp Grammar<'inp>,
     symb: Vec<(Element, usize)>,
     sent: Vec<Element>,
     state: State,
@@ -168,7 +170,7 @@ enum Element {
 impl<'inp> Acceptor<'inp> {
     /// Creates a new [`Acceptor`].
     #[must_use]
-    fn new(g: &'inp Grammar, t: &'inp str) -> Self {
+    fn new(g: &'inp Grammar<'inp>, t: &'inp str) -> Self {
         Acceptor {
             grammar: g,
             input: t,
@@ -198,7 +200,7 @@ impl<'inp> Acceptor<'inp> {
             .nt_sorted
             .iter()
             .copied()
-            .map(|id| (id, self.grammar.non_terminal[id].as_str()))
+            .map(|id| (id, self.grammar.non_terminal[id]))
         {
             if let Some(s) = from.strip_suffix(nt) {
                 return (Element::NonTerminal(id), s);
@@ -258,10 +260,8 @@ impl<'inp> Acceptor<'inp> {
             State::Q => match self.sent.last().copied().unwrap() {
                 Element::NonTerminal(id) => {
                     self.caso = "1";
-                    self.pop_with_elements(self.grammar.non_terminal[id].as_str());
-                    self.extend_with_elements(
-                        self.grammar.rhs[self.grammar.starting_ptr[id]].as_str(),
-                    );
+                    self.pop_with_elements(self.grammar.non_terminal[id]);
+                    self.extend_with_elements(self.grammar.rhs[self.grammar.starting_ptr[id]]);
                     self.symb.push((Element::NonTerminal(id), 0));
                 }
                 Element::Terminal(next) if self.remaining().starts_with(next) => {
@@ -296,15 +296,13 @@ impl<'inp> Acceptor<'inp> {
                     let n = unsafe { self.increase_last_symb_counter() };
                     let start = self.grammar.starting_ptr[id];
 
-                    self.pop_with_elements(self.grammar.rhs[start + n - 1].as_str());
-                    self.extend_with_elements(self.grammar.rhs[start + n].as_str());
+                    self.pop_with_elements(self.grammar.rhs[start + n - 1]);
+                    self.extend_with_elements(self.grammar.rhs[start + n]);
                 }
                 (Element::NonTerminal(id), n) => {
                     self.caso = "6c";
-                    self.pop_with_elements(
-                        self.grammar.rhs[self.grammar.starting_ptr[id] + n].as_str(),
-                    );
-                    self.extend_with_elements(self.grammar.non_terminal[id].as_str());
+                    self.pop_with_elements(self.grammar.rhs[self.grammar.starting_ptr[id] + n]);
+                    self.extend_with_elements(self.grammar.non_terminal[id]);
                     self.symb.pop();
                 }
             },
