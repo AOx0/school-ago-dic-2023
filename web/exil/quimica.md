@@ -84,6 +84,16 @@ La masa molar es diferente, en el examen solo viene la masa molar.
 
 El estado de oxidacion de un atomo varia dependiendo del compuesto. Normalmente el oxigeno trabaja en -2, el estado oxidación de un elemento libre (sin combinar con otro) es 0
 
+Cargas ionicas 
 
+Primero cation despues anión
+
+Nomenclatura:
+- Son dos elementos
+- 
+
+Son 18 preguntas, 
+
+== 
 
  
