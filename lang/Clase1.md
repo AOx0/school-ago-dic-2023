@@ -1302,3 +1302,110 @@ La salida indica las derivaciones que tenemos que hacer para replicarlo, similar
 
 Si cuando estamos haciendo el recorrido y caemos en un espacio vacio es error
  
+
+Las LL1 simples exigen que inicien con un no terminal. 
+
+== Gramaticas LL1 sin reglas vacías (pag 243/abs 259)
+
+Primero define una función `FIRST`($alpha$), es el conjunto omega, donde $omega in V_T$ de forma que si partimos de un valor de entrada $alpha$, al inicio, va a quedar omega, forma parte de _first_
+
+Ejemplos en el libro abs 262:
+
+```sql
+FIRST(S#) =
+
+S# => ABe# => {}
+
+
+FIRST(c) = c
+-- Toca imaginarse todas las derivaciones
+-- Tenemos que ver el Gra-mix
+```
+
+
+Una gramatica sin reglas vacías es LL1 si:
+- Es independiente del contexto
+- Si para todas las reglas en las que hay opciones, la intersección de los _first_ es el vacío
+
+#rect[
+    Error común: "Para ver si esta gramatica es ll1 sin reglas vacias voy a ver el first de S'" S' no hay que verlo porque solo tiene una opción.
+    No hay que ver el first de donde solo hay una regla. En el caso de la gramatica tenemos que hacerle FIRST a A y B.
+
+    Aqui hablo de la gramatica en abs 259 y 243
+
+    Solo si el no terminal tiene más de una opción. Para comprobar si se trata de una gramatica tenemos que obtener el first de las dinstintas reglas y después hacer la intersección.
+
+    By applying this definition to the sample grammar, we obtain the following: 
+
+    1. Rules A -> dBlaSIc FIRST(dB) n FIRST(aS)= {d}n <a! = d FIRST(dB) n FIRST(c) = {dIn {c! = ф FIRST(aS) n FIRST(c) = (a} n {c) = $ 2. Rules B -> ASIb FIRST(AS) n FIRST(b) = {a, c, d}n {b} =ф 
+]
+
+Como en todas las reglas las intersecciones de los FIRST resulta en el conjunto vaci
+
+#rect[
+    Clave: Los first de la parte derecha de los no terminales que tienen más de una opción
+]
+
+Igual que en LL1 simple se hace una tabla, ejemplo en 247.
+
+En Sa tenemos ABe 1 porque a está en `FIRST` de $S$, lo mismo para $c$ y $d$
+
+Para demostrar si es ll1 solo tenemos que ver los first de solo los que tienen màs de una opción, pero para hacer la tabla si necesitamos el first de todos.
+
+
+El first de A es  {a, c, d}
+
+La ejecución es igual. Recordemos que si caemos en un espacio en blanco es un error. Ejemplo en 247, abs 264.
+
+== Gramaticas LL1 con reglas vacías
+
+#rect[
+    Este tipo de gramaticas la usa para ejecutar comandos de usuarios, por ejemplo, en bases de datos. De esta forma, si sabe que el query es apropiado, saber si dará vacío.
+]
+
+En este tipo de gramaticas si tenemos reglas vacías. Si vemos los first de la parte derecha de la regla, cumple:
+- Es independiente del contexto
+
+Si hacemos la tabla, vamos a encontrar que, si en nuestra cadena de entrada hay une flecha, entonces tendriamos que decir que en la entrada hay un corchete o un punto. Pero si sustituimos la B por la regla vamos a llegar al signo que está en la entrada.
+
+Para solucionarlo no solo hay que calcular el FIRST de las partes derechas, sino también la función `FOLLOW` de los no terminales.
+
+`FOLLOW` se aplica solo a no ternimales, a las partes izquierdas, es el conjunto de terminales ($omega in V_T$) de forma que si comenzamos en el símbolo distinguido de la gramática y hacemos muchas derivaciones (o ninguna, por eso =>*), y llegamos a $alpha, gamma in V*$, entonces los $omega$s son los que están en el FIRST de $gamma$. Si $gamma$ es $epsilon$, como no hay nada después vale nada.
+
+Los no terminales que tienen más de una regla tienen que cumplir la misma regla de los simples, que su intersección sea $emptyset$.
+
+Con la gramática de la pag 250.
+
+O. S' -> A# (solo tiene una regla) 
+1. A - iB <- e  (solo tiene una)
+2. B -› SB 
+    - First de SB = [, .
+    - Follow B = Siempre habrá <-  
+3. B -› $epsilon$
+4. S -> [eC] 
+    - First [ec] = [
+    - No follow porque no tiene reglas vacias
+5. S - .i 
+    - First .i = .
+    - No hay follow porque no tiene reglas vacias
+6. C -> eC 
+    - First eC = e
+    - Como tiene regla vacia hacemos follow
+    - Follow C = Porque su unica sustitución posible lleva a ]
+7. C-> $epsilon$
+
+Como el follow solo se calcula para no terminales que tienen reglas vacías, lo especñifica en la función $M(A, a)$
+
+
+
+En A con i aparece la regla porque en el first está la i.
+En B <- aparece vacio 3 porque en el follow de B está la flecha a la izquierda.
+
+La ventaja es que se puede automatizar, porque podemos hacer la _gramix_, que es infinita, el conjunto de first y folllows no cambia. Se puede hacer un codigo que le das la gramatica ll1 y genera la tabla.
+
+Estos 6 metodos, fuerza bruta, knuth, ll y demás son sencillos y requieren poco computo. Ahora vamos a ver down top que van sustituyendo a la derecha hasta que queda el sìmbolo inicial, lo que verifica que es generada.
+, lo que verifica que es generada.
+
+Yacc es down top, lo malo es que requieren más recursos de cómputo. 
+
+Los lenguajes que usamos son dependientes del contexto, interpretarlos depende del mismo.

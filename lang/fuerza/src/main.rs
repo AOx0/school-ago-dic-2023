@@ -1,33 +1,70 @@
 #![deny(clippy::all)]
-#![warn(clippy::pedantic)]
+#![deny(clippy::pedantic)]
 #![deny(rust_2018_idioms)]
 
-// #[global_allocator]
-// static ALLOC: dhat::Alloc = dhat::Alloc;
+use std::{io::Write, process::ExitCode};
 
-use std::process::ExitCode;
+fn ask_val(msg: &str) -> std::io::Result<String> {
+    print!("{}", msg);
+    std::io::stdout().lock().flush()?;
+    let mut value = String::with_capacity(20);
+    std::io::stdin().read_line(&mut value)?;
 
-fn main() -> ExitCode {
-    // let _profile = dhat::Profiler::new_heap();
+    while value.ends_with('\n') {
+        value.pop();
+    }
 
-    let file = std::fs::read_to_string("gramatica.txt").unwrap();
+    Ok(value)
+}
 
+fn app() -> Result<(), Box<dyn std::error::Error>> {
+    let mut args = std::env::args().skip(1);
+
+    let path = if let Some(path) = args.next() {
+        path
+    } else {
+        ask_val("Ingresa la ruta del archivo con la gramatica: ")?
+    };
+
+    println!("INFO:: Leyendo gramática de la ruta {:?}", path);
+    let file = std::fs::read_to_string(&path)?;
     let g = Grammar::from_str(file.as_str());
+    println!("INFO:: Gramatica: {g:?}");
 
-    println!("{g:?}");
+    let mut inp = if let Some(inp) = args.next() {
+        inp
+    } else {
+        ask_val("Ingresa la cadena a verificar (sin incluir #): ")?
+    };
+    inp.push('#');
+    println!("INFO:: Evaluando {:?}", inp);
 
-    let mut acceptor = Acceptor::new(&g, "b#");
-
+    let mut acceptor = Acceptor::new(&g, &inp);
     println!("{acceptor}");
+
     loop {
         let state = acceptor.next();
-        println!("(Caso {: <2})  |- {acceptor}", acceptor.caso);
+        println!("  (Caso {: <2})  |- {acceptor}", acceptor.caso);
         if state == State::T {
             break;
         }
     }
 
-    ExitCode::SUCCESS
+    println!(
+        "La gramatica {}acepto la entrada {inp:?}",
+        if acceptor.caso == "3" { "" } else { "no " }
+    );
+
+    Ok(())
+}
+
+fn main() -> ExitCode {
+    if let Err(err) = app() {
+        eprintln!("ERROR:: {err}");
+        ExitCode::FAILURE
+    } else {
+        ExitCode::SUCCESS
+    }
 }
 
 type NonTerminalID = usize;
@@ -39,6 +76,13 @@ struct Grammar<'inp> {
     number_rules: Vec<usize>,
     starting_ptr: Vec<usize>,
     rhs: Vec<&'inp str>,
+}
+
+impl std::fmt::Display for Grammar<'a> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!("Grammar {")?;
+        writeln!("}")
+    }
 }
 
 static DEFAULT_GRAMMAR: Grammar<'static> = Grammar {
@@ -168,7 +212,6 @@ enum Element {
 }
 
 impl<'inp> Acceptor<'inp> {
-    /// Creates a new [`Acceptor`].
     #[must_use]
     fn new(g: &'inp Grammar<'inp>, t: &'inp str) -> Self {
         Acceptor {
