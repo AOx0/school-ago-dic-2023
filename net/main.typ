@@ -628,4 +628,140 @@ Tienen un comportamiento de capa 2. El switch tiene
 
 La ip omportantes es la que tiene el router. Los hubs son de capa 1.
 
+== Direccionamiento 
+
+Las direcciones IP son de 32 bits, 4 bytes. Se divide en dos partes, para indicar la red a la que pertenece la computadora, y el número de computadora dentro de la red.
+
+Podemos saber hasta donde llegan los bits de red y de host usando la máscara. Cuando tiene valor `1` en la máscara se indica que esa posición aún es de la parte de red.
+
+Podemos calcular el tamaño de la red con $2^("numero de 0s") - 2$
+
+Ejemplo, con la mascara: `255.255.255.0`, es decir `1111_1111 1111_1111 1111_1111 0000_0000`, tiene 8 0s, por lo que la red puede tener hasta `253 dispositivos`.
+
+Se restan dos porque es uno de broadcast y de __
+
+La máscara se puede expresar de la forma `255.0.0.0` o `/8`, porque se indica que hay 8 bits que conforman la parte de red.
+
+Si conocemos la IP de un dispositivo y su máscara de red (_subnet mask_), si hacemos un _bitwise_ AND obtendremos la dirección IP del dispositivo en la red.
+
+- Unicast: Se envía un paquere a una dirección IP de destino.
+- Broadcast: Se envía a todos en la red excepto la IP de origen.
+- Multicast: Se envia un paquete a un subconjunto de dispositivos que forman parte del todo.
+  - Por ejemplo, solo a impresoras, routers, laptops, etc.
+  - Nosotros configuramos rangos de red para los dispositivos, manualmente.
+
+== Direcciones IPv4
+
+- Privadas: Usamos en la red local
+
+  Nosotros las configuramos como queramos, son gratuitas y privadas
+
+  Un dipsoitivo con IP privada no puede comunicarse en el internet si no se comunica primero con un dispositivo con IP publica
+
+- Publicas: Usamos en internet 
+
+  Tienen costo, no son gratis
+
+== NAT
+
+A partir del router del ISP usamos una red publica, que se encarga de ser el representante de todos los dispositivos en la red.
+
+== Clase Legacy
+
+Las clases son el tamaño potencial que puede tener la IP. Porque el tamaño corresponde a el número de 0s.
+
+- Clase A, B, C: Configurado en todos lados.
+- Clase D (multicast), E (para testeo): No lo podemos usar
+
+Clase A (/8): Si el primer octeto está entre 0 y 127 es de clase A
+  - Usado entre ISP
+  - Podemos tener 1 privada /8
+Clase B (/16): Si el primer octeto está entre 128 y 141
+  - Podemos tener 16 privada /12
+Clase C (/24): Si el primer octeto está entre 142 y 223
+  - Podemos tener 256 privada /
+
+Por ejemplo tenemos 1000 dispositivos, para partirla en cachos vamos a usar 4 clases C, donde cada una me da 254, de forma que las 4 juntas proveen la demanda de 1000 dispositivos.
+
+== Loopback
+
+127.0.0.0/8 es una clase A, en esa clase la única IP que se utiliza es 127.0.0.1, que identifiac el dispositivo mismo "yo dije que" todos lo pueden decir.
+
+Se usa para probar si TCP/IP está operativo.
+
+== Enlace local
+
+169.254.0.0/16 (de 169.254.0.1 a 169.254.255.255)
+
+Esto se hace porque en Windows, si la máquina no tiene una IP asignada, y se hace una consulta en internet, entonces se queda trabada en intentar hacerlo.
+
+Es un rango privado de forma que, si tiene una "IP" asignada entonces funciona mejor.
+
+== Asignacion de direcciones IP
+
+Las asignaciones las haca la IANA, que administra.
+
+== Subnet
+
+De forma que, en lugar de tener una sola red, separamos los dispositivos en distintas redes para facilitar, por ejemplo, el broadcast.
+
+Es conveniente dividir la red en subredes:
+- Puede ser en función a lo fisico, como por pisos
+- Por área de la empresa: estudiantes, administradores, etc. Depende de las politicas de la empresa.
+- Por seguridad
+
+Entre más sub-redes más eficiente es, no tienen que ser simétricas.
+
+== Classfull
+
+Tenemos una empresa que tiene:
+  - Finanzas que ocupa 16 pc
+  - Administración que ocupa 8 pc
+  - Seguridad 4 pc
+  - TI  24 pc
+
+1. Primero ordenamos las redes de mayor a menor
+  - TI 24 pc
+  - Finanzas que ocupa 16 pc
+  - Administración que ocupa 8 pc
+  - Seguridad 4 pc
+
+2. Sabiendo que tenemos dos direcciones IP para todo, de broadcast e ip, entonces sumamos a todas 2 porque necesitamos minimo ese extra de ips
+  - TI 26 pc
+  - Finanzas que ocupa 18 pc
+  - Administración que ocupa 10 pc
+  - Seguridad 6 pc
+
+3. Se pierden dos IP entonces, por cada subret y a parte se pierden 2 ips entre las redes
+
+  1. Se pierde
+  2. TI 26 pc
+  3. Finanzas que ocupa 18 pc
+  4. Administración que ocupa 10 pc
+  5. Seguridad 6 pc
+  n. Se pierde
+
+4. Por lo que ocupamos 6 subredes donde cada una de 31 SP/IP. La mascara de red serán:
+
+/24 -> 255.255.255.0 -> Donde tenemos hasta 8 bits para modificar
+
+  0xFF 0xFF 0xFF 0bxxxx_xxxx
+
+
+SN  2   4   8   | 16    32  64  128 256
+    x   x   x   | x     x   x   x   x
+    256 128 64  |  32   16  8   4   2   HOST
+                |
+Estos bits pasan| Estos bits se mantienen en 0
+a ser 1
+
+El bueno es el de 8|32, porque se esa forma tenemos el numero suficiente de subredes y el numero adecuado de dispositivos en cada subred
+
+Por lo que la mascara de origen que era /24 paso a ser /27
+
+Numero de subredes: 2^("numero de bits de subred") es el numero de subredes. En el caso anterior tenemos 2^3, que son 8 subredes.
+
+Numero de hosts: 2^("numero de bits de host") - 2 = 2^5 - 2 = 30, que es 30, y si nos permite dar una subred a cada departamento, cubriendo la demanda de hasta 24 dispositivos.
+
+
 

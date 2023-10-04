@@ -29,7 +29,7 @@ fn app() -> Result<(), Box<dyn std::error::Error>> {
     println!("INFO:: Leyendo gramática de la ruta {:?}", path);
     let file = std::fs::read_to_string(&path)?;
     let g = Grammar::from_str(file.as_str());
-    println!("INFO:: Gramatica: {g:?}");
+    println!("INFO:: Gramatica con representación {g:?}");
 
     let mut inp = if let Some(inp) = args.next() {
         inp
@@ -38,6 +38,8 @@ fn app() -> Result<(), Box<dyn std::error::Error>> {
     };
     inp.push('#');
     println!("INFO:: Evaluando {:?}", inp);
+
+    println!("INFO:: {g}");
 
     let mut acceptor = Acceptor::new(&g, &inp);
     println!("{acceptor}");
@@ -78,10 +80,19 @@ struct Grammar<'inp> {
     rhs: Vec<&'inp str>,
 }
 
-impl std::fmt::Display for Grammar<'a> {
+impl<'a> std::fmt::Display for Grammar<'a> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!("Grammar {")?;
-        writeln!("}")
+        writeln!(f, "Grammar {{")?;
+        for (id, nt) in self.non_terminal.iter().enumerate() {
+            write!(f, "    {nt} -> ")?;
+            let starts_at = self.starting_ptr[id];
+            let has = self.number_rules[id];
+
+            for idx in starts_at..starts_at + has 
+            writeln!(f, "{}", self.rhs[starts_at..starts_at + has].join("|"))?;
+        }
+
+        writeln!(f, "}}")
     }
 }
 
