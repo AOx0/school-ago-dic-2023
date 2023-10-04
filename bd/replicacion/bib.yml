@@ -1,0 +1,8 @@
+replication:
+  type: Article
+  url:
+    value: https://mariadb.com/kb/en/setting-up-replication/
+    date: 2023-10-04
+  title: Setting Up Replication
+  organization: MariaDB
+  
