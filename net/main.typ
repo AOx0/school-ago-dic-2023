@@ -676,9 +676,9 @@ Las clases son el tamaño potencial que puede tener la IP. Porque el tamaño cor
 Clase A (/8): Si el primer octeto está entre 0 y 127 es de clase A
   - Usado entre ISP
   - Podemos tener 1 privada /8
-Clase B (/16): Si el primer octeto está entre 128 y 141
+Clase B (/16): Si el primer octeto está entre 128 y 191
   - Podemos tener 16 privada /12
-Clase C (/24): Si el primer octeto está entre 142 y 223
+Clase C (/24): Si el primer octeto está entre 192 y 223
   - Podemos tener 256 privada /
 
 Por ejemplo tenemos 1000 dispositivos, para partirla en cachos vamos a usar 4 clases C, donde cada una me da 254, de forma que las 4 juntas proveen la demanda de 1000 dispositivos.
@@ -718,16 +718,16 @@ Tenemos una empresa que tiene:
   - Finanzas que ocupa 16 pc
   - Administración que ocupa 8 pc
   - Seguridad 4 pc
-  - TI  24 pc
+  - TI  29 pc
 
 1. Primero ordenamos las redes de mayor a menor
-  - TI 24 pc
+  - TI 29 pc
   - Finanzas que ocupa 16 pc
   - Administración que ocupa 8 pc
   - Seguridad 4 pc
 
 2. Sabiendo que tenemos dos direcciones IP para todo, de broadcast e ip, entonces sumamos a todas 2 porque necesitamos minimo ese extra de ips
-  - TI 26 pc
+  - TI 29 pc
   - Finanzas que ocupa 18 pc
   - Administración que ocupa 10 pc
   - Seguridad 6 pc
@@ -735,7 +735,7 @@ Tenemos una empresa que tiene:
 3. Se pierden dos IP entonces, por cada subret y a parte se pierden 2 ips entre las redes
 
   1. Se pierde
-  2. TI 26 pc
+  2. TI 29 pc
   3. Finanzas que ocupa 18 pc
   4. Administración que ocupa 10 pc
   5. Seguridad 6 pc
@@ -743,7 +743,7 @@ Tenemos una empresa que tiene:
 
 4. Por lo que ocupamos 6 subredes donde cada una de 31 SP/IP. La mascara de red serán:
 
-/24 -> 255.255.255.0 -> Donde tenemos hasta 8 bits para modificar
+/24 -> 255.255.255.0 -> Donde tenemos hasta 8 bits para modificar, partimos de la mascara por defecto de la clase C
 
   0xFF 0xFF 0xFF 0bxxxx_xxxx
 
@@ -757,11 +757,51 @@ a ser 1
 
 El bueno es el de 8|32, porque se esa forma tenemos el numero suficiente de subredes y el numero adecuado de dispositivos en cada subred
 
+Por lo que la mascara final sera:
+
+  0xFF 0xFF 0xFF 0b111_0_0000
+
+  24 bits de red + 3 bits de subret + 5 bits de host
+
 Por lo que la mascara de origen que era /24 paso a ser /27
 
 Numero de subredes: 2^("numero de bits de subred") es el numero de subredes. En el caso anterior tenemos 2^3, que son 8 subredes.
 
-Numero de hosts: 2^("numero de bits de host") - 2 = 2^5 - 2 = 30, que es 30, y si nos permite dar una subred a cada departamento, cubriendo la demanda de hasta 24 dispositivos.
+Numero de hosts: 2^("numero de bits de host") - 2 = 2^5 - 2 = 30, que es 30, y si nos permite dar una subred a cada departamento, cubriendo la demanda de hasta 29 dispositivos.
 
 
+4. Hacer la tabla de direcciones 
 
+- IP de red: La ip que nos asignaron el ejercicio. Es desde clase C + 11
+  Si C es 192.168.0.0 + 11 queda 192.168.10.0
+- IP Broadcast cubre todos los posibles + 1
+
+Vamos sumando 32 a 32 porque es el numero maximo de direccines totales, incluyendo broadcast y de red.
+
+No. de red  IP de red      Primera IP de Host/Usable   Ultima IP de Host/usable    IP Broadcast
+0           192.168.10.0   192.168.10.1                192.168.10.30               192.168.10.31 
+1           192.168.10.32  192.168.10.33               192.168.10.62               192.168.10.63 
+2           192.168.10.64  192.168.10.65               192.168.10.94               192.168.10.95
+3           192.168.10.96  192.168.10.97               192.168.10.126              192.168.10.127
+4           192.168.10.128 192.168.10.129              192.168.10.158              192.168.10.159
+5           192.168.10.160 192.168.10.161              192.168.10.190              192.168.10.191
+6           192.168.10.192 192.168.10.193              192.168.10.223              192.168.10.224
+7           192.168.10.224 192.168.10.223              192.168.10.254              192.168.10.255       
+
+
+De esta tabla podemos interpretar, cuantas ip totales usables tenemos? 
+- de 192.168.10.33 a 192.168.10.223, notese que las direcciones en 7 y 0 no se usan 
+- Entonces usables tenemos 6 * 30 = 180 ips de host. 
+
+
+Tenemos 57 IPs usadas de 180, podemos crecer más, asi mismo, en cada nivel tenemos cierto numero de IPs usadas
+que podemos ampliar.
+
+Sobran un monton de IPs que sobran, lo cual es un hueco de seguridad. Siempre tenemos que buscar hacerlo lo más compacto posible,
+porque si no cualquier malicioso se puede asignar una de las IPs que están vacías. 
+
+Cuando se diesño este metodo los routers estaban diseñados, asi. Hoy en dia tenemos routers que usan classfull pero los optimizan de forma que la red 0 y la red $n$ se pueda usar tambien. Por eso se invento un comando que permite usar la red 0. Si tenemos una red en un router moderno podemos contar la 0 como usable.
+
+Cuando usamos la red 0 aun asi perdemos la de broadcast y la de red. La primera y la ultima red se quitan porque asi lo diseñaron, antes se usaba una red de red y una red de broadcast, por eso se perdia la red de redes y red de broadcast.
+
+Tenemos que leer el capitlo 11 completo
