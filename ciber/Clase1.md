@@ -2,8 +2,6 @@
 
 #outline(indent: 2em)
 
-
-
 Entrega de proyecto 4 diciembre
 
 == Libros
@@ -487,4 +485,17 @@ Involucra la confidencialidad, integridad (porque queremos que llegue integro) y
 Viene de kryptos y grafos: Ocultar la escritura
 
 El hash es una función que transforma de forma no reversible. Podemos usar hashes para verificar si un archivo ha sido modificado, pues dos contenidos diferentes alimentados a una función hash generará dos hashes diferentes. 
+
+
+== Criptografía
+
+Tiene distintos usos, por ejemplo:
+- Cifrar mensajes/bases de datos
+- Autenticación (firma electrónica)
+
+
+=== Hash
+
+Función que transforma de manera irreversible un mensaje
+
 
