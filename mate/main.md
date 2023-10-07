@@ -861,3 +861,79 @@ mcd(106, 46)
 2
 ```
 
+== Euclides extendido
+
+Partimos de lo que hicimos en el primer algoritmo, ahora vamos a ir hacia atrás.
+
+```
+14 = 78 - 32 times 2
+
+4 = 32  - 14 times 2
+
+2 = 14 - 4 times 3 
+```
+
+
+Ejemplo
+
+```
+mcd(-8, 22)
+
+esta definido para una s y t que pertenecen a los enteros, o sea que se pueden negativos.
+
+Para no tener probelmas usaremos el menor (-8) como base.
+
+-8 = 22
+
+Ahora por que lo multiplico para que me de un residuo positivo
+Empezamos siempre con -1
+
+-8 = -1 times 22 + 14
+22 = 14 times  1 + 8
+14 = 8 times 1 + 6
+ 8 = 6 times 1 + 2
+ 6 = 2 times 3 + 0
+
+Hasta aqui tenemos todo. Tambien tenemos los residuos 14, 8, 6, 2, 0.
+Aqui el mcd es 2 porque es el inmediato aneterior a 0
+
+14 = -8 - -1 22    (1)
+8 = 22 - 14 1
+6 = 14 - 8 1
+2 = 8 - 6 1
+
+No tomamos 0 porque no nos da nada
+Y ahira podemoes iniciar euclides extendido 
+
+2 = 8 - 6
+2 = 8 - (14 - 8) -- Factorizacion mas sustitucion. Simplemente simplificamos y tomamos el 14 como sig.
+2 = 8 times 2 - 14 times 1
+2 = 8 times 2 - (-8 - -1 times 22)
+-- en lugar de 14 ponemos el -8 - -1 por el valor (1)
+
+Este problema necesita ser si o si
+
+2 =                + (-1) 22
+
+El residuo tiene que regresar un 2, y el numero inicial era -8, por eso:
+
+2 = -8 N + -1 22
+
+Ahora tiene que ser un numero negativo para que de positivo
+
+2 = -8 * -3  + -1 22
+
+Y asi tenemos a (-8), s (-3), t (-1) y b (22)
+
+Por lo que sabemos que cominando estos numeros vamos a obtener el mcd
+
+de sa + tb = mcd(a, b)
+```
+
+```
+141 = (1) 96 + 45
+ 96 = (2) 45 + 6
+ 45 = (7)  6 + 3
+  6 = (2)  3 + 0
+mcd(141,  96): 3
+```

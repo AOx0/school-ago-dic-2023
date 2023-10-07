@@ -1409,3 +1409,124 @@ Estos 6 metodos, fuerza bruta, knuth, ll y demás son sencillos y requieren poco
 Yacc es down top, lo malo es que requieren más recursos de cómputo. 
 
 Los lenguajes que usamos son dependientes del contexto, interpretarlos depende del mismo.
+
+
+Recursividad por la izquierda el unico que no puede es el de fuerza bruta.
+
+LL1 simple: Cada regla comienza con un no terminal distinto
+LL1: Donde se usa FIRST
+LL1 con reglas vacias
+
+
+== 
+
+Ejercicio 8
+- Demostrar que es una gramatica LL1
+- Ver las intersecciones 
+
+
+#rect[
+    - Es independiente del contexto
+    - Si para todas las reglas en las que hay opciones, la intersección de los _first_ es el vacío
+]
+
+#rect[
+    Primero vemos si es regular:
+        - En todas las reglas |a| < |b|, se cumple (vacio cuenta como 1)
+        - No es regular por la regla 1, 2, 4
+    Independiente del contexto?
+        - Ya sabemos que a < b
+        - a solo pertenece a los no terminales, por lo tanto es independiente del contexto
+    Las reglas que tienen mas de una opcion:
+        Por culpa de A neceistamos FIRST(a) y FIRST(bbD)
+            - First(a) = a
+            - First(bbD) = b   No se intersecciona
+        Por culpa de B vemos el FIRST(a) y first(empty)
+            Como es empty queda FOLLOW(B) = 
+            El follow de B es el first de C 
+                -> FIRST(C) = b
+            + FIRST(a) = a
+        Por culpa de C vemos que FIRST(b) y FOLLOW(C)
+            El FIRST de b = b
+            El FOLLOW de C = #
+        Por culpa de D vemos FIRST(c) = c
+            FOLLOW(D) = quedara como bbDCBC, por lo que veremos el first de BC
+            FIRST(BC) = {a, b}
+            como BC primero sacamos el first de b, que es a.
+            Pero como en BC, B puede ser vacio, entonces necesitamos tambien obtener el first de C, que es b
+            - Haciendo el gramix, la unica forma en que D entra en las derivaciones es que S pase a ser donde A y A pase a ser abbD seguido de BC donde BC es lo que le sigue, por eso sacamos el first de todo eso
+            - Como B puede ser vacio tambien tenemos que sacar el first del que le sigue, D
+            - En el gramix analizamos todos los patrones que pueden generar a D, en este caso, no es solo uno 
+            {a, b} sect { c } = emptyset
+]
+
+En la tabla no se considera el vacio
+
+Dejar espacio suficiente para que vea
+Llenamos con 
+- Los first
+- Para los que tienen reglas vacias con los follow
+
+-- estos first van a parte
+S': FIRST(S#) = a -- no lo quitemos en el examen
+S: FIRST(aABC) = a
+Reusamos el FIRST DE A en a o bbD
+Reusamps F(B) = a
+
+No quiere explicacion de las triviales
+Como D tiene vacio tambien asignamos todos los follows
+- a, b son ambos el numero 10
+
+```
+    a          b        c        d         #
+S'  (S#, 1)
+S   (aABC,2) 
+A   (a, 3)     (bbD, 4),          
+B   (a, 5)     (epsilon, 6), ,               (epsilon, n)
+C               (c, 7)                       (epsilon, 8)
+D   (epsilon, 10), (epsilon, 10), , (c, 9),  (epsilon, n)
+
+a
+b
+c
+#
+```
+
+Y ahora probamos que una cadena se genera con esa gramatica:
+
+El libro no tiene ejemplos pero podemos inventarnos ejemplos
+- (abbc, S#, emptyset)
+- en S con a tenemos aABC 2
+- (abbc, aABC#, 2)
+- pop
+- (bbc, ABC, 2)
+- A con b tiene bbD
+- (bbc, bbDC, 4)
+- pop 2 veces
+- (c, DC, 4)
+
+Se equivoco en los follow porque en el Follow de C le falto ver que pasa si esta vacio, es decir que es #
+entonces C lleva a gato, D lleva a gato
+
+Eventualmente lleva al mero mero
+
+```
+S'  &-> S#
+    - Solo tiene una regla, no revisamos
+S  &-> aABC
+    - Solo tiene una regla, no revisamos
+A  &-> a | bbD 
+    - Hay dos reglas
+    - FIRST(a) =? FIRST(bbD)
+    - a sect bbD = emptyset se cumple
+B &-> a | epsilon
+    - Tiene regla vacia
+C &-> b | epsilon
+    - Tiene regla vacia
+D  &-> c | epsilon 
+    - Tiene regla vacia
+    
+```
+
+Es independiente del contexto porque no tenemos terminales en la parte izquierda de las reglas.
+
