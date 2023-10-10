@@ -1,32 +1,29 @@
 %{
 		#include <stdio.h>
 		#include <stdlib.h>
+		#include "lexer.h"
+
+		int main();
+    void yyerror(char *s);
+	 
 %}
 
-%token WORD
-%token SPACE
+
+%output  "./out/parser.c"
+%defines "./out/parser.h"
+
+%union {
+  int numero;
+  char *var;
+}
+
 %token NUM
-%token NL
-%token OP
-%token EOFF
+%nterm SUMA
 
 %%
-S   : EXP S | N S | E S | END | E;
-EXP   : WORD MS OP MS NUM MS OP MS NUM MS
-    {
-			puts("Read word!");
-    };
-MS  : E | SPACE MS;
-E   : ;
-N   : NL 
-    | SPACE 
-    {
-			puts("Nada");
-		}
-END : EOFF
-		{
-			puts("END");
-		}
+SUMA[res] : NUM[num1] '+' NUM[num2] {
+    $<numero>res = $<numero>num1 + $<numero>num2;
+}
 %%
 
 int main() {
