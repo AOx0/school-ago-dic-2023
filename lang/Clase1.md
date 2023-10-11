@@ -1530,3 +1530,121 @@ D  &-> c | epsilon
 
 Es independiente del contexto porque no tenemos terminales en la parte izquierda de las reglas.
 
+= Expresiones aritmeticas
+
+#rect[Pagina 277]
+
+- Infija: Operando Op Operando
+- Prefija* (polaca): Op Operando Operando
+- Post-fija* (polaca inversa): Operando Operando Op
+
+*: No hace falta tener paréntesis. Se les llama expresión polaca y polaca inversa.
+
+Como la sufija y post-fija no requieren paréntesis, se puede usar con pilas las operaciones. Por eso se pueden convertir las expresiones en uno de estos formatos.
+
+== Convertir de infija a polaca
+
+Usando la tabla de precedencia de la pag 279 (abs 296), se puede mapear cada elemento de la expresión. Hay que tomar en cuenta que el algoritmo quita los enteros negativos pues es considerado como operador.
+
+Entonces mete valores. Checa la precedencia, si es menor se quitan los elementos del stack hasta que se encuentre uno mayor.
+
+En el caso de que existan paréntesis, existe f y g, a diferencia de solo f. Asume que los identificadores son de un solo caracter.
+
+En un compilador completo no se usa en un compilador completo, porque la misma gramática se encarga de indicar la sintaxis correcta. Pero en el libro tenemos un algoritmo pequeño para verificarlo.
+
+== Gramatica de operadores
+
+Aquella que no tiene reglas del tipo $V -> alpha X Y beta$ donde $X, Y in V_N$. Es decir, que no aparecen no terminales consecutivamente. Es decir, que siempre entre no terminales habrá un terminal.
+
+En el caso de las funciones como $sin(x)$ se tiene que agregar de la forma:
+
+$
+"..."\
+P -> i | (E) | sin(E)\
+$
+
+
+Las expresiones algebraicas se pueden traducir en forma de tablas. 
+
+7.2 Podemos definir tres tipos de procedencias relacionales:
+- Son iguales, si existe una producción $U -> a S S B$ o $U -> a S X S B$. En el segundo caso están separados por un no terminal.
+- Es menor si tiene $U -> alpha s1 X beta$ tal que $X=>+ S2...$, X con por lo menos una derivacion deriva en $S2$ al inicio.
+- Es mayor si existe $alpha X s2 beta$ donde $X =>+$ en algo que al final tiene a $S1$ o $X =>+ ...S1 Y$
+
+$
+E -> T|E + T|E - T
+T - F|T "*" F|T/F 
+F -> P|F "^" P 
+P -> i|(E) 
+$
+
+En la gramatica, en la expresion tenemos un a que es vacio S1 que es ( el no terminal y otro S2 ).
+Una producción es la gramix, podemos partir de donde sea.
+
+En la tabla que decribe la gramática de arriba se aprecia la precedencia para todos los caracteres. 
+
+- Ejemplo $( < ($. Necesitamos encontrar una producción que hace que se derive en ( al inicio
+
+```
+s1  x  s2
+(   E  )
+```
+E => T => F => P equiv ((
+
+Al final nos quedará:
+
+```
+(( ... 
+```
+
+Ojo que `...` pueden ser $epsilon$
+
+Por eso es que es menor
+
+- Ejemplo $i > +$
+
+Para que se cumpla necesitamos una produccion que diga alpha x s2
+
+```
+Parte de
+X  s2  beta
+T  *   F
+
+Vamos a ver si llegamos por derivaciones a un operador
+T * F => F * F => 
+```
+
+También podemos notar que, en el caso de el `*`, el único que rompe la 
+
+```
+S1 > S2
+/ y +
+
+Parte de 
+T / F
+
+X s2 
+T /  F
+
+Por derivaciones de T queremos llegar a uno que tenga 
+
+T / F 
+=> F / F
+=> P / F
+```
+
+```
+La relacion que queremos ver es S1 := / y S2 := +
+
+    s2
+E   +   T 
+=> T + T 
+=> T / F + T
+        
+Y ese es el caso de  
+```
+
+
+Con la tabla de precedencia se toma una empresión y se colocan las relaciones entre cada operador, u camos sustituyendo cada uno por reglas
+
+De esta forma vamos desde abajo, haciendo sustituciones hasta que llegamos al simbolo inicial.

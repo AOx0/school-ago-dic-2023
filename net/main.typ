@@ -805,3 +805,9 @@ Cuando se diesño este metodo los routers estaban diseñados, asi. Hoy en dia te
 Cuando usamos la red 0 aun asi perdemos la de broadcast y la de red. La primera y la ultima red se quitan porque asi lo diseñaron, antes se usaba una red de red y una red de broadcast, por eso se perdia la red de redes y red de broadcast.
 
 Tenemos que leer el capitlo 11 completo
+
+
+VSLM: Mascara de subred de tamaño variable
+
+
+

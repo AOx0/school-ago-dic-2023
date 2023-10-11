@@ -17,6 +17,7 @@
   char *var;
 }
 
+%start SUMA;
 %token NUM
 %nterm SUMA
 

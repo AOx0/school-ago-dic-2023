@@ -497,7 +497,7 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    24,    24
+       0,    25,    25
 };
 #endif
 
@@ -1054,7 +1054,7 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* SUMA: NUM '+' NUM  */
-#line 24 "grammar.c"
+#line 25 "grammar.c"
                                     {
     (yyval.numero) = (yyvsp[-2].numero) + (yyvsp[0].numero);
 }
@@ -1255,7 +1255,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 27 "grammar.c"
+#line 28 "grammar.c"
 
 
 int main() {
