@@ -1,3 +1,4 @@
+#import "@preview/tablex:0.0.5": tablex, rowspanx, colspanx, cellx
 
 #table(
   columns: (1fr, 1fr),
@@ -13,7 +14,7 @@
 = Resultados
 
 #align(center)[
- #image("exito.png", width: 70%)
+ // #image("exito.png", width: 70%)
 ]
 
 = Preguntas
