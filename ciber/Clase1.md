@@ -1,3 +1,5 @@
+#import "@preview/tablex:0.0.5": tablex, rowspanx, colspanx
+
 = Ciberseguridad
 
 #outline(indent: 2em)
@@ -498,4 +500,47 @@ Tiene distintos usos, por ejemplo:
 
 Función que transforma de manera irreversible un mensaje
 
+=== Kerberos
 
+Cifrar cosas que pasan por la red
+
+Active directory 0 
+
+Proporciona detalles de los provolegios de cada ususario, autentica pero no da el acceso a los recursos.
+Es un sistema de autenticacion, evita el envio de contrasñeos
+
+Desventajas:
+- Se tiene que migrar todas las contraseñas, por ejemplo de sistemas unix a kerberos
+- Una persona podria acceder al servicio de tickets
+- Las aplicaciones tendran que llamar a kerberos. Implica estar dependiendo en todos lados en tener kerberos
+
+Funcionamiento:
+- Permite autenticar, en lugar de enviar en texto plano las credenciales se envia por medio del protocolo de kerberos
+- Se envia un ticket, un paquete que devuelve un sustituto temporal
+
+== X.509
+
+Tipo de certificado que se utiliza por ejemplo para el SSL de HTTP.
+Parte integral de la arquitectura PKI
+
+#tablex(
+  columns: (1fr, ) * 3,
+  [Proveedor], [Tipo de Certificado], [Costo aproximado],
+  
+  [GoDaddy], 
+    [Certificado SSL de validación de dominio (DV)], 
+    [107.51 mxn/mes],
+  
+  [Digicert], 
+    [DigiCert Basic TLS/SSL Certificate], 
+    [432.08 mxn/mes],
+  
+  [HostGator], 
+    [Positive SSL],
+    [40 mxn/mes],
+)
+
+
+Podemos usar:
+- OpenSSL: Firmado por nosotros mismos
+- LetsEncrypt: 
