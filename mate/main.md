@@ -795,7 +795,7 @@ La aplicaciòn sucesiva del algoritmo de división => movidmo entero positivo qu
 
 Sea $a, b, q, r in ZZ$ tales que $a = b q + r$ donde $b >= 0 and 0 <= r < b$ 
 
-$mcd(a, b) = mcd(b, r)$
+$"mcd"(a, b) = "mcd"(b, r)$
 
 Ejemplo:
 
@@ -937,3 +937,88 @@ de sa + tb = mcd(a, b)
   6 = (2)  3 + 0
 mcd(141,  96): 3
 ```
+
+
+== Introducción a la noción de numeros primos 
+
+- Para identificar un número primo:
+    - Teorema 1: Si $a, b, n in NN$ y $a > 1, b > 1, n > 1$:
+        - Si $n = a b$, entonces $a <= sqrt(n) and b <= sqrt(n)$
+        - Si $n$ no tiene primos $<= sqrt(n)$ (divisores), entonces $n$ es primo
+
+        #rect[
+            Singularidad: Donde no existe la función.
+            La transformada de Laplace y de fourier vienen de no se donde jaja.
+        ]
+
+    - Ejemplo:
+        #block[
+            $
+            n &= 2311\
+            sqrt(n) &= 48.07\
+            &"Obtenemos los primos hasta " sqrt(n)\
+            &"Para cada uno vemos si es divisible entre alguno"\
+            &"Como no lo es pues es primo"
+            $
+        ]
+
+- Función entero mayor: Representado $[[x]]$ o $[x]$:
+    Las funciones de parte entera son funciones que toman parte real y devuelven
+    parte entera, es decir $E: RR -> ZZ$.
+
+    #block[
+    $
+    E: RR &-> ZZ\
+    x -> y &= E(x)\
+    E(x) &= [[x]]\
+    $
+    ]
+
+    Puede que se _trunque_ o se devuelva el siguiente, que quiere decir que puede ser una función techo o piso.
+
+    Por lo mismo se puede representar $ceil(x)$ o $floor(x)$
+
+    - Si la función es *techo* se aplica a un número $x in RR$ y devuelve un número $y in ZZ$ no inferior a $x$:
+        
+        $top x top = n$ donde $n$ es el inmediato entero
+
+        Ejemplo: $ceil(-1.4) = -1$
+
+    - Si la función es *suelo*, se aplica a un número $x in RR$ y devuelve un número $y in ZZ$, devuelve el máximo entero $y$ no superior a $x$. 
+
+        Ejemplo: $floor(-1.4) = -2$
+
+// - Para saber cuántos números primos existen en un rango de números naturales:
+- Teorema Legendra: Para poder deducir si el número es primo. 
+
+    Sea $P_1, P_2, ..., P_s$ números primos $s <= sqrt(n)$, tal que $pi(x)$ se expresa:
+
+    #block[
+    $
+        pi(n) &= n - 1 + pi(sqrt(n)) - sum_(1 <= i < s) floor(n/P_i) + sum_(i < j) floor(n/(P_i P_j)) - sum_(i < j < k) floor(n/(P_i P_j P_k)) + ... + (-1)^s floor(n/(P_i P_j P_k ... P_s))
+    $
+    ]
+
+    Ejemplo, vamos a calcular los primeros 100:
+
+    #block[
+    $
+        n &= 100\
+        sqrt(100) &= 10\
+        pi(sqrt(100)) &= {2, 3, 5, 7} = 4\
+        pi(100) &= 100 - 1 + 4 - (floor(100/2) + floor(100/3) + floor(100/5) + floor(100/7))\
+        & + (floor(100/(2 times 3)) + floor(100/(2 times 5)) + floor(100/(2 times 7)) + floor(100/(3 times 5)) + floor(100/(3 times 7)) + floor(100/(5 times 7)) )\
+        & - ( floor(100/(2 times 3 times 5)) + floor(100/(2 times 3 times 7)) +  floor(100/(2 times 5 times 7))+ floor(100/(3 times 5 times 7)))\
+        & + ( floor(100/(2 times 3 times 5 times 7)) )\
+        &= 100 - 1 + 4 - ( 50 + 33 + 20 + 14 )\
+        & + ( 16 + 10 + 7 + 6 + 4 + 2 )\
+        & - ( 3 + 2 + 1 + 105)
+        & + ( 0 )\
+        &= 103 - (117) + 45 - 6\
+        &= 25
+    $
+    ]
+
+    #rect(width: 100%)[
+        *Actividad*: Cuántos hay hasta el 40
+    ]
