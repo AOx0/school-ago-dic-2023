@@ -1,9 +1,8 @@
 %{
-		#include <stdio.h>
-		#include <stdlib.h>
-		#include "lexer.h"
-
-		int main();
+    #include <stdio.h>
+	#include <stdlib.h>
+	#include "lexer.h"
+	int main();
     void yyerror(char *s);
 	 
 %}
