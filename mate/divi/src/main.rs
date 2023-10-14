@@ -25,22 +25,51 @@ fn divide(n: i64, d: i64) -> (i64, i64) {
     }
 }
 
-fn mcd(a: i64, b: i64) -> i64 {
+fn sgn(n: i64) -> i64 {
+    if n < 0 {
+        -1
+    } else if n > 0 {
+        1
+    } else {
+        n
+    }
+}
+
+fn mcd(a: i64, b: i64) -> (i64, i64, i64) {
     assert!(b != 0);
 
-    let (mut d, mut c) = (b.abs(), a.abs());
+    let (mut c, mut d) = (a.abs(), b.abs());
+    let (mut c1, mut d1) = (1, 0);
+    let (mut c2, mut d2) = (0, 1);
 
     while d != 0 {
-        let (t, r) = divide(c, d);
-        println!("{c: >3} = ({t}) {d: >2} + {r}");
+        let (q, r) = divide(c, d);
+        let r1 = c1 - q * d1;
+        let r2 = c2 - q * d2;
+
         c = d;
         d = r;
+
+        c1 = d1;
+        d1 = r1;
+
+        c2 = d2;
+        d2 = r2;
     }
 
-    println!("mcd({a: >3}, {b: >3}): {c}\n");
-    c
+    let (s, _) = divide(c1, sgn(a) * sgn(c));
+    let (t, _) = divide(c2, sgn(b) * sgn(c));
+    (c, s, t)
 }
 
 fn main() {
-    mcd(141, 96);
+    let (mcd, s, t) = mcd(141, 96);
+
+    // mcd de 141 y 96 es 3
+    assert_eq!(mcd, 3);
+
+    // s a + t b = mcd
+    assert_eq!(s * 141 + t * 96, mcd);
+
+    println!("(mcd: {mcd}, s: {s}, t: {t})");
 }
