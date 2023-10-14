@@ -1648,3 +1648,35 @@ Y ese es el caso de
 Con la tabla de precedencia se toma una empresión y se colocan las relaciones entre cada operador, u camos sustituyendo cada uno por reglas
 
 De esta forma vamos desde abajo, haciendo sustituciones hasta que llegamos al simbolo inicial.
+
+
+#rect[
+    Se entrega un día antes el proyecto final:
+    - Compilador de tipo traductor que recibe codigo en pascal y lo traduce a C
+    - El chiste es que no necesitamos saber pascal porque ya tenemos la gramatica (bkf, backus normal form)
+    - Se entrega un documento y todo el codigo
+    - La documentación explica absolutamente todo
+    - El proyecto es traducir de Pascal a C/C++: Recibe un programa en pascal y devuelve su equivalente en C
+    - La gramatica tiene no terminales con más de una letra. En el documento que nos va a dar viene en negritas
+        los no terminales. El no terminal inicial es programs
+    - Mes y medio queda
+    - No todo debe determinarse desde bison, por ejemplo un identificador puede usarse una expresión regular
+    - Cuando encontremos identificadores tenemos que verificar que no sean palabras reservadas
+    - Los comentarios asumimos que son iguales que en C/C++, con `//` y `/* ... */`
+    Consejos:
+    - Advierte que necesitamos estudiar como se hace un arbol, porque eventualmente vamos a hacer un arbol de sintaxis
+    - Tambien nos recomienda que hagamos una tabla de _hashes_.
+    - No esperarnos
+    - Para encontrar un trabajo final asi deberíamos buscar 12 años atrás.
+    - Revisa GitHub para ver que no hay nada similar
+    - Todo el código es C o C++
+]
+
+== Bison
+
+Parte de un archivo de entrada donde escribimos con un formato específico de `yacc`. En él escribimos la gramática.
+Trataron que fuera lo más similar a `flex`. 
+
+Lo único que pide es que la gramática sea independiente del contexto
+Va entre apostrofos, no entre comillas
+

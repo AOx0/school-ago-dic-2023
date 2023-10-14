@@ -1,16 +1,16 @@
-//! Daniel Alejandro Osornio López
-//! 0244685@up.edu.mx
+//! Equipo 8:
+//!     * 0244685@up.edu.mx: Daniel Alejandro Osornio López
+//!     * 0237328@up.edu.mx: Jorge Barba Pérez
 //!
 //! - En src/grammar.rs tiene la definicion de Grammar
-//! - En este archivo tiene la definicion de Acceptor, primero le pongo lo que
-//! mas me interesa que revise porque es lo que se toca en el libro
+//! - En este archivo tiene la definicion de [`Acceptor`], ponemos en este archivo
+//! fuente lo que mas nos interesa que revise, pues es lo que se toca en el libro
 //! (p. ej. el algoritmo en si).
 //!
-//! Para las partes mas bajas del archivo dejo las funciones que son mas de _papeleo_,
+//! Para las partes mas bajas del archivo dejamos las funciones que son mas de _papeleo_,
 //! detalles muy especificos que no son vitales para entender el funcionamiento
 //! general del programa (p. ej. solicitud de valores al usuario, lectura de archivos).
-//!
-//! No incluyo ningun caracter especial (p. ej. acentos)
+//! No incluimos ningun caracter especial.
 //!
 //! Ejecuciones sugeridas:
 //! ```
@@ -18,7 +18,7 @@
 //! ```
 //!
 //! ```
-//! cargo run --release -- grama
+//! cargo run --release -- gramatica2.txt ccc
 //! ```
 
 #![deny(clippy::all)]
@@ -399,6 +399,7 @@ fn app() -> Result<(), Box<dyn std::error::Error>> {
     let file = std::fs::read_to_string(&path)?;
     let g = Grammar::from_str(file.as_str());
     println!("INFO:: Gramatica con representacion {g:?}");
+    println!("INFO:: {g}");
 
     // Si no se ingreso un texto de entrada para verificar como argumento al
     // ejecutar el programa, entonces la pedimos al usuario que lo ingresse
@@ -410,8 +411,6 @@ fn app() -> Result<(), Box<dyn std::error::Error>> {
     // Agregamos el caracter de terminacion al final del texto a evaluar
     inp.push('#');
     println!("INFO:: Evaluando {inp:?}");
-
-    println!("INFO:: {g}");
 
     // Creamos el aceptor, evaluara el texto de entrada `inp` usando la
     // gramatica `g`
