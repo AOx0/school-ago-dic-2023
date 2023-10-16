@@ -272,4 +272,10 @@ Por lo tanto, no necesarimente a menudo es algo bueno.
     CREATE VIEW vUSA_CA_Lim AS SELECT customerNumber, customerName, creditLimit FROM customers WHERE  (country='USA')  AND (state='CA');
     ```
 
-
+```sql
+SELECT orderdetails.productCode, customers.country, orderdetails.quantityOrdered FROM orders
+JOIN orderdetails USING(orderNumber)
+JOIN customers USING(customerNumber)
+GROUP BY orderdetails.productCode, customers.country
+ORDER BY orderdetails.quantityOrdered;
+``` 
