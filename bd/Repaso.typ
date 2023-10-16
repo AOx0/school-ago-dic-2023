@@ -90,3 +90,17 @@ CREATE TRIGGER log_change AFTER UPDATE
 	END; //
 DELIMITER ;
 ```
+#pagebreak()
+
+
+```sql
+DELIMITER //
+CREATE PROCEDURE simpleproc (OUT param1 INT)
+ BEGIN
+  SELECT COUNT(*) INTO param1 FROM t;
+ END; //
+DELIMITER ;
+
+-- CALL simpleproc(@a);
+
+```
