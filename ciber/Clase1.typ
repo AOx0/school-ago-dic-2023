@@ -67,8 +67,10 @@ La seguridad es un proceso continuo, como decia el libro, en lugar de decir 'est
 
 == Ciclo de demming
 
-- Plan
-- Do
+- Plan: Qué vamos a mitigar
+- Do: Implementamos
+- Check: Verificamos con retest o auditoria
+- Act: Reacción
 
 == Seguridad
 
@@ -552,3 +554,6 @@ Podemos realizar una prueba intentato acceder a recursos que no existen, que mue
 Podemos ver información sobre el certificado más a profundidad con SSL LABS, de global sign
 
 - `HSTS`: Redirecciona consultas a los puertos seguros
+
+- IDS : Detecta
+- IPS : Detecta y bloquea
