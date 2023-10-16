@@ -544,3 +544,11 @@ Parte integral de la arquitectura PKI
 Podemos usar:
 - OpenSSL: Firmado por nosotros mismos
 - LetsEncrypt: 
+
+`TLS` es el sucesor de `SSL`, `SSL` está obsoleto.
+
+Podemos realizar una prueba intentato acceder a recursos que no existen, que muestra versiones.
+
+Podemos ver información sobre el certificado más a profundidad con SSL LABS, de global sign
+
+- `HSTS`: Redirecciona consultas a los puertos seguros
