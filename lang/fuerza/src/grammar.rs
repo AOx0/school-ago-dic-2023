@@ -19,11 +19,10 @@ impl<'inp> Grammar<'inp> {
         let mut buf = Vec::new();
 
         for line in contenido.lines() {
-            let mut word_iter = line.split(' ');
-
-            if let Some(rule_name) = word_iter.next() {
-                for p in word_iter {
-                    buf.push(p);
+            if let Some((rule_name, rem)) = line.split_once([':', ' ']) {
+                let rules = rem.split('|');
+                for rule in rules {
+                    buf.push(rule.trim());
                 }
 
                 grammar.add_rule(rule_name, buf.as_ref());

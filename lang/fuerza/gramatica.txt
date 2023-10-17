@@ -1,6 +1,6 @@
 S E
 E TE'
-E' +TE' 
+E' +TE'|
 T FT'
-T' *FT' 
-F b (E)
+T' *FT'|
+F b|(E)
