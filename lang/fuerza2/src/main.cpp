@@ -35,11 +35,11 @@ struct Element {
 };
 
 struct Grammar { 
-    vector<const string> non_terminals;
+    vector<string> non_terminals;
     vector<size_t> nt_sorted;
     vector<size_t> start_ptr;
     vector<size_t> num_rules;
-    vector<const vector<Element>> prods;
+    vector<vector<Element>> prods;
     
     Grammar(const string & from) 
     : non_terminals() 
@@ -52,7 +52,7 @@ struct Grammar {
         
         str_slice_debug_verbose(&sl);
         
-        str_iterator lines = str_slice_iter(&sl, "\n");
+        str_iterator lines = str_slice_iter(&sl, (char *)"\n");
         
         while (!lines.ended) {
             str_slice line = str_iter_next(&lines);

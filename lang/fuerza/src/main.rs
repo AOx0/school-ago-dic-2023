@@ -1,16 +1,18 @@
-//! Daniel Alejandro Osornio López
-//! 0244685@up.edu.mx
+//! Equipo_8:
+//! - 0237328@up.edu.mx Jorge Barba Pérez
+//! - 0244685@up.edu.mx Daniel Alejandro Osornio López
 //!
+//! Archivos:
 //! - En src/grammar.rs tiene la definicion de Grammar
-//! - En este archivo tiene la definicion de Acceptor, primero le pongo lo que
-//! mas me interesa que revise porque es lo que se toca en el libro
+//! - En este archivo tiene la definicion de Acceptor, primero ponemos lo que
+//! mas nos interesa que revise porque es lo que se toca en el libro
 //! (p. ej. el algoritmo en si).
 //!
-//! Para las partes mas bajas del archivo dejo las funciones que son mas de _papeleo_,
+//! Para las partes mas bajas del archivo estan las funciones que son mas de _papeleo_,
 //! detalles muy especificos que no son vitales para entender el funcionamiento
 //! general del programa (p. ej. solicitud de valores al usuario, lectura de archivos).
 //!
-//! No incluyo ningun caracter especial (p. ej. acentos)
+//! No se incluye ningun caracter especial (p. ej. acentos)
 //!
 //! Ejecuciones sugeridas:
 //! ```
@@ -18,15 +20,14 @@
 //! ```
 //!
 //! ```
-//! cargo run --release -- grama
+//! cargo run --release -- gramatica2.txt ccc
 //! ```
 
 #![deny(clippy::all)]
 #![deny(clippy::pedantic)]
 #![deny(rust_2018_idioms)]
 
-/// La definicion de gramatica, es en esencia lo mismo que le entregue en la
-/// primera actividad.
+/// La definicion de gramatica esta en grammar.rs
 mod grammar;
 use grammar::{Grammar, NonTerminalID};
 
@@ -57,7 +58,7 @@ fn main() -> ExitCode {
     }
 }
 
-/// Para representar las producciones y facilitar su parseo decidi usar este
+/// Para representar las producciones y facilitar su parseo se usa este
 /// enumerador.
 ///
 /// - Terminales: En caso de ser un terminal se trata, por definicion, de un caracter.
@@ -109,13 +110,9 @@ struct Acceptor<'inp> {
 impl<'inp> Acceptor<'inp> {
     /// Realiza una iteracion y devuelve el estado resultante de la misma.
     ///
-    /// Use el _pattern matching_ de Rust para lograr un codigo que se lee, de
-    /// forma tal, que se puede ver de forma clara las ramas en las que podemos
-    /// terminar en base al estado actual, variantes restantes, etc.
-    ///
-    /// # Panics
-    ///
-    /// Panics if .
+    /// Usamos el _pattern matching_ de Rust para describir de forma clara las
+    /// ramas en las que podemod terminar en base al estado actual,
+    /// variantes restantes, etc.
     pub fn next(&mut self) -> State {
         assert!(!self.input.is_empty());
 
