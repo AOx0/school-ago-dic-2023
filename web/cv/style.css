@@ -1,0 +1,51 @@
+h3 {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #ff5500;
+}
+
+
+.ora {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #ff5700;
+}
+
+
+* {
+  font-family: 'Sen', sans-serif;
+}
+
+
+a {
+  color: inherit;
+  /* blue colors for links too */
+  text-decoration: inherit;
+  /* no underline */
+}
+
+
+.vcont>* {
+  display: inline-block;
+}
+
+
+.vcont {
+  display: inline-flex;
+  width: 100%;
+  gap: 0.5em;
+}
+
+
+ul {
+  list-style-type: circle;
+}
+
+
+ul li:before {
+  /*  content: '\2014'; */
+  position: absolute;
+  margin-left: -20px;
+  text-align: justify;
+  text-justify: inter-word;
+}

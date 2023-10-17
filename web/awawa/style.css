@@ -1,0 +1,20 @@
+p {
+  color: red;
+}
+
+#caballo {
+  color: aqua;
+}
+
+.perro {
+  color: blue;
+}
+
+input[type="text"] {
+  border: 2px solid red;
+}
+
+.box-model {
+  background-color: darkblue;
+  padding: 100px;
+}
