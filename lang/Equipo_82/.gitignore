@@ -1,0 +1,4 @@
+cmake-build*
+salidas/*
+lex.yy.c
+bin/*

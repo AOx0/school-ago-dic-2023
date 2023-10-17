@@ -373,7 +373,7 @@ fn ask_val(msg: &str) -> std::io::Result<String> {
     let mut value = String::with_capacity(20);
     std::io::stdin().read_line(&mut value)?;
 
-    while value.ends_with('\n') {
+    while value.ends_with(['\n', '\r']) {
         value.pop();
     }
 

@@ -1,0 +1,45 @@
+(*
+
+	Solo un script de prueba
+
+*)
+
+INICIO
+	A = 0;    # Bien
+	X = 10;   # Bien
+	A_A = 1;  # Bien
+	AS_0 = 4; # Bien
+	A__ = 2;  # Mal
+	A__B = 2; # Mal
+	__A = 3;  # Mal
+
+	(* Aja *)
+	MIENTRAS A <= 10 HACER
+		A = A + 1;
+		PRINT 10E-3;
+		PRINT 3;
+		PRINT 3.4;
+		PRINT -1;
+		PRINT -1.0;
+		PRINT 3.2.0; # Sip, eso no se ve bien
+		PRINT 3.; (* Debería ser 3.0 *)
+		PRINT 3E; (* Eso también se ve mal *)
+	FIN;
+	
+	SI A == 10 HACER
+		PRINT 'Si es igual a 10';
+	FIN;
+
+	# Aqui solo estamos probando un comentario que pasa que tiene '' y # y ya jaj asi como (* aja *)
+	PRINT 'Este es un ejemplo de cadena';
+	PRINT 'Este es \'otro\' ejemplo de cadena';
+	PRINT 'Esta cadena también tiene' + 2 + '\'comillas\' dentro'  ;
+FIN;
+
+(*
+	Deberia de poder incluir (* (* a *) *) Algo asi, pues estoy en un comentario
+	Solo un script de prueba
+
+*)
+
+(* Otro comentario *)
