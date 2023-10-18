@@ -4,8 +4,8 @@
  #include "parser.h"
 %}
 
-%option outfile="./out/lexer.c" 
-%option header-file="./out/lexer.h"
+%option outfile="./src/lexer.c" 
+%option header-file="./src/lexer.h"
 %option noyywrap
 
 /* 
