@@ -22,4 +22,5 @@ build_lexer:
 	$(CC) $(OUT)/lexer.c -o $(OUT)/lex
 
 clean: outdir
+	git clean -d -f -x ./
 	rm -rf $(OUT)
