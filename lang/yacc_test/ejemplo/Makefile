@@ -8,7 +8,7 @@ run: build
 	$(OUT)/main
 
 build: gen
-	env PWD="$(OUT)" $(CC) $(OUT)/*.c -o $(OUT)/main
+	$(CC) $(OUT)/parser.c $(OUT)/lexer.c -o $(OUT)/main
 
 outdir:
 	mkdir -p $(OUT)
@@ -19,7 +19,7 @@ gen: outdir
 
 build_lexer:
 	flex lexer.lex
-	env PWD="$(OUT)" $(CC) $(OUT)/lexer.c -o $(OUT)/lex
+	$(CC) $(OUT)/lexer.c -o $(OUT)/lex
 
 clean: outdir
 	rm -rf $(OUT)
