@@ -35,7 +35,13 @@ pub fn build(b: *std.build.Builder) void {
 
     {
         const clean = b.addSystemCommand(&.{ "sh", "./scripts/clean.sh" });
-        const clean_step = b.step("clean", "cleanerar lexer.{c,h}, parser.{c, h}");
+        const clean_step = b.step("clean", "Borrar lexer.{c,h}, parser.{c, h}");
+        clean_step.dependOn(&clean.step);
+    }
+
+    {
+        const clean = b.addSystemCommand(&.{ "sh", "./scripts/format.sh" });
+        const clean_step = b.step("format", "Limpiar el codigo en todos los .h y .c");
         clean_step.dependOn(&clean.step);
     }
 
