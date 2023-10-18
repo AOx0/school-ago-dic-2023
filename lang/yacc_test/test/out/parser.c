@@ -67,17 +67,16 @@
 
 
 /* First part of user prologue.  */
-#line 1 "grammar.c"
+#line 1 "grammar.yacc"
 
-		#include <stdio.h>
-		#include <stdlib.h>
-		#include "lexer.h"
-
-		int main();
+    #include <stdio.h>
+	#include <stdlib.h>
+	#include "lexer.h"
+	int main();
     void yyerror(char *s);
 	 
 
-#line 81 "./out/parser.c"
+#line 80 "./out/parser.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -497,7 +496,7 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    25,    25
+       0,    24,    24
 };
 #endif
 
@@ -1054,15 +1053,15 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* SUMA: NUM '+' NUM  */
-#line 25 "grammar.c"
+#line 24 "grammar.yacc"
                                     {
     (yyval.numero) = (yyvsp[-2].numero) + (yyvsp[0].numero);
 }
-#line 1062 "./out/parser.c"
+#line 1061 "./out/parser.c"
     break;
 
 
-#line 1066 "./out/parser.c"
+#line 1065 "./out/parser.c"
 
       default: break;
     }
@@ -1255,7 +1254,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 28 "grammar.c"
+#line 27 "grammar.yacc"
 
 
 int main() {

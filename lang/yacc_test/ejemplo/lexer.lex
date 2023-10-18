@@ -8,13 +8,17 @@
 %option header-file="./out/lexer.h"
 %option noyywrap
 
+/* 
+ TODO: Ver como desactivo los return para cuando estamos en lex solo 
+ o usar dos versiones distintas
+ */
+
 %%
  /* Asi lo puede recibir yacc */
  /* Aunque el devolvio return yytext; */
-"#" { return GG; }
-"a" { return AA; }
-"b" { return BB; }
-"c" { return CC; }
-.|\n puts("Error");
+"#" { puts("Encontro: #"); return GG; }
+"a" { puts("Encontro: a"); return AA; }
+"b" { puts("Encontro: b"); return BB; }
+"c" { puts("Encontro: c"); return CC; }
 %%
 

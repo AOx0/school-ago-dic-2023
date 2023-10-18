@@ -9,32 +9,28 @@
 %output  "./out/parser.c"
 %defines "./out/parser.h"
 
-%token AA 'a';
-%token BB 'b';
-%token CC 'c';
-%token GG '#';
-
+%token AA BB CC GG;
 %start Sp;
 
 %%
-Sp: S '#';
-S: 'a' A B C;
-A: 'a' | 'b' 'b' D;
-B: 'a' | %empty;
-C: 'b' | %empty; 
-D: 'c' | %empty;
+Sp: S GG;
+S: AA A B C;
+A: AA | BB BB D;
+B: AA | %empty;
+C: BB | %empty; 
+D: CC | %empty;
 %%
 
-int main() {
-    FILE * in = fopen("./entrada.txt", "r");
-
-    if (in) {
-        yyin = in;
-        return yyparse();
-    }
-
-    puts("Nope");
-    return 1;
+int main(int argc, char * argv[])
+{
+    ++argv, --argc; /* salta el nombre del programa que se ejecuta */
+	if ( argc > 0 )	{
+		yyin = fopen( argv[0], "r" );
+		if(!yyin) yyin = stdin;		
+	} else yyin = stdin;
+   yyparse();
+   printf("Linea reconocida correctamente\n");
+   return 0;
 }
 
 void yyerror(char *s) {

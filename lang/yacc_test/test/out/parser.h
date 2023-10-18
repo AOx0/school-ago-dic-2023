@@ -63,7 +63,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 15 "grammar.c"
+#line 14 "grammar.yacc"
 
   int numero;
   char *var;
