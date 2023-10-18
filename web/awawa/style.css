@@ -1,20 +1,23 @@
-p {
-  color: red;
+.color-container {
+  background-color: #2A2A2A;
 }
 
-#caballo {
-  color: aqua;
+.color-container2 {
+  background-color: #DDD;
 }
 
-.perro {
-  color: blue;
+.color-texto-blanco {
+  color: white;
 }
 
-input[type="text"] {
-  border: 2px solid red;
+.linea-amarilla {
+  border-bottom: solid yellow;
 }
 
-.box-model {
-  background-color: darkblue;
-  padding: 100px;
+.bloque-amarillo {
+  background-color: yellow;
+}
+
+.bloque-gris {
+  background-color: gray;
 }

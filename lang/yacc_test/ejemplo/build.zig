@@ -19,6 +19,23 @@ pub fn build(b: *std.build.Builder) void {
         allocator.free(result2.stdout);
     }
 
+    const exe = b.addExecutable(.{ .name = "yacc", .target = target, .optimize = optimize });
+
+    b.installArtifact(exe);
+    exe.linkLibC();
+    exe.addCSourceFiles(&.{ "out/lexer.c", "out/parser.c" }, &.{ "-W", "-Wall", "-Wextra" });
+
+    const run_cmd = b.addRunArtifact(exe);
+
+    run_cmd.step.dependOn(b.getInstallStep());
+
+    if (b.args) |args| {
+        run_cmd.addArgs(args);
+    }
+
+    const run_step = b.step("run", "Ejecutar yacc");
+    run_step.dependOn(&run_cmd.step);
+
     switch (result.term) {
         .Exited => |code| if (code != 0) return,
         else => return,
@@ -27,21 +44,4 @@ pub fn build(b: *std.build.Builder) void {
         .Exited => |code| if (code != 0) return,
         else => return,
     }
-
-    const exe = b.addExecutable(.{ .name = "yacc", .target = target, .optimize = optimize });
-
-    b.installArtifact(exe);
-    exe.linkLibC();
-    exe.addCSourceFiles(&.{ "out/lexer.c", "out/parser.c" }, &.{ "-W", "-Wall", "-Wextra" });
-
-    const exec_cmd = b.addRunArtifact(exe);
-
-    exec_cmd.step.dependOn(b.getInstallStep());
-
-    if (b.args) |args| {
-        exec_cmd.addArgs(args);
-    }
-
-    const run_step = b.step("run", "Ejecutar yacc");
-    run_step.dependOn(&exec_cmd.step);
 }
