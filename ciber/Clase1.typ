@@ -557,3 +557,8 @@ Podemos ver información sobre el certificado más a profundidad con SSL LABS, d
 
 - IDS : Detecta
 - IPS : Detecta y bloquea
+
+== Herramientas 
+
+- SIEM: Security Information and Events
+- SPLUNK: 
