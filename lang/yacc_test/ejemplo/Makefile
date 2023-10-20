@@ -8,18 +8,21 @@ run: build
 	$(OUT)/main
 
 build: gen
-	$(CC) $(OUT)/parser.c $(OUT)/lexer.c -o $(OUT)/main
+	$(CC) src/parser.c src/lexer.c src/main.c -o $(OUT)/main
+
+build_flex: gen gen_dummy
+	$(CC) src/parser.c src/ddlexer.c src/dlexer.c -o $(OUT)/lex
 
 outdir:
 	mkdir -p $(OUT)
 
-gen: outdir
-	bison -l grammar.yacc
-	flex -L lexer.lex
+gen_dummy:
+	sh ./scripts/copy_lexer.sh
+	flex -L src/ddlexer.l
 
-build_lexer:
-	flex lexer.lex
-	$(CC) $(OUT)/lexer.c -o $(OUT)/lex
+gen: outdir
+	bison -l src/grammar.y
+	flex -L src/lexer.l
 
 clean: outdir
 	git clean -d -f -x ./
