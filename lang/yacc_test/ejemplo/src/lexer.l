@@ -20,5 +20,7 @@
 "a" { puts("Encontro: a"); return AA; }
 "b" { puts("Encontro: b"); return BB; }
 "c" { puts("Encontro: c"); return CC; }
+. { puts("OTRO"); return OO; }
+\n { puts("NL"); return NL; }
 %%
 

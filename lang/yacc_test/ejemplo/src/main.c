@@ -1,6 +1,8 @@
 #include "lexer.h"
 #include "parser.h"
 
+int err = 0;
+
 extern int yyparse(void);
 
 int main(int argc, char *argv[]) {
@@ -12,8 +14,14 @@ int main(int argc, char *argv[]) {
   } else
     yyin = stdin;
   yyparse();
-  printf("Linea reconocida correctamente\n");
+
+  if (!err)
+    printf("Linea reconocida correctamente\n");
+
   return 0;
 }
 
-void yyerror(char *s) { fprintf(stderr, "Error: %s\n", s); }
+void yyerror(char *s) {
+  err = 1;
+  fprintf(stderr, "Error: %s\n", s);
+}
