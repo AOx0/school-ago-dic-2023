@@ -1,6 +1,8 @@
 #include "lexer.h"
 #include "parser.h"
 
+extern int yyparse(void);
+
 int main(int argc, char *argv[]) {
   ++argv, --argc; /* salta el nombre del programa que se ejecuta */
   if (argc > 0) {

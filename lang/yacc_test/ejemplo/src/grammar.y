@@ -16,8 +16,8 @@
 Sp: S GG;
 S: AA A B C;
 A: AA | BB BB D;
-B: AA | %empty;
-C: BB | %empty; 
-D: CC | %empty;
+B: AA |;
+C: BB |; 
+D: CC |;
 %%
 
