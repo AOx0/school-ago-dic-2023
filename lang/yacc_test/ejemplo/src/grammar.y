@@ -1,24 +1,58 @@
-%{
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include "lexer.h"
-    int main();
-    void yyerror(char *s);
-%}
-
 %output  "./src/parser.c"
 %defines "./src/parser.h"
 
-%token AA BB CC GG OO NL;
-%start Sp;
+%code top {
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <stdint.h>
+    #include "lexer.h"
+
+    extern int main();
+    extern void yyerror(char *s);
+}
+
+%code requires {
+    struct StrSlice {
+        char * start;
+        size_t len;
+    };
+    typedef struct StrSlice StrSlice;
+}
+
+%union {
+    int64_t snum;
+    uint64_t unum;
+    char * ident;
+    StrSlice slice;
+}
+
+/* Ident */
+%token <slice> IDENT;
+
+/* Par */
+%token SPACE <slice> STRING;
+
+/* Keywords */ 
+%token KW_PROG KW_CONST;
+
+/* Types */
+%token T_INT T_REAL T_STR T_BOOL;
+
+%token NL;
+
+%start programa;
 
 %%
-Sp: S GG ONL;
-S: AA A B C;
-A: AA | BB BB D;
-B: AA |;
-C: BB |; 
-D: CC |;
-ONL: NL |;
+programa: KW_PROG IDENT '(' identificador_lista ')' ';'  {
+    printf("Ident: %.*s\n", $2.len, $2.start);
+};
+identificador_lista: STRING ',' identificador_lista | STRING {
+    printf("Cadena: %.*s\n", $1.len, $1.start);
+};
 %%
 
+    /*
+declaraciones: declaraciones_variables | declaraciones_constantes;
+declaraciones_constantes: declaraciones_constantes KW_CONST IDENT '=' ';'|;
+declaraciones_variable: declaracion_variable 
+    */

@@ -8,19 +8,28 @@
 %option header-file="./src/lexer.h"
 %option noyywrap
 
-/* 
- TODO: Ver como desactivo los return para cuando estamos en lex solo 
- o usar dos versiones distintas
- */
-
+LETRA [a-zA-Z]
+DIGIT [0-9]
+NZDIGIT [1-9]
+SPACE [ \t\f] 
+CALFANUM {LETRA}|{DIGIT}|"$"|"&"|"/"|"+"|"-"|"*"|"%"|"="|":"|"{"|"}"|">"|"<"|":"|";"|"["|"]"|","|"."|"#"
 %%
- /* Asi lo puede recibir yacc */
- /* Aunque el devolvio return yytext; */
-"#" { puts("Encontro: #"); return GG; }
-"a" { puts("Encontro: a"); return AA; }
-"b" { puts("Encontro: b"); return BB; }
-"c" { puts("Encontro: c"); return CC; }
-. { puts("OTRO"); return OO; }
-\n { puts("NL"); return NL; }
+{SPACE}+ /* Nah */
+["]{CALFANUM}*["] {
+ yylval.slice = (StrSlice) { .start = yytext, .len = yyleng };
+ return STRING;
+}
+"("|")"|";"|","|"=" { return yytext[0]; }
+"program" { return KW_PROG; }
+"const" { return KW_CONST; }
+"integer" { return T_INT; }
+"real" { return T_REAL; }
+"string" { return T_STR; }
+"boolean" { return T_BOOL; }
+\n {  }
+{LETRA}({LETRA}|{DIGIT})* {
+ yylval.slice = (StrSlice) { .start = yytext, .len = yyleng };
+ return IDENT;
+}
 %%
 
