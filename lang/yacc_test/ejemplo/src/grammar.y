@@ -30,29 +30,34 @@
 %token <slice> IDENT;
 
 /* Par */
-%token SPACE <slice> STRING;
+%token <unum> UINT <slice> STRING;
 
 /* Keywords */ 
-%token KW_PROG KW_CONST;
+%token KW_PROG KW_CONST KW_VAR KW_ARRAY KW_OF;
 
 /* Types */
 %token T_INT T_REAL T_STR T_BOOL;
 
-%token NL;
-
 %start programa;
 
 %%
-programa: KW_PROG IDENT '(' identificador_lista ')' ';'  {
+programa: KW_PROG IDENT '(' ident_lista ')' ';' decl  {
     printf("Ident: %.*s\n", $2.len, $2.start);
 };
-identificador_lista: STRING ',' identificador_lista | STRING {
+ident_lista: IDENT ',' ident_lista | IDENT {
     printf("Cadena: %.*s\n", $1.len, $1.start);
 };
-%%
 
-    /*
-declaraciones: declaraciones_variables | declaraciones_constantes;
-declaraciones_constantes: declaraciones_constantes KW_CONST IDENT '=' ';'|;
-declaraciones_variable: declaracion_variable 
-    */
+/* Declaration */
+decl: decl_var decl | decl_const decl |;
+decl_var: KW_VAR ident_lista ':' tipo ';' {
+    
+};
+decl_const: KW_CONST IDENT '=' IDENT ';' {
+    printf("Const: %.*s\n", $2.len, $2.start);
+};
+
+ /* Tipo */
+tipo: estandard_tipo | KW_ARRAY '[' T_INT '.' '.' T_INT ']' KW_OF estandard_tipo;
+estandard_tipo: T_INT | T_REAL | T_STR | T_BOOL;
+%%

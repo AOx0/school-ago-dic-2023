@@ -1,1 +1,3 @@
-program HOLA ( "hola" );
+program HOLA ( hola );
+	var numero: integer;
+	const NUMERO = ass;
