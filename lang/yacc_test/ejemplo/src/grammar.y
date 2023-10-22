@@ -41,7 +41,7 @@
 %start programa;
 
 %%
-programa: KW_PROG IDENT '(' ident_lista ')' ';' decl  {
+programa: KW_PROG IDENT '(' ident_lista ')' ';' decl ident_lista {
     printf("Ident: %.*s\n", $2.len, $2.start);
 };
 ident_lista: IDENT ',' ident_lista | IDENT {
@@ -49,7 +49,7 @@ ident_lista: IDENT ',' ident_lista | IDENT {
 };
 
 /* Declaration */
-decl: decl_var decl | decl_const decl |;
+decl: decl_var decl | decl_const decl |  ;
 decl_var: KW_VAR ident_lista ':' tipo ';' {
     
 };
