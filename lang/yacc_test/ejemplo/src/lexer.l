@@ -7,6 +7,8 @@
 %option outfile="./src/lexer.c" 
 %option header-file="./src/lexer.h"
 %option noyywrap
+%option nounput
+%option noinput
 
 LETRA [a-zA-Z]
 DIGIT [0-9]

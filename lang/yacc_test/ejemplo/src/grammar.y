@@ -7,14 +7,14 @@
     #include <stdint.h>
     #include "lexer.h"
 
-    extern int main();
+    extern int main(void);
     extern void yyerror(char *s);
 }
 
 %code requires {
     struct StrSlice {
         char * start;
-        size_t len;
+        int len;
     };
     typedef struct StrSlice StrSlice;
 }
