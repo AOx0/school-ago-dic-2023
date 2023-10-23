@@ -1,7 +1,7 @@
 %code top {
-    #include "parser.h"
-
     extern int main(void);
+    extern int yylex (void);
+    extern void yyerror(char *s);
 }
 
 %code requires {
@@ -10,10 +10,7 @@
     #include <stdint.h>
     #include <inttypes.h>
 
-    extern size_t yyleng;
     extern FILE *yyin, *yyout;
-    extern int yylex (void);
-    extern void yyerror(char *s);
 
     struct StrSlice {
         char * start;

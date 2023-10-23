@@ -12,19 +12,16 @@ pub fn build(b: *std.build.Builder) void {
 
     // Flex + Bison
     const gen_flex = b.addSystemCommand(&.{ "flex", "-L", "src/lexer.l" });
-    const mv_flex = b.allocator.create(MoveFileStep) catch unreachable;
-    mv_flex.* = MoveFileStep.init(b, "Moving flex source into ./src", &.{"./lex.yy.c"}, &.{"./src/lexer.c"});
+    const mv_flex = MoveFileStep.init(b, "Moving flex source into ./src", &.{"./lex.yy.c"}, &.{"./src/lexer.c"});
     mv_flex.step.dependOn(&gen_flex.step);
     const gen_bison = b.addSystemCommand(&.{ "bison", "-ld", "src/grammar.y" });
-    const mv_bison = b.allocator.create(MoveFileStep) catch unreachable;
-    mv_bison.* = MoveFileStep.init(b, "Moving bison source into ./src", &.{ "./grammar.tab.c", "./grammar.tab.h" }, &.{ "./src/parser.c", "./src/parser.h" });
+    const mv_bison = MoveFileStep.init(b, "Moving bison source into ./src", &.{ "./grammar.tab.c", "./grammar.tab.h" }, &.{ "./src/parser.c", "./src/parser.h" });
     mv_bison.step.dependOn(&gen_bison.step);
 
     // Dummy flex
     const gen_dflex = b.addSystemCommand(&.{ "flex", "-L", "src/ddlexer.l" });
     const mir_dflex = b.step("dummy", "Generar un analizador lexico de juguete");
-    const mv_dflex = b.allocator.create(MoveFileStep) catch unreachable;
-    mv_dflex.* = MoveFileStep.init(b, "Moving flex source into ./src", &.{"./lex.dd.c"}, &.{"./src/ddlexer.c"});
+    const mv_dflex = MoveFileStep.init(b, "Moving flex source into ./src", &.{"./lex.dd.c"}, &.{"./src/ddlexer.c"});
     mir_dflex.makeFn = makeDummyLexer;
     gen_dflex.step.dependOn(mir_dflex);
     mv_dflex.step.dependOn(&gen_dflex.step);
@@ -56,7 +53,8 @@ pub fn build(b: *std.build.Builder) void {
         const lexer = b.addExecutable(.{ .name = "lexer", .target = target, .optimize = optimize });
 
         lexer.linkLibC();
-        lexer.addCSourceFiles(&.{ "src/dlexer.c", "src/ddlexer.c", "src/parser.c" }, &flags);
+        lexer.addCSourceFiles(&.{ "src/ddlexer.c", "src/parser.c" }, &.{});
+        lexer.addCSourceFiles(&.{"src/dlexer.c"}, &flags);
         lexer.step.dependOn(&mv_flex.step);
         lexer.step.dependOn(&mv_bison.step);
         lexer.step.dependOn(&mv_dflex.step);
@@ -74,7 +72,8 @@ pub fn build(b: *std.build.Builder) void {
         b.installArtifact(exe);
 
         exe.linkLibC();
-        exe.addCSourceFiles(&.{ "src/main.c", "src/lexer.c", "src/parser.c" }, &flags);
+        exe.addCSourceFiles(&.{ "src/lexer.c", "src/parser.c" }, &.{});
+        exe.addCSourceFiles(&.{"src/main.c"}, &flags);
         exe.step.dependOn(&mv_flex.step);
         exe.step.dependOn(&mv_bison.step);
         exe.step.dependOn(&mv_dflex.step);
@@ -172,18 +171,21 @@ pub fn makeDummyLexer(self: *std.build.Step, progress: *std.Progress.Node) !void
 }
 
 const MoveFileStep = struct {
+    const Self = @This();
     step: std.build.Step,
     context: []const u8,
     from: []const []const u8,
     into: []const []const u8,
 
-    pub fn init(b: *std.build.Builder, context: []const u8, from: []const []const u8, into: []const []const u8) MoveFileStep {
-        return .{ .step = std.build.Step.init(.{
+    pub fn init(b: *std.build.Builder, context: []const u8, from: []const []const u8, into: []const []const u8) *MoveFileStep {
+        const self = b.allocator.create(Self) catch @panic("out of memory");
+        self.* = Self{ .step = std.build.Step.init(.{
             .id = .custom,
             .name = "Move step",
             .owner = b,
             .makeFn = make,
         }), .context = context, .from = from, .into = into };
+        return self;
     }
     fn make(step: *std.build.Step, prog_node: *std.Progress.Node) !void {
         _ = prog_node;
