@@ -11,16 +11,25 @@ pub fn build(b: *std.build.Builder) void {
     };
 
     // Flex + Bison
-    const flex = b.addSystemCommand(&.{ "flex", "-L", "src/lexer.l" });
-    const bison = b.addSystemCommand(&.{ "bison", "-l", "src/grammar.y" });
+    const gen_flex = b.addSystemCommand(&.{ "flex", "-L", "src/lexer.l" });
+    const mv_flex = b.allocator.create(MoveFileStep) catch unreachable;
+    mv_flex.* = MoveFileStep.init(b, "Moving flex source into ./src", &.{"./lex.yy.c"}, &.{"./src/lexer.c"});
+    mv_flex.step.dependOn(&gen_flex.step);
+    const gen_bison = b.addSystemCommand(&.{ "bison", "-ld", "src/grammar.y" });
+    const mv_bison = b.allocator.create(MoveFileStep) catch unreachable;
+    mv_bison.* = MoveFileStep.init(b, "Moving bison source into ./src", &.{ "./grammar.tab.c", "./grammar.tab.h" }, &.{ "./src/parser.c", "./src/parser.h" });
+    mv_bison.step.dependOn(&gen_bison.step);
 
     // Dummy flex
     const gen_dflex = b.addSystemCommand(&.{ "flex", "-L", "src/ddlexer.l" });
     const mir_dflex = b.step("dummy", "Generar un analizador lexico de juguete");
+    const mv_dflex = b.allocator.create(MoveFileStep) catch unreachable;
+    mv_dflex.* = MoveFileStep.init(b, "Moving flex source into ./src", &.{"./lex.dd.c"}, &.{"./src/ddlexer.c"});
     mir_dflex.makeFn = makeDummyLexer;
     gen_dflex.step.dependOn(mir_dflex);
+    mv_dflex.step.dependOn(&gen_dflex.step);
 
-    const flags = .{ "-W", "-Wall", "-Wextra", "-Werror", "-pedantic", "-pedantic-errors" };
+    const flags = .{ "-W", "-Wall", "-Wextra", "-Werror", "-pedantic", "-pedantic-errors", "-Wno-error=sign-compare" };
 
     if (!target.isWindows()) {
         {
@@ -38,9 +47,9 @@ pub fn build(b: *std.build.Builder) void {
 
     {
         const gen_step = b.step("gen", "Generar lexer.{c,h}, parser.{c, h}");
-        gen_step.dependOn(&flex.step);
-        gen_step.dependOn(&bison.step);
-        gen_step.dependOn(&gen_dflex.step);
+        gen_step.dependOn(&mv_flex.step);
+        gen_step.dependOn(&mv_bison.step);
+        gen_step.dependOn(&mv_dflex.step);
     }
 
     {
@@ -48,9 +57,9 @@ pub fn build(b: *std.build.Builder) void {
 
         lexer.linkLibC();
         lexer.addCSourceFiles(&.{ "src/dlexer.c", "src/ddlexer.c", "src/parser.c" }, &flags);
-        lexer.step.dependOn(&flex.step);
-        lexer.step.dependOn(&bison.step);
-        lexer.step.dependOn(&gen_dflex.step);
+        lexer.step.dependOn(&mv_flex.step);
+        lexer.step.dependOn(&mv_bison.step);
+        lexer.step.dependOn(&mv_dflex.step);
 
         const run_cmd = b.addRunArtifact(lexer);
         run_cmd.step.dependOn(b.getInstallStep());
@@ -66,9 +75,9 @@ pub fn build(b: *std.build.Builder) void {
 
         exe.linkLibC();
         exe.addCSourceFiles(&.{ "src/main.c", "src/lexer.c", "src/parser.c" }, &flags);
-        exe.step.dependOn(&flex.step);
-        exe.step.dependOn(&bison.step);
-        exe.step.dependOn(&gen_dflex.step);
+        exe.step.dependOn(&mv_flex.step);
+        exe.step.dependOn(&mv_bison.step);
+        exe.step.dependOn(&mv_dflex.step);
 
         const run_cmd = b.addRunArtifact(exe);
         run_cmd.step.dependOn(b.getInstallStep());
@@ -104,6 +113,16 @@ pub fn replaceDummyReturns(inp: []const u8, buffer: []u8) usize {
                     }
                 } else {
                     buffer[j] = 'r';
+                    j += 1;
+                }
+            },
+            '%' => {
+                if (inp.len > i + 18 and std.mem.eql(u8, inp[i .. i + 19], "%option prefix=\"yy\"")) {
+                    @memcpy(buffer[j .. j + 19], "%option prefix=\"dd\"");
+                    j += 19;
+                    i += 18;
+                } else {
+                    buffer[j] = '%';
                     j += 1;
                 }
             },
@@ -151,3 +170,29 @@ pub fn makeDummyLexer(self: *std.build.Step, progress: *std.Progress.Node) !void
     _ = progress;
     _ = self;
 }
+
+const MoveFileStep = struct {
+    step: std.build.Step,
+    context: []const u8,
+    from: []const []const u8,
+    into: []const []const u8,
+
+    pub fn init(b: *std.build.Builder, context: []const u8, from: []const []const u8, into: []const []const u8) MoveFileStep {
+        return .{ .step = std.build.Step.init(.{
+            .id = .custom,
+            .name = "Move step",
+            .owner = b,
+            .makeFn = make,
+        }), .context = context, .from = from, .into = into };
+    }
+    fn make(step: *std.build.Step, prog_node: *std.Progress.Node) !void {
+        _ = prog_node;
+        const self = @fieldParentPtr(MoveFileStep, "step", step);
+
+        for (self.from, self.into) |from, into| {
+            std.fs.cwd().rename(from, into) catch {
+                std.log.err("Failed to move {s} to {s}", .{ self.from, self.into });
+            };
+        }
+    }
+};

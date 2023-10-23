@@ -1,4 +1,3 @@
-#include "lexer.h"
 #include "parser.h"
 
 int err = 0;

@@ -4,8 +4,7 @@
  #include "parser.h"
 %}
 
-%option outfile="./src/lexer.c" 
-%option header-file="./src/lexer.h"
+%option prefix="yy"
 %option noyywrap
 %option nounput
 %option noinput
