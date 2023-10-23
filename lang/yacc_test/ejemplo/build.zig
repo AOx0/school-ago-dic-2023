@@ -35,7 +35,7 @@ pub fn build(b: *std.build.Builder) void {
         const gen_step = b.step("gen", "Generar lexer.{c,h}, parser.{c, h}");
         gen_step.dependOn(&flex.step);
         gen_step.dependOn(&bison.step);
-        if (!target.isWindows()) gen_step.dependOn(&gen_dflex.step);
+        gen_step.dependOn(&gen_dflex.step);
     }
 
     {
