@@ -1,6 +1,11 @@
 %code top {
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <stdint.h>
+    #include <inttypes.h>
+
     extern int main(void);
-    extern int yylex (void);
+    extern int yylex(void);
     extern void yyerror(char *s);
 }
 

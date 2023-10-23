@@ -1,4 +1,4 @@
-#include "ddlexer.h"
+#include <stdio.h>
 
 int main(int argc, char *argv[]) {
   ++argv, --argc; /* salta el nombre del programa que se ejecuta */
@@ -11,3 +11,8 @@ int main(int argc, char *argv[]) {
   yylex();
   return 0;
 }
+
+void yyerror(char *s) {
+  printf("%s", s);
+}
+

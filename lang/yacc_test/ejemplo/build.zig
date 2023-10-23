@@ -54,7 +54,6 @@ pub fn build(b: *std.build.Builder) void {
 
         lexer.linkLibC();
         lexer.addCSourceFiles(&.{ "src/ddlexer.c", "src/parser.c" }, &.{});
-        lexer.addCSourceFiles(&.{"src/dlexer.c"}, &flags);
         lexer.step.dependOn(&mv_flex.step);
         lexer.step.dependOn(&mv_bison.step);
         lexer.step.dependOn(&mv_dflex.step);
@@ -153,19 +152,27 @@ pub fn makeDummyLexer(self: *std.build.Step, progress: *std.Progress.Node) !void
         return;
     };
 
+    var contents: [20_000]u8 = .{};
+    var main_contents: [5_000]u8 = .{};
+    var final: [25_000]u8 = .{};
+
+    var main_file = try std.fs.cwd().openFile("src/dlexer.c", .{ .mode = .read_only });
+    defer main_file.close();
+
     var file = try std.fs.cwd().openFile("src/lexer.l", .{ .mode = .read_only });
     defer file.close();
-
-    var contents: [20_000]u8 = .{};
-    var final: [25_000]u8 = .{};
-    const size = try file.readAll(&contents);
 
     var dest_file = try std.fs.cwd().createFile("src/ddlexer.l", .{ .truncate = true });
     defer dest_file.close();
 
+    const size = try file.readAll(&contents);
+    const main_size = try main_file.readAll(&main_contents);
+
     const final_size = replaceDummyReturns(contents[0..size], &final);
 
-    try dest_file.writeAll(final[0..final_size]);
+    @memcpy(final[final_size .. final_size + main_size], main_contents[0..main_size]);
+
+    try dest_file.writeAll(final[0 .. final_size + main_size]);
     _ = progress;
     _ = self;
 }

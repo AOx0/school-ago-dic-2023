@@ -1,7 +1,9 @@
+#include <stdio.h>
 #include "parser.h"
 
 int err = 0;
 
+extern FILE *yyin, *yyout;
 extern int yyparse(void);
 
 int main(int argc, char *argv[]) {
