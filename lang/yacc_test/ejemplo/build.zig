@@ -5,6 +5,11 @@ pub fn build(b: *std.build.Builder) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
+    std.process.changeCurDir(b.build_root.path.?) catch {
+        std.log.err("Failed to set cwd", .{});
+        return;
+    };
+
     // Flex + Bison
     const flex = b.addSystemCommand(&.{ "flex", "-L", "src/lexer.l" });
     const bison = b.addSystemCommand(&.{ "bison", "-l", "src/grammar.y" });
@@ -125,6 +130,11 @@ pub fn replaceDummyReturns(inp: []const u8, buffer: []u8) usize {
 }
 
 pub fn makeDummyLexer(self: *std.build.Step, progress: *std.Progress.Node) !void {
+    _ = std.fs.cwd().openFile("build.zig", .{}) catch {
+        std.log.err("Ejecuta zig build desde el mismo directorio de build.zig", .{});
+        return;
+    };
+
     var file = try std.fs.cwd().openFile("src/lexer.l", .{ .mode = .read_only });
     defer file.close();
 
