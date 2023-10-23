@@ -20,7 +20,7 @@ pub fn build(b: *std.build.Builder) void {
     mir_dflex.makeFn = makeDummyLexer;
     gen_dflex.step.dependOn(mir_dflex);
 
-    const flags = .{ "-W", "-Wall", "-Wextra", "-Werror", "-pedantic-errors" };
+    const flags = .{ "-W", "-Wall", "-Wextra", "-Werror", "-pedantic", "-pedantic-errors" };
 
     if (!target.isWindows()) {
         {
