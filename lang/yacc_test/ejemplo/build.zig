@@ -74,7 +74,7 @@ pub fn build(b: *std.build.Builder) void {
     }
 }
 
-pub fn replaceDummyReturs(inp: []const u8, buffer: []u8) usize {
+pub fn replaceDummyReturns(inp: []const u8, buffer: []u8) usize {
     var i: usize = 0;
     var j: usize = 0;
     while (i < inp.len) {
@@ -135,7 +135,7 @@ pub fn makeDummyLexer(self: *std.build.Step, progress: *std.Progress.Node) !void
     var dest_file = try std.fs.cwd().createFile("src/ddlexer.l", .{ .truncate = true });
     defer dest_file.close();
 
-    const final_size = replaceDummyReturs(contents[0..size], &final);
+    const final_size = replaceDummyReturns(contents[0..size], &final);
 
     try dest_file.writeAll(final[0..final_size]);
     _ = progress;
