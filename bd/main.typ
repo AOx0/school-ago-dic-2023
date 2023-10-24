@@ -712,3 +712,103 @@ Hay multiples servidores que se comportan como una sola base de datos.
 - Nube: Se basa en la virtualización para poder generar tantas "maquinas" como sean necesarias, sea con maquinas virtuales o contenedores. Da flexibilidad porque puedes fácil levantar o tirar máquinas a voluntad y pagar por lo que usas. Puedes ejecutar datos o almacenar lo que quieras. Computo que da la posibilidad de usarlo segun la demanda.
 
 En la nube podemos tener Bases de datos distribuidas con nodos flexibles, tambien podemos tenerlo en hosting pero los nodos son estáticos.
+
+
+
+= Data warehouse
+
+Sistema de gestión, que almacena información, relacionado a business intelligence, para ayudar a tomar decisiones en una empresa, lo que implica el análisis de datos.
+
+Una sola funete de verdad.
+
+Extraction; Load; Transformation: La información para crear el data warehouse se extrae de las fuentes se carga en el warehouse.
+Ellos encontraron que se hace ELT en lugar de ETL, es decir, que se transforma en el warehouse mismo.
+
+Grupos:
+- Actualización
+  - Tiempo real: Se actualiza cada que hay nueva información
+  - Offline: Programadas cada tiempo
+- Subgrupos
+  - Operational data store: Ocupa tiempo real, almacena datos de forma rapida
+  - Data Marts: 
+- Arquitectura:
+  - Sencillos: Almacenan sin procesar
+  - Sencilla con zona de preparación: Procesamiento (se prepara) antes de enviarse la respuesta
+  - Radial: Se personaliza para cada área de una empresa
+  - Sandbox: Para explorar los datos 
+- Arquitectura:
+  - Sencillos: Almacenan sin procesar
+  - Sencilla con zona de preparación: Procesamiento (se prepara) antes de enviarse la respuesta
+  - Radial: Se personaliza para cada área de una empresa
+  - Sandbox: Para explorar los datos, experimentar con ellos
+
+SSS (SQL Server Integration Services): Por medio de SQL 
+
+== Modelo estrella
+
+Tenemos tablas de hechos y dimensiones
+- Hechos: Información que relaciona las dimensiones, reciben muchos datos. Entonces la tabla de hechos es solo una tabla de llaves foráneas. Si puede tener datos pero principalmente es FK.
+- Dimensiones: Los nodos en el _edge_ de la estrella, tiene el contexto. Lo que surge a partir de ello, de forma que este tipo de nodos esta especializado por departamento
+
+P. ej una tabla de hechos tiene las ventas, donde, cuando, cliente, monto y la
+de dimensión dice mas cosas sobre el contexto y detalles, como quien lo vendio.
+
+=== Ventajas 
+
+- La información esta clasificada de forma optima para que su manejo sea más natural dependiendo del departamento
+- Como tenemos multiples tablas pequeñas el rendimiento aumenta
+  - Reduce redundancia
+- Flexibilidad: En los sandbox podemos experimentar con las dimensiones
+- Escalabilidad:
+- Integración de herramientas: Como PowerBI, visualizaciones, etc.
+
+=== Desventajas
+
+- Esta complejo implementarlo de forma inicial porque requiere planificacion cuidadosa.
+- Almacenamiento: Las tablas de hechos acumulan mucha información.
+- Mantenimiento: Hay cambios en la información que se maneja, se debe mantener actualizado.
+- Habilidades: Puede requerir capacitaciones externas.
+
+Si se necesita integrar todas las fuentes de información de una empresa, los usarios requieren hacer reportes, se gasta muchos recursos, se puede optar por un data warehouse.
+
+=== Comentarios del profesor
+
+#rect[
+  El profe quiere definiciones exactas y claras con lo que podemos hacer con ello
+]
+
+- Es solo de lectura un data Warehouse? Normalmente se escribe una sola vez y se lee muchas, no se tiene la intención de que se borre nada, no es una base de datos operativa. Los datos de producción están en otro lado, no es para que nuestro negocio funcione.
+- Impulsa la inteligencia empresarial, entendemos en negocio por medio de los datos y vemos cómo mejorarlo, no es una cuestión de operar.
+- No es operativa, si un dato llega, no se borra. Se inserta y lee, y ya.
+- No se trata de tener los exceles o el data warehouse, sino que es simplemente un agregador de información. Responde preguntas diferentes a las producciones.
+- Es contextual: 
+  - Si hacemos un data warehouse de una empresa tenemos un diseño para esa empresa en especifico, pero no podemos usar el mismo modelo.
+  - Data Mart: Es un data warehouse más pequeño, especializado a solo un área de la empresa (p. ej. ventas). Contextual cada uno, a una parte pequeña de la empresa.
+- Una de las preguntas es cómo planearlo, si iniciar con Marts y después diseñar el Warehouse gigante, o qué hacer.
+- Una dimensión: Aspectos del contexto que nos interesa analizar (p. ej. clientes, tiempo), solo usamos la información relevante para poder analizarlo.
+  - Normalmente, si se hace un data warehouse de estrella se tiene una sola tabla de hechos.
+  - En la presentacion vemos dos data marts funsionados porque comparten dimensiones. 
+  - Tenemos atomicidad de tiempo, puede que solo nos importe el año, o mes, no la fecha y segundo.
+  - Si en un datamart tenemos resoluciones de tiempos medidos en distinto tipos no podemos fusionar data marts.
+- Si en nuestro data warehouse queremos tener una ubicacion y otra de clientes, vamos a tener dos dimensiones distintas, estamos hablando sobre dimensiones, no entidades completas. Entonces no pensamos en objetos, sino en datos que nos interesan para entender nuestro negocio (p. ej. quien compra, desde donde).
+- Dimension: Aspectos con los cuales quiero analizar los datos. Lo ponemos de forma que sea facil analizar los datos.
+- ETL: Extraer, Transformar y luego subir:
+  - Extracción: Siempre se tiene este paso, el tiempo de desarollo de los ETLs es lo más tardado. *Ubicar las funetes y obtener los datos, los que nos interesan*, tenemos que determinar que datos necesitamos. 
+    - Son solo los datos que tenemos, podemos contestar con lo que tenemos
+    - Si no tenemos datos podemos ver cómo mejorar nuestro sistema para poderlo conocer.
+    - Tenemos que entender qué es lo que quieren los jefes para entender los campos que necesitamos, porque nos ayudan a responder las preguntas.
+  - Transform: Limpiar la información (p. ej. 'CDMX', 'Ciudad de Mexico'), o homologar los datos (p. ej. 'Enero', 'EN', 1 `->` 1)
+    - Para poder jugar con los datos, tienen que estar totalmente organizados y homologados
+  - Carga: *Tener una carga inicial y después (mantenimiento)*:
+    + En tiempo real: El ETL es complejo y demanda recursos
+    + Cada cierto tiempo: Dependiendo de cada cuánto tiene sentido ver nuestro negocio
+- ELT: Se usa por ejemplo en big data, cargamos todo y a ver qué nos sirve
+- Es un analisis, nos interesa saber la edad exacta, no tener que calularla.
+- Como analisis toca ver la definicion de analisis, supongo que implica tiempo y circunstancia.
+- Se _rompe_ con la normalización, y los esquemas de relación, en este tipo solo importan las dimensiones y cómo nos funciona el modelo para responder las preguntas. 
+- Si necesitamos conectar dimensiones, ya no estamos en estrella, es un copo de nieve. 
+- Si la estructura es muy compleja la estructura estrella no sirve.
+- No es barato, se necesita muchos recursos para un proyecto asi. Hay productos que lo hacen por fuerza bruta, por eso no todas las empresas lo tienen.
+- Online Analitic Apps, como PowerBI, nos permiten modelar los datos. Nos permite formar _cubos_ de información, usando las dimensiones que definimos.
+
+
