@@ -1694,4 +1694,8 @@ Lo que hace el algoritmo es buscar de izquierda a derecha una regla o pedazo de 
 
 Con `#E#` se acaba
 
+En el examen hay una pregunta en el que pide que hagamos cambios al de fuerza bruta.
+
+
+
 

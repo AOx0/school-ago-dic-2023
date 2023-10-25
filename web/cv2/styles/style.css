@@ -1,0 +1,6 @@
+.color-morado {
+  background: linear-gradient(90deg, rgba(104, 253, 255, 1) 0%, rgba(179, 82, 255, 1) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
