@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "parser.h"
 
 int main(int argc, char *argv[]) {
   ++argv, --argc; /* salta el nombre del programa que se ejecuta */

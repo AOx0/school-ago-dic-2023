@@ -5,7 +5,6 @@
     #include <inttypes.h>
 
     extern int main(void);
-    extern int yylex(void);
     extern void yyerror(char *s);
 }
 
