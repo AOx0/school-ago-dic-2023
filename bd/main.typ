@@ -811,4 +811,94 @@ Si se necesita integrar todas las fuentes de información de una empresa, los us
 - No es barato, se necesita muchos recursos para un proyecto asi. Hay productos que lo hacen por fuerza bruta, por eso no todas las empresas lo tienen.
 - Online Analitic Apps, como PowerBI, nos permiten modelar los datos. Nos permite formar _cubos_ de información, usando las dimensiones que definimos.
 
+== Copo de nieve
 
+
+Esquema dimensional: La dimensiòn es cualquier dato que se requiere analizar para el contexto que tenemos.
+Tabla de hehcos: Almacena informacion con muchas llaves foraneas, relaciona las tablas de dimension.
+es, en el copo de nieve va normalizando las tablas de relacion para que se faciliten los queries. 
+rtimos del esquema estrella por medio de normalizaciones, para obtener tablas de dimension no directamente relacionadas a la de hechos, pero si de acorde a la dimensión.
+
+Esto lo hacen para facilitar los queries y su performance
+
+- Se puede ahorrar en almacenamiento
+- Es mas facil mantener las tablas normalizadas
+- Se hace menos intuitivo para los usuarios
+- Con mas joins se reduce el performance
+- No se tiene que normalizar todo por que si, se toma en cuenta lo que se quiere lograr, lo que se tiene para lograrlo (p. ej. personal), y demás del contexto.
+- Para quitar redundancia y ganar performance.
+
+
+
+- La normalizacion no es natural para quien usa excel, por lo que el esquema de copo de nieve tampoco es natural para ellos. Aunque para eso esta PowerBI y demás.
+- Hasta donde normalizar? La clave es, recordando que un datawarehouse esta motivado por quienes toman deciciones, debe ser capaz de responder sus preguntas. 
+
+  La guia para normalizar depende de las sub categorias que queremos obtener, normalizamos con la intencion de obtener las sub categorias que permiten tener consultas
+  claras sobre lo que debemos responder.
+
+- Tatuarse:
+  - El data warehouse siempre tiene contexto y pregunta asociada, si no hay pregunta nos mandaron a hacer algo por diversion
+  - Si no tenemos preguntas claras no podemos armar el data warehouse.
+  - Tenemos que saber exactamente qué tenemos que hacer, de forma que podamos construir.
+  - O se involucra de forma correcta la directiva o no va a salir.
+
+== Object Database
+
+Es producto de la inteligencia artificial, habia lenguajes como SmallTalk que buscaban emular el comportamiento humano. Abstraer la realidad y darle las caracteristicas que tiene un objeto completo, como lo que es y para qué sirve. 
+
+Lo que se busca es generar un modelo de datos orientado a objectos qque tenga persistencia. SGBDOO (Sistema Gestor de Base de Datos Orientado a Objetos). En lugar de esquemas tenemos mapas de objetos, con herencia, por ejemplo.
+
+Se necesita:
+- Base de datos
+- Modelo de datos: 
+- Gestor de base de datos: Se encarga de la persistencia: La fabrica de los objetos que se van a tener en el modelo, relacionado con la persistencia
+
+#rect[
+  Tenemos _fábricas_ de objetos y las instancias del mismo. La fabrica se encarga de dar instancias de objetos.
+]
+
+Surgen en 1989 con el Manifiesto de A:::
+- Objetos complejos: Componer objetos por agregación (uno se conforma de varios).
+- Mecanismos de identidad de los objetos: Como identificar entre ambos objetos, aun cuando son identicos (p. ej. viven en distintos lugares en memoria)
+- Soporte a encapsulación
+- Tipos o clases
+- Soportarse el enlace dinámico: Para ejecutar codigo externo, resolviendo lso simbolos de forma dinámica
+- DML: Data Manipulation Language (SELECT, DELETE, UPDATE).
+- El conjunto de todos los datos debe ser ampiables
+- Debe ser capaz de servir para bases de datos grandes
+- Concurrente
+- Proporcionar una forma simple de consultar los datos (p. ej XPath de XML?)
+
+#rect[
+  Herencia, Polimorfismo, Interfaces/Protocolos, Categorias (herencia donde solo se pueden agregar metodos)
+]
+
+=== Caracteristicas
+
+- Identidad de los objetos:
+  - Puede ser con un identificador interno y con sus referencias (p. ej. con un garbage collector)
+- Encapsulamiento: Public, Private, Protected
+- Manejo de objetos complejos
+- Polimorfismo
+- Creación de versiones: 
+  - Por cada clase podemos tener versiones (p. ej agregamos un campo nuevo). La base de datos debe ser capaz de manejar distintas versiones.
+  - Implica el almacenamiento y carga de objetos de versiones pasadas sin problema.
+
+=== Ventajas
+
+- Podemos diseñar objetos complejos
+- Manipularlos de forma rapida y ágil (aunque es más del lado del código)
+- Ampliable: Se construyen nuevos tipos por medio de los que tenemos
+- Modelar el mundo real
+- Mejor control de concurrencia
+- Menos codigo debido a la herencia
+- Menos memoria por que podemos tener distintos hilos de forma cocurrente sobre la misma clase
+
+=== Desventajas
+
+- No hay estandares en la industria. Hacemos las clases de acuerdo a los requerimientos que tenemos.
+- Para bases de datos pequeñas no es tan bueno, es mejor para problemas complejos
+
+#rect[
+  Se puede tomar una base de datos relacional como engine de persistencia para una base de datos orientada a objetos. No quiere decir que sea eficiente pero si se puede.
+]
