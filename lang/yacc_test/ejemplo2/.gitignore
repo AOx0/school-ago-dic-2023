@@ -1,0 +1,8 @@
+zig-cache
+zig-out
+out
+src/ddlexer.*
+src/parser.c
+src/lexer.h 
+src/lexer.c 
+src/parser.h
