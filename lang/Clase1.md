@@ -1431,33 +1431,42 @@ Ejercicio 8
 ]
 
 #rect[
-    Primero vemos si es regular:
-        - En todas las reglas |a| < |b|, se cumple (vacio cuenta como 1)
-        - No es regular por la regla 1, 2, 4
-    Independiente del contexto?
-        - Ya sabemos que a < b
-        - a solo pertenece a los no terminales, por lo tanto es independiente del contexto
-    Las reglas que tienen mas de una opcion:
-        Por culpa de A neceistamos FIRST(a) y FIRST(bbD)
-            - First(a) = a
-            - First(bbD) = b   No se intersecciona
-        Por culpa de B vemos el FIRST(a) y first(empty)
-            Como es empty queda FOLLOW(B) = 
-            El follow de B es el first de C 
-                -> FIRST(C) = b
-            + FIRST(a) = a
-        Por culpa de C vemos que FIRST(b) y FOLLOW(C)
-            El FIRST de b = b
-            El FOLLOW de C = \#
-        Por culpa de D vemos FIRST(c) = c
-            FOLLOW(D) = quedara como bbDCBC, por lo que veremos el first de BC
-            FIRST(BC) = {a, b}
-            como BC primero sacamos el first de b, que es a.
-            Pero como en BC, B puede ser vacio, entonces necesitamos tambien obtener el first de C, que es b
-            - Haciendo el gramix, la unica forma en que D entra en las derivaciones es que S pase a ser donde A y A pase a ser abbD seguido de BC donde BC es lo que le sigue, por eso sacamos el first de todo eso
-            - Como B puede ser vacio tambien tenemos que sacar el first del que le sigue, D
-            - En el gramix analizamos todos los patrones que pueden generar a D, en este caso, no es solo uno 
-            {a, b} sect { c } = emptyset
+```
+S' -> S# 
+S -> aABC
+A -> a|bbD
+B -> a|
+C -> b|
+D -> c|
+ 
+Primero vemos si es regular:
+    - En todas las reglas |a| < |b|, se cumple (vacio cuenta como 1)
+    - No es regular por la regla 1, 2, 4
+Independiente del contexto?
+    - Ya sabemos que a < b
+    - a solo pertenece a los no terminales, por lo tanto es independiente del contexto
+Las reglas que tienen mas de una opcion:
+    Por culpa de A neceistamos FIRST(a) y FIRST(bbD)
+        - First(a) = a
+        - First(bbD) = b   No se intersecciona
+    Por culpa de B vemos el FIRST(a) y first(empty)
+        Como es empty queda FOLLOW(B) = 
+        El follow de B es el first de C 
+            -> FIRST(C) = b
+        + FIRST(a) = a
+    Por culpa de C vemos que FIRST(b) y FOLLOW(C)
+        El FIRST de b = b
+        El FOLLOW de C = \#
+    Por culpa de D vemos FIRST(c) = c
+        FOLLOW(D) = quedara como bbDCBC, por lo que veremos el first de BC
+        FIRST(BC) = {a, b}
+        como BC primero sacamos el first de b, que es a.
+        Pero como en BC, B puede ser vacio, entonces necesitamos tambien obtener el first de C, que es b
+        - Haciendo el gramix, la unica forma en que D entra en las derivaciones es que S pase a ser donde A y A pase a ser abbD seguido de BC donde BC es lo que le sigue, por eso sacamos el first de todo eso
+        - Como B puede ser vacio tambien tenemos que sacar el first del que le sigue, D
+        - En el gramix analizamos todos los patrones que pueden generar a D, en este caso, no es solo uno 
+        {a, b} sect { c } = emptyset
+```
 ]
 
 En la tabla no se considera el vacio
