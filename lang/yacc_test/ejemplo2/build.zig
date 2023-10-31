@@ -22,9 +22,9 @@ pub fn build(b: *std.build.Builder) void {
 
     const mv_bison = MoveFileStep.create(b, &.{ "./grammar.tab.c", "./grammar.tab.h" }, &.{ "./src/parser.c", "./src/parser.h" });
     if (debug_bison) {
-        mv_bison.step.dependOn(&b.addSystemCommand(&.{ "bison", "-l", "--debug", "src/grammar.y" }).step);
+        mv_bison.step.dependOn(&b.addSystemCommand(&.{ "bison", "-ld", "--debug", "src/grammar.y" }).step);
     } else {
-        mv_bison.step.dependOn(&b.addSystemCommand(&.{ "bison", "-l", "src/grammar.y" }).step);
+        mv_bison.step.dependOn(&b.addSystemCommand(&.{ "bison", "-ld", "src/grammar.y" }).step);
     }
 
     // Dummy flex

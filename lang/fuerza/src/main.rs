@@ -134,12 +134,13 @@ impl<'inp> Acceptor<'inp> {
             State::Q => match self.sent.last().copied().unwrap() {
                 // Si es un no terminal entonces lo expandimos por su primera
                 // produccion
-                Element::NonTerminal(id) => {
+                Element::NonTerminal(id) if self.grammar.number_rules[id] > 1 => {
                     self.caso = "1";
                     self.pop_with(self.grammar.non_terminal[id]);
-                    self.extend_with(self.grammar.rhs[self.grammar.starting_ptr[id]]);
-                    self.hist.push((Element::NonTerminal(id), 0));
+                    self.extend_with(self.grammar.rhs[self.grammar.starting_ptr[id] + 1]);
+                    self.hist.push((Element::NonTerminal(id), 1));
                 }
+                Element::NonTerminal(_) => {}
                 // Si es un terminal y esta presente en la entrada entonces lo
                 // contamos como _match_
                 Element::Terminal(next) if self.rem_str().starts_with(next) => {
@@ -178,7 +179,7 @@ impl<'inp> Acceptor<'inp> {
                     self.hist.pop();
                 }
                 // Si es un no terminal pero aun quedan variantes por explorar
-                (Element::NonTerminal(id), _) if self.rem_variants(id) > 0 => {
+                (Element::NonTerminal(id), _) if self.rem_variants(id) > 1 => {
                     self.caso = "6a";
                     self.state = State::Q;
 
@@ -187,7 +188,7 @@ impl<'inp> Acceptor<'inp> {
 
                     // Entonces sustituimos la variante en sent por la nueva
                     // variante a probar
-                    self.pop_with(self.grammar.rhs[start + n - 1]);
+                    self.pop_with(self.grammar.rhs[start + n - 2]);
                     self.extend_with(self.grammar.rhs[start + n]);
                 }
                 // Para cualquier otro no terminal, es decir, que no le quedan
@@ -356,7 +357,7 @@ impl<'inp> Acceptor<'inp> {
         self.hist
             .last_mut()
             .map(|(_, n)| {
-                *n += 1;
+                *n += 2;
                 *n
             })
             .unwrap_unchecked()

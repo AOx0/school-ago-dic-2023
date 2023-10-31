@@ -23,6 +23,10 @@ int main(int argc, char *argv[]) {
 }
 
 void yyerror(char *s) {
+  /* 
+    En caso de error ponemos la variable global de error como 1, asi podemos mostrar 
+    de forma mas precisa si se reconocio o no el texto correctamente
+  */
   err = 1;
   fprintf(stderr, "Error: %s\n", s);
 }
