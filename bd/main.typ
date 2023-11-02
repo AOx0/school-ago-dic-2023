@@ -902,3 +902,84 @@ Surgen en 1989 con el Manifiesto de A:::
 #rect[
   Se puede tomar una base de datos relacional como engine de persistencia para una base de datos orientada a objetos. No quiere decir que sea eficiente pero si se puede.
 ]
+
+== Modelo Inmon (o Top down)
+
+- Intenta hacer el data warehouse de toda la empresa de una.
+- Se dan resultados en mucho tiempo desde que inicia. Cuando eventualmente de los resultados sera de toda la empresa.
+- Hasta el final podemos generar data marts, su fuente es el data warehouse completo.
+- Busca responder que estrategia general usar para toda la empresa, busca el optimo global.
+- Es muy grande, complejo, 
+- Modelo base: Copo de nieve. Por la complejidad no se puede solo tener estrella
+
+== Modelo Kimball (o bottom up)
+
+Hay dos formas de ver la empresa:
+- Kimball ve de arriba hacia abajo. Inicia por los procesos, se va a lo concreto. Las respuestas que busca responder es como hacer más eficaces los procesos. Empieza por el data mart.
+  
+  Inicia con secciones, haciendo data marts de secciones hasta que eventualmente los une.
+
+  Se pueden unir los distintos data marts si comparten dimensiones. Eventualmente podemos llegar a tener data warehouse federados, que no se relacionan en nada, y eso no es un data warehouse.
+
+  Se plantea con el hacer una estrella, tiene la ventaja de que es mas facil de contstruir, mas rapido porque no hay normalización
+- Modelo base: estrella
+- Top down.
+
+Modular, escalable.
+- ETL: Extraer, transformar, cargar
+
+Se propone que se usa como una cocina, los que no son chefs no pueden entrar a la misma.
+
+Diseño:
+- Seleccionar un proceso en la organización: Las areas que se van a cubrir.
+- Declarar el grano: Una fila de la tabla de hechos, cuales seran las especificaciones de las tablas. Ah ya, la granularidad de los datos, asi todos estan medidos con la misma regla.
+- Identificar las dimensiones: 
+- Identificar los hechos:
+
+Kimball:
+- Centrarse en el negocio
+- Construir infraestructura adecuada
+
+
+=== Ventajas
+
+- Implementación veloz
+- No normalizar
+
+=== Desventajas
+
+- Pueden existir datos redundantes
+
+Es una metdologia eficaz centrado a areas. Es rapido de construir, no tiene normalizacion, tenemos tablas de hechos y de dimensiones. Tendremos exito si analizamos exitosamente ventajas/desventajas. Lo que busca es ser lo mas preciso posible.
+
+#rect[
+  Los data warehouse no se venden _per se_, sino que se vende como Inteligencia de Negocios. Para poder hacer el tipo de analisis se debe incluir un data warehouse 
+]
+
+#rect[
+  Kimball: Tenemos un negocio familar, es una funeraria, tenemos un problema con la producción de los feretros, lo que queremos es mejorar un *proceso*.
+  Inmon: Empresa, como tener una ofensiva adecuada ante la nueva ruta de la seda de china, es un problema que abarca toda la empresa. 
+]
+
+#rect[
+  Se pueden usar ambas estrategias: Queremos tener un proyecto de 60 meses que deberia terminar en 15 meses, en ese caso, por lo que no podemos solo usar Kimball.
+
+  Estamos en un barco de vapor, para hervir el agua necesitamos combustible. Nuestro barco es de madera, estamos en medio de la nada y nos quedamos sin combustible. Nuestra mision es que el barco que llegue. Vamos destruyendo el barco quitando lo menos importante y dandole como combustible eso al motor.
+
+  Esto se conoce como una ruta critica, para el problema de los 18 meses nos quedamos con solo lo critico. Todo el rato se piensa en inmon pero formulando las cosas para responder ya.
+]
+
+Dependiendo de lo que se necesita resolver hay distintas herramientas. Los ETL no cambian. Lo mas importante es responder a las preguntas del cliente, lo que quiere decir que él debe tener preguntas, saber lo que quiere. Si hoy no sabe lo que quiere te pedirá cualquier cosa.
+
+Si no tiene preguntas podemos:
+- Si tuvieramos que quitar todo menos 1 cosa, que seria?
+  Si responde que la gente no nos resuelve nada.
+- No podemos cambiar nada más que una cosa. 
+
+Con eso podemos medio saber qué es lo que quiere. Este tipo de procesos no dependen del numero de gente, no hara las cosas mas rapido necesariamente. Si metes mas gente incluso pueden chocar entre si.
+
+#rect[
+  Nos preguntara mas o menos que necesitamos en el examen.
+]
+
+= 

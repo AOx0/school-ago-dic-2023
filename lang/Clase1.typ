@@ -1705,6 +1705,40 @@ Con `#E#` se acaba
 
 En el examen hay una pregunta en el que pide que hagamos cambios al de fuerza bruta.
 
+== Tablas de símbolos
 
+Contiene:
+- Identificador
+- De que tipo es: var, procedimiento, funcion, arreglo
+- Tipo de variable si es una variable
+- Procedimiento: No devuelve nada
+- Funcion: Que tipo devuelve la funcion
+- Dimensión del arreglo, el tipo si es un arreglo
+- El ámbito (scope): Espacio del tiempo de vida de las variables
+    - El ambito se va multiplicando x2, iniciando por 1, si tenemos ambito de 8 sabemos que estamos 4 veces dentro
+    - Es x2 porque para obtenerlo podemos hacerle shift al bit.
+- Direccion de memoria: Donde estan en el heap
+- Tamaño que ocupa cada elemento
+- Numero de linea donde se define
+- Numeros de linea donde se usa/invoca (p. ej. no podemos tener una variable que no se definio antes)
 
+- Tenemos que hacer una tabla de hashes
+
+#rect[
+    
+]
+
+== Tabla hash
+
+Ocupa una función hash que mapea de una cadena de caracteres a numeros naturales $t_1t_2t_3...t_i -> ZZ$
+
+Colisión: cuando hay dos elementos distintos que mapean al mismo valor.
+
+Sumar los codigos ascii de la cadena
+
+Un ejemplo de tabla es que define un arreglo de N elementos. Para cada valor que se va a ingresar lo pasa a alguno de los espacios del vector, cuando hay colision lo agrega tambien, porque el arreglo en realidad contiene todos los elementos
+
+- Variable no declarada
+- Variable no usada
+- Variable declarada dos veces en el mismo ambito 
 
