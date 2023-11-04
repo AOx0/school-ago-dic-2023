@@ -1724,10 +1724,6 @@ Contiene:
 
 - Tenemos que hacer una tabla de hashes
 
-#rect[
-    
-]
-
 == Tabla hash
 
 Ocupa una función hash que mapea de una cadena de caracteres a numeros naturales $t_1t_2t_3...t_i -> ZZ$
@@ -1741,4 +1737,58 @@ Un ejemplo de tabla es que define un arreglo de N elementos. Para cada valor que
 - Variable no declarada
 - Variable no usada
 - Variable declarada dos veces en el mismo ambito 
+
+=== Codigo
+
+```cpp
+enum VarType // Tipo de dato y eso
+enum VarConcept // Si es arreglo y eso
+```
+
+Por cada elemento tenemos
+- Tamaño en Bytes
+- La linea donde se define
+- El ambito donde esta
+- Los punteros los tiene porque no quiere crear de golpe los items, hasta que es necesario crea los valores.
+- La lista de colisión es un arerglo de vectores
+- Para crear un item:
+    - Tiene el nombre del identificador
+    - Un puntero a item en la memoria
+- La tabla tiene una variable count, contando tanto en items como en colision
+- Primero crea el item y luego el espacio en la cadena, para destruirlo lo hace en modo inverso
+- Para donde puede evitar ifs lo hace
+- Si encuentra una colisión, lo pone al final del arreglo
+- Cuidado de tener copias no profundas
+- Usa unsigned int
+- Hay dos casos:
+    - Es null (Es el primero)
+    - Si no lo agrega a la lista de colisión
+- Tiene un metodo de busca que nos permite buscar cierto elemento en la tabla
+- BUscar:
+    - Busca el indice y pide el item en esa posicion, si no es nulo devuelve que si lo encontro
+    - Si es falso puede que el elemento no este y busca uno a uno en la lista de colision
+    - Devuelve en que posicion del vector de colisiones esta
+- Borrar un elemento:
+    - Tiene tabla y llave
+    - Si no existe devuelve
+    - Si no tiene lista de colision en esa posicion es un error
+    - Esta en el lugar y no tiene lista de colision, entonces lo borra directamente
+    - Ese indice coincide con el elemento, pero tiene lista de colision, por eso tiene que borrar el elemento e ir copiando los elementos para 'comprimir'
+- Buscar un elemento en la tabla y devuelve el index, tanto de la lista de colision como el de los items
+- Un metodo para imprimir la tabla completa
+- Tiene un arreglo de items y un arreglo de colision
+
+#rect[
+*Temas del examen*
+- Gramaticas con atributos
+- Reconocerodes SSLR1
+- Arbol sintactico
+- Tabla de simbolos
+- Manejo de errores
+]
+
+Para juntarlo todo:
+- Cuando encontremos un identificador, lo subimos a la tabla de simbolos, mandando a la vez las lineas y scope
+- Obviamente hay que agregar los distintos tipos, como program si no vienen
+- Variables, nombres de procedimientos, funciones, etc. Toca buscar exactamente donde los vamos a encontrar
 
