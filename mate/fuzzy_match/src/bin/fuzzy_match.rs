@@ -6,26 +6,35 @@ fn main() {
     #[cfg(feature = "dhat")]
     let _profiler = dhat::Profiler::new_heap();
 
-    // let p = F::from(100);
-    // let sr = SR::new(
-    //     &|x: F| x.clone() * x - F::new(2u64, 1u64),
-    //     &|x| F::new(2u64, 1u64) * x,
-    //     p.clone(),
-    // )
-    // .with_iter(15);
+    let p = F::from(1);
+    let sr = SR::new(
+        &|x: F| {
+            (x.clone() * x.clone() * x.clone() * x.clone() * x.clone())
+                + F::new(20usize, 1usize) * (x.clone() * x.clone())
+                + x.clone()
+                + 1.5
+        },
+        &|x| {
+            F::new(5usize, 1usize) * (x.clone() * x.clone() * x.clone() * x.clone())
+                + F::new(40usize, 1usize) * x.clone()
+                + 1
+        },
+        p.clone(),
+    )
+    .with_iter(15);
 
-    // const P: usize = 200;
+    const P: usize = 200;
 
-    // let mut p = format!("{:.P$}", p);
-    // for (i, s) in sr.into_iter().enumerate() {
-    //     let res = format!("{:.P$}", s);
-    //     if res == p {
-    //         println!("Equal sol iter {i}, val:\n{}", res);
-    //         break;
-    //     }
-    //     println!("{res}");
-    //     p = res;
-    // }
+    let mut p = format!("{:.P$}", p);
+    for (i, s) in sr.into_iter().enumerate() {
+        let res = format!("{:.P$}", s);
+        if res == p {
+            println!("Equal sol iter {i}, val:\n{}", res);
+            break;
+        }
+        println!("{res}");
+        p = res;
+    }
 
     const MAX_ITER: usize = 3500;
 
@@ -33,7 +42,7 @@ fn main() {
     let mut p = 10.;
     let sr = SRF64::new(
         &|x| x.powf(5.) + 20. * x.powf(2.) + 0.5 + x + 1.,
-        &|x| 5. * x.powf(4.) + 40. * x + 0.5,
+        &|x| 5. * x.powf(4.) + 40. * x + 1.,
         p,
     )
     .with_iter(MAX_ITER);
