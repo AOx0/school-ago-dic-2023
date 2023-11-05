@@ -27,33 +27,35 @@ fn main() {
     //     p = res;
     // }
 
+    const MAX_ITER: usize = 3500;
+
     println!("NEWTON-RAPHSON:");
     let mut p = 10.;
-    let sr = SRF64::new(&|x| x.powf(2.) - 2., &|x| 2. * x, p).with_iter(15);
+    let sr = SRF64::new(
+        &|x| x.powf(5.) + 20. * x.powf(2.) + 0.5 + x + 1.,
+        &|x| 5. * x.powf(4.) + 40. * x + 0.5,
+        p,
+    )
+    .with_iter(MAX_ITER);
 
     for (i, s) in sr.into_iter().enumerate() {
         if s == p {
             println!("Equal sol iter {i}, val:\n{:.60}", p);
             break;
         }
-        println!("{:.60}", s);
+        println!("{}: {:.60}", i, s);
         p = s;
     }
 
     println!("SECANTE:");
-    let (mut sol, mut p) = (1., 10.);
-    let sr = MS::new(
-        &|x| 3. * x.powf(100.) - 2. * x.powf(23.) + (0.5 * x.powf(2.)) - 2.,
-        sol,
-        p,
-    )
-    .with_iter(50);
+    let (sol, mut p) = (1., 10.);
+    let sr = MS::new(&|x| x.powf(5.) + 20. * x.powf(2.) + 0.5 + x + 1., sol, p).with_iter(MAX_ITER);
     for (i, s) in sr.into_iter().enumerate() {
         if s == p {
             println!("Equal sol iter {i}, val:\n{:.60}", p);
             break;
         }
-        println!("{:.60}", s);
+        println!("{}: {:.60}", i, s);
         p = s;
     }
 }
