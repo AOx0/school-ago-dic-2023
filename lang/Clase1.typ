@@ -1792,3 +1792,5 @@ Para juntarlo todo:
 - Obviamente hay que agregar los distintos tipos, como program si no vienen
 - Variables, nombres de procedimientos, funciones, etc. Toca buscar exactamente donde los vamos a encontrar
 
+
+
