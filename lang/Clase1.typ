@@ -1793,4 +1793,19 @@ Para juntarlo todo:
 - Variables, nombres de procedimientos, funciones, etc. Toca buscar exactamente donde los vamos a encontrar
 
 
+- Presentar el flex y el yacc que reconocen un programa en pascal
 
+== Arbol sintáctico
+
+Recorrer en:
+- preorden (recorrer toda parte izquierda, cuando acabamos subimos y continuamos)
+- orden
+- postorden
+
+```
+r -> 
+```
+
+Todas las instrucciones en un statement compuesto tiene muchos hermanos, en cada nodo tenemos muchos elementos que son de tipo arbol sintactico.
+Es muy diferente los nodos del arbol sintactico (nodos de una instruccion, expresion, etc. En un nodo de tipo instruccion no hay operadores como con una expresion.
+Propone que ocupemos los conocimientos que tenemos sobre las distintas instrucciones para poner el numero de nodos que tiene. Armar un arbol con las instrucciones y expresiones y despues lo vamos a ir recorriendo e imprimiendo la sintaxis.
