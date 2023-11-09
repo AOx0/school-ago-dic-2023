@@ -1076,3 +1076,8 @@ $
     $
         25 times 24 times 23 times 22 times 21 = 6,375,600
     $
+
+= Introducción a desmostraciones
+
+- Deductiva: Secuencia de pasos justificados
+- Inductiva: Demostraciones recursivas

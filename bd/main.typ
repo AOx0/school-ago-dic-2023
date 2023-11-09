@@ -982,4 +982,68 @@ Con eso podemos medio saber qué es lo que quiere. Este tipo de procesos no depe
   Nos preguntara mas o menos que necesitamos en el examen.
 ]
 
-= 
+= CRIP-DM
+
+Enfocado a personas que no son data scientists, que no son expertos en el tema.
+
+- Comprender el negocio: Comienza con objetivos del negocio, como optimizar procesos, encontrar embotellamientos
+- Comprender los datos: Explorar y entender los datos. Que tenemos y que necesitamos. Que calidad, disponibilidad, granularidad y frecuencia.
+- Preparar los datos: Selecciona, limpiar 
+- Modelado: Integrar disitntas tecnicas para ver si podemos lograr el objetivo. Para simular lo que pasa en la vida real.
+- Evaluacion: Los resultados obtenidos del modelo. Rendimiento, sensibilidad, precision y eficacia. Esta listo para desplegarse?
+- Despliegue: Se aplica el modelo en el negocio completo.
+
+Esta metodologia no sigue los pasos de forma lineal, sino que es un proceso de prueba y error. Entre modelado y preparacion de datos puede ser un va y viene hasta que se logre.
+
+Video: 
+
+== Ventajas:
+- Ayuda a mejorar la empresa
+- Plazos definidos
+- 
+
+== Desventajas
+
+- Inconvenientes
+- Requiere conocimientos en el tema
+- La implementación como el limpiado y modelado requiere conocimiento.
+
+== Ejemplo de uso
+- Tenemos una cadena de restaurantes, queremos aumentar nuestras ventas.
+
++ Comprender el negocio: Especificamos, queremos aumentar las ventas 10% en tanto tiempo.
++ Comprender los datos: Recopilamos los datos de los puntos de venta y de redes sociales o demás lugares.
++ Preparar los datos: Eliminar datos duplicados, var categoricas
++ Modelado: Se identifican patrones y se emplean para entender como esta funcionando el negocio y por lo tanto como mejorarlo
++ Evaluacion: De todo lo que ya hicimos, que es lo que mejorres resultados dio. Eficiencia y rendimiento, 
+  por medio de proyecciones y estadisticas que nos pueden dar un poco de conocimiento sobre su eficacia.
+  Solo se despliega si estamos algo segurs de que puede funcionar. 
++ Despliegue: Evaluamos y obtuvimos resultados, ahora se pone en platica sobre el negocio de verdad. T
+
+
+Le esta preguntando sobre las regreciones lineales, habla de los minimos cuadrados. Poniendo el ejemplo de que tengamos un modelo que predice y. 
+Para ver el error obtenemos la diferencia entre lo que tenemos y lo que debe ser.
+Puede que no se despliegue el modelo porque la evaluacion no dio para sacarlo, lo que hace que tengamos que volver a empezar
+En excel podemos graficar fast regresiones lineales
+Rellenar datos sus
+
+- KDD y CRISP no compiten como pasa con Inmon y Kimball. 
+- CRISP: La metodologia es esta
+- Si es en particular sobre bases de datos entonces usamos KDD
+- KDD es parte de CRISP
+
+
+== CA
+
+Lo que CA hacia es distribuir mensajes de acuerdo a la persona, haciendo que cada quien escuchara lo que queria oir. 
+Logrando que Trump ganara.
+
+- Obtenian datos de aplicaciones de Facebook, porque dabas permiso para ver tus datos y de tus contactos.
+- Michal desarrolla el methodo OCEAN de acuerdo a lo que opinas en la red, miden tu personalidad
+- Wylie: Denuncio
+- FB: Pago
+
+- OCEAN: O big 5, mide 5 caracteristicas de una persona que la permite. Con 70 likes te puede conocer como amigo, 150 como padres, 300 likes como pareja, +300 lo que piensas de ti mismo
+- Tambien puede saber que orientacion sexual, tendencia politica, etc.
+
+Giovanni Santo Omni Videns 
