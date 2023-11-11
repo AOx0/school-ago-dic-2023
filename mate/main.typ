@@ -1081,3 +1081,6 @@ $
 
 - Deductiva: Secuencia de pasos justificados
 - Inductiva: Demostraciones recursivas
+
+== 
+

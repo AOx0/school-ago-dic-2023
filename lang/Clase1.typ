@@ -1809,3 +1809,11 @@ r ->
 Todas las instrucciones en un statement compuesto tiene muchos hermanos, en cada nodo tenemos muchos elementos que son de tipo arbol sintactico.
 Es muy diferente los nodos del arbol sintactico (nodos de una instruccion, expresion, etc. En un nodo de tipo instruccion no hay operadores como con una expresion.
 Propone que ocupemos los conocimientos que tenemos sobre las distintas instrucciones para poner el numero de nodos que tiene. Armar un arbol con las instrucciones y expresiones y despues lo vamos a ir recorriendo e imprimiendo la sintaxis.
+
+== Tabla de simbolos
+
+Las declaraciones de pascal tienen un problema. Primero aparecen los identificadores y hasta el final el tipo.
+- Posible solución: `ultimo_Var_Concept` (), `ambito` ()
+- Compara la entrada para saber el tipo de dato y lo almacena. 
+- ambito: scope, lo cambia cada que se mete a funcion o procedimiento.
+- 
