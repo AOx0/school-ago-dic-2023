@@ -1,0 +1,26 @@
+so_js:
+  type: Web
+  title: Stack Overflow 2023 Developer Survey
+  url:
+    value: https://survey.stackoverflow.co/2023/
+    date: 2023-11-14
+
+para_que:
+  type: Article
+  title: Para qué sirve JavaScript
+  url:
+    value: https://openwebinars.net/blog/para-que-sirve-javascript/
+    date: 2023-11-14
+
+aws_js:
+  type: Article
+  title: ¿Qué es JavaScript (JS)?
+  url: 
+    value: https://aws.amazon.com/es/what-is/javascript/
+    date: 2023-11-14
+
+tauri:
+  type: Repository
+  title: tauri
+  url:
+    value: https://github.com/tauri-apps/tauri
