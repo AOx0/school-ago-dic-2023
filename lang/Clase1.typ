@@ -1816,4 +1816,11 @@ Las declaraciones de pascal tienen un problema. Primero aparecen los identificad
 - Posible solución: `ultimo_Var_Concept` (), `ambito` ()
 - Compara la entrada para saber el tipo de dato y lo almacena. 
 - ambito: scope, lo cambia cada que se mete a funcion o procedimiento.
-- 
+
+== Arbol sintáctico
+
+Ya definido el arbol llenarlo es muy facil. Su metodo se llama `NuevoNodo(TIPO)`, donde en tipo pasa directamente cual es, por ejemplor  `FOR`, asi se ahorra tener que hacer chingos de instrucciones. Tiene metodos que crean directamente sobre el arbol el tipo de union adecuado. O sea que creo que si hizo lo mismo que queria.
+
+
+Si tener lo que hace que se genere solo el flex.
+ 
