@@ -1,4 +1,4 @@
-#import "@preview/tablex:0.0.5": tablex, rowspanx, colspanx, cellx
+#import "@preview/tablex:0.0.6": tablex, rowspanx, colspanx, cellx
 
 #table(
   columns: (1fr, 1fr),

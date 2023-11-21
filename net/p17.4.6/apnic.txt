@@ -1,0 +1,30 @@
+PING www.apnic.net.cdn.cloudflare.net (104.18.235.68): 56 data bytes
+64 bytes from 104.18.235.68: icmp_seq=0 ttl=60 time=16.060 ms
+64 bytes from 104.18.235.68: icmp_seq=1 ttl=60 time=14.274 ms
+64 bytes from 104.18.235.68: icmp_seq=2 ttl=60 time=12.252 ms
+64 bytes from 104.18.235.68: icmp_seq=3 ttl=60 time=9.353 ms
+64 bytes from 104.18.235.68: icmp_seq=4 ttl=60 time=14.005 ms
+64 bytes from 104.18.235.68: icmp_seq=5 ttl=60 time=14.097 ms
+64 bytes from 104.18.235.68: icmp_seq=6 ttl=60 time=15.520 ms
+64 bytes from 104.18.235.68: icmp_seq=7 ttl=60 time=15.925 ms
+64 bytes from 104.18.235.68: icmp_seq=8 ttl=60 time=37.747 ms
+64 bytes from 104.18.235.68: icmp_seq=9 ttl=60 time=9.018 ms
+64 bytes from 104.18.235.68: icmp_seq=10 ttl=60 time=7.968 ms
+64 bytes from 104.18.235.68: icmp_seq=11 ttl=60 time=9.660 ms
+64 bytes from 104.18.235.68: icmp_seq=12 ttl=60 time=17.184 ms
+64 bytes from 104.18.235.68: icmp_seq=13 ttl=60 time=12.337 ms
+64 bytes from 104.18.235.68: icmp_seq=14 ttl=60 time=18.225 ms
+64 bytes from 104.18.235.68: icmp_seq=15 ttl=60 time=6.313 ms
+64 bytes from 104.18.235.68: icmp_seq=16 ttl=60 time=7.345 ms
+64 bytes from 104.18.235.68: icmp_seq=17 ttl=60 time=12.756 ms
+64 bytes from 104.18.235.68: icmp_seq=18 ttl=60 time=31.578 ms
+64 bytes from 104.18.235.68: icmp_seq=19 ttl=60 time=10.500 ms
+64 bytes from 104.18.235.68: icmp_seq=20 ttl=60 time=15.572 ms
+64 bytes from 104.18.235.68: icmp_seq=21 ttl=60 time=14.756 ms
+64 bytes from 104.18.235.68: icmp_seq=22 ttl=60 time=12.945 ms
+64 bytes from 104.18.235.68: icmp_seq=23 ttl=60 time=12.912 ms
+64 bytes from 104.18.235.68: icmp_seq=24 ttl=60 time=8.086 ms
+
+--- www.apnic.net.cdn.cloudflare.net ping statistics ---
+25 packets transmitted, 25 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 6.313/14.256/37.747/6.854 ms

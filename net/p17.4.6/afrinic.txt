@@ -1,0 +1,29 @@
+PING www.afrinic.net (196.216.2.6): 56 data bytes
+64 bytes from 196.216.2.6: icmp_seq=0 ttl=46 time=310.035 ms
+64 bytes from 196.216.2.6: icmp_seq=1 ttl=46 time=307.309 ms
+64 bytes from 196.216.2.6: icmp_seq=2 ttl=46 time=300.973 ms
+64 bytes from 196.216.2.6: icmp_seq=3 ttl=46 time=306.669 ms
+64 bytes from 196.216.2.6: icmp_seq=4 ttl=46 time=306.033 ms
+64 bytes from 196.216.2.6: icmp_seq=5 ttl=46 time=332.668 ms
+64 bytes from 196.216.2.6: icmp_seq=6 ttl=46 time=306.102 ms
+64 bytes from 196.216.2.6: icmp_seq=7 ttl=46 time=300.914 ms
+64 bytes from 196.216.2.6: icmp_seq=8 ttl=46 time=311.880 ms
+64 bytes from 196.216.2.6: icmp_seq=9 ttl=46 time=309.297 ms
+64 bytes from 196.216.2.6: icmp_seq=10 ttl=46 time=301.683 ms
+64 bytes from 196.216.2.6: icmp_seq=11 ttl=46 time=306.367 ms
+64 bytes from 196.216.2.6: icmp_seq=12 ttl=46 time=300.261 ms
+64 bytes from 196.216.2.6: icmp_seq=13 ttl=46 time=301.351 ms
+64 bytes from 196.216.2.6: icmp_seq=14 ttl=46 time=303.462 ms
+64 bytes from 196.216.2.6: icmp_seq=15 ttl=46 time=387.147 ms
+64 bytes from 196.216.2.6: icmp_seq=16 ttl=46 time=303.178 ms
+64 bytes from 196.216.2.6: icmp_seq=17 ttl=46 time=300.014 ms
+64 bytes from 196.216.2.6: icmp_seq=18 ttl=46 time=300.954 ms
+64 bytes from 196.216.2.6: icmp_seq=19 ttl=46 time=302.152 ms
+64 bytes from 196.216.2.6: icmp_seq=20 ttl=46 time=305.909 ms
+64 bytes from 196.216.2.6: icmp_seq=21 ttl=46 time=309.128 ms
+64 bytes from 196.216.2.6: icmp_seq=22 ttl=46 time=299.800 ms
+64 bytes from 196.216.2.6: icmp_seq=23 ttl=46 time=305.175 ms
+
+--- www.afrinic.net ping statistics ---
+25 packets transmitted, 24 packets received, 4.0% packet loss
+round-trip min/avg/max/stddev = 299.800/309.103/387.147/17.551 ms

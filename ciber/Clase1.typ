@@ -562,3 +562,22 @@ Podemos ver información sobre el certificado más a profundidad con SSL LABS, d
 
 - SIEM: Security Information and Events
 - SPLUNK: 
+
+
+= Bussiness continuity plan
+
+Como mantener la operación siempre. 
+Por ejemplo, Banxico tiene centros alternativos en caso de marcha y cosas asi, donde manda a un par de cada area.
+
+Los citios alternos para personal tanto como servidores es importante, asi se puede actuar en casos extremos.
+Debemos tener respaldos, de recursos humanos y de los demás (como los recursos de TI).
+
+Para los humanos también es necesario tener un personal principal y uno de backup.
+
+Sistema de gestion. Identificar, Operar, revisar. Que todo funcione y que sea capaz de responder a incidentes
+
+Diseñar un plan de continuidad de los aplciances de continuidadi
+
+Realizar simulacros. Medir en ellos qué está pasando.
+
+
